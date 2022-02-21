@@ -1,16 +1,54 @@
 # Horizon
 
+## Table of Contents
+- [Horizon](#horizon)
+	- [Table of Contents](#table-of-contents)
+	- [Members](#members)
+	- [Application](#application)
+	- [Key Features](#key-features)
+	- [Additional features](#additional-features)
+	- [Tech Stack](#tech-stack)
+		- [Development Stack](#development-stack)
+		- [Deployment Stack](#deployment-stack)
+	- [Technical Challenges](#technical-challenges)
+		- [5 Technical Challenges](#5-technical-challenges)
+			- [1 - First challenge](#1---first-challenge)
+			- [2 - Second challenge](#2---second-challenge)
+			- [3 - Third challenge](#3---third-challenge)
+			- [4 - Forth challenge](#4---forth-challenge)
+			- [5 - Fifth SS](#5---fifth-ss)
+
 ## Members
 - Mohamed Halat
 - Ahmed Halat
 
-## Deliverables
-After registration, each team will be assigned a new private Github repository for the project. By the project proposal deadline, the team should have pushed the proposal to their project repository. The proposal will take the form of a README.md file at the root of your project repository on Github. This file should be properly formatted in markdown.
+## Application
+a description of the web application
 
-### Requirements
-- team Members
-- a description of the web application
-- a description of the key features that will be completed by the Beta version
-- a description of the additional features that will be complete by the Final version
-- a description of the technology stack that you will use to build and deploy it
-- a description of the top 5 technical challenges
+## Key Features
+a description of the key features that will be completed by the Beta version
+
+## Additional features
+a description of the additional features that will be complete by the Final version
+
+## Tech Stack
+
+### Development Stack
+
+### Deployment Stack
+
+## Technical Challenges
+a description of the top 5 technical challenges
+### 5 Technical Challenges
+#### 1 - First challenge
+First challenge description
+#### 2 - Second challenge
+Second challenge description
+#### 3 - Third challenge
+Third challenge description
+
+#### 4 - Forth challenge
+Forth challenge description
+
+#### 5 - Fifth SS
+Fifth challenge description
