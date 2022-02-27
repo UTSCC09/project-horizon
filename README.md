@@ -1,54 +1,53 @@
-# Horizon
+# Horizon Project
 
 ## Table of Contents
-- [Horizon](#horizon)
-	- [Table of Contents](#table-of-contents)
-	- [Members](#members)
-	- [Application](#application)
-	- [Key Features](#key-features)
-	- [Additional features](#additional-features)
-	- [Tech Stack](#tech-stack)
-		- [Development Stack](#development-stack)
-		- [Deployment Stack](#deployment-stack)
-	- [Technical Challenges](#technical-challenges)
-		- [5 Technical Challenges](#5-technical-challenges)
-			- [1 - First challenge](#1---first-challenge)
-			- [2 - Second challenge](#2---second-challenge)
-			- [3 - Third challenge](#3---third-challenge)
-			- [4 - Forth challenge](#4---forth-challenge)
-			- [5 - Fifth SS](#5---fifth-ss)
+- [Horizon Project](#horizon-project)
+  - [Table of Contents](#table-of-contents)
+  - [Members](#members)
+  - [Desription](#desription)
+  - [Beta Version Key Features](#beta-version-key-features)
+  - [Final Version Features](#final-version-features)
+  - [Stack](#stack)
+  - [Top 5 Technical Challenges](#top-5-technical-challenges)
 
 ## Members
 - Mohamed Halat
 - Ahmed Halat
 
-## Application
-a description of the web application
+## Desription
+A social network for game developers and 3d artists. Works similar to most social networks and allows posting, commenting, liking, user feeds, private messaging, and more. The key feature is the ability to create and share 3d models.
 
-## Key Features
-a description of the key features that will be completed by the Beta version
+## Beta Version Key Features
+- [ ] Registration
+- [ ] Posting
+- [ ] Commenting
+- [ ] User Feeds
+- [ ] Adding Friends
+- [ ] Preview post Content
 
-## Additional features
-a description of the additional features that will be complete by the Final version
+## Final Version Features
+- [ ] Searching
+- [ ] Aggregate Feed
+- [ ] Snapshots of 3d content
+- [ ] Clean UI
 
-## Tech Stack
+## Stack
+- Frontend:
+  - Vue.js
+  - Compiler: Vite
+  - Libraries:
+    - Three.js (WebGL library for rendering 3d graphics)
+    - Vuetify (UI library)
+    - Pinia (Storage)
+- Backend:
+  - Nest.js
+  - DB: Elasticsearch
+  - Auth: Passport.js/JWT
 
-### Development Stack
+## Top 5 Technical Challenges
+1. Creating and storing snapshots of 3d models to be used while looking at your feed. These are then changed to rendered models on preview.
+2. Displaying actual 3d models in an interactive way.
+3. Automatic updates of the feed using websockets.
+4. Searching for users and posts.
+5. Private messaging.
 
-### Deployment Stack
-
-## Technical Challenges
-a description of the top 5 technical challenges
-### 5 Technical Challenges
-#### 1 - First challenge
-First challenge description
-#### 2 - Second challenge
-Second challenge description
-#### 3 - Third challenge
-Third challenge description
-
-#### 4 - Forth challenge
-Forth challenge description
-
-#### 5 - Fifth SS
-Fifth challenge description
