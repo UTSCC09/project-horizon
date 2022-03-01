@@ -55,7 +55,7 @@ and NestJS, Elasticsearch and Apollo for the backend because of their GraphQL su
 - Backend:
   - Nest.js
     - Apollo (GraphQL driver)
-  - DB: Elasticsearch/
+  - DB: Elasticsearch
   - Auth: Passport.js/JWT
 
 ## Top 5 Technical Challenges
