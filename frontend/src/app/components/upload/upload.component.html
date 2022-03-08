@@ -1,3 +1,6 @@
 <p>upload works!</p>
-<p-fileUpload name="myfile[]" mode="basic" accept="*.stl" [customUpload]="true" (uploadHandler)="uploadFile($event)"></p-fileUpload>
+<p-fileUpload mode="basic" accept="*.stl" [auto]="true" [customUpload]="true"
+	(uploadHandler)="uploadFile($event)"></p-fileUpload>
+<p-button label="Snapshot" (onClick)="takeSnapshot()"></p-button>
+
 <canvas #canvas id="canvas" style="width: 100%; height: 100"></canvas>

@@ -29,11 +29,17 @@ export class EngineService {
     return mesh;
   }
 
+  public takeSnapshot() {
+    this.render();
+    return this.renderer.domElement.toDataURL('image/png');
+  }
+
   public createScene(canvas: ElementRef<HTMLCanvasElement>): void {
     // The first step is to get the reference of the canvas element from our HTML document
     this.canvas = canvas.nativeElement;
 
     this.renderer = new THREE.WebGLRenderer({
+      preserveDrawingBuffer: true,
       canvas: this.canvas,
       alpha: true,    // transparent background
       antialias: true // smooth edges
@@ -100,6 +106,7 @@ export class EngineService {
     if (this.frameId != null) {
       cancelAnimationFrame(this.frameId);
     }
+
     if (this.renderer != null) {
       this.renderer.dispose();
       this.canvas = null;
