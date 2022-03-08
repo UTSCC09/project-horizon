@@ -19,6 +19,16 @@ export class UploadComponent implements OnInit {
     this.engineService.animate();
   }
 
+  takeSnapshot() {
+    const image = this.engineService.takeSnapshot();
+    console.log({image})
+
+    const downloadLink = document.createElement("a");
+    downloadLink.href = image;
+    downloadLink.download = "snapshot.png";
+    downloadLink.click();
+  }
+
   uploadFile(event: any) {
     console.log({ event });
     const files = event.files;
