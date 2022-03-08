@@ -8,6 +8,7 @@ import { UploadComponent } from './components/upload/upload.component';
 
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ButtonModule } from 'primeng/button';
     FileUploadModule,
     HttpClientModule,
     ButtonModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
