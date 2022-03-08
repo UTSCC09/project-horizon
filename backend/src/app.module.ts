@@ -31,5 +31,5 @@ import { UserModule } from './user/user.module';
   providers: [AppController],
 })
 export class AppModule {
-  constructor(private readonly connection: Connection) {}
+  constructor(private readonly connection: Connection) { }
 }
