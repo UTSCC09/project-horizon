@@ -16,12 +16,7 @@ export class AuthController {
 
   @Mutation(() => User)
   async register(@Args('data') userData: UserInput): Promise<User> {
-
-    try {
-      return await this.authService.register(userData);
-    } catch (e) {
-      throw new HttpException(e, HttpStatus.BAD_REQUEST);
-    }
+    return await this.authService.register(userData);
   }
 
 
@@ -29,6 +24,6 @@ export class AuthController {
   async login(@Args('data') userData: LoginInfo): Promise<UserToken> {
     const token = await this.authService.login(userData);
     const user = await this.authService.getAuthenticatedUser(userData.email, userData.password);
-    return {token, ...user};
+    return { token, ...user };
   }
 }
