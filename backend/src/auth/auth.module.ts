@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from 'src/user/user.module';
-import { AuthController } from './auth.controller';
+import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 
@@ -23,7 +23,7 @@ const passport = PassportModule.register({
     }),
     passport,
   ],
-  providers: [AuthService, JwtStrategy, AuthController],
+  providers: [AuthService, JwtStrategy, AuthResolver],
   exports: [JwtModule, passport],
 })
 export class AuthModule { }

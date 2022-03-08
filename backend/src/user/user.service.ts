@@ -34,7 +34,6 @@ export class UserService {
     userToUpdate.firstName = user.firstName;
     userToUpdate.lastName = user.lastName;
     userToUpdate.email = user.email;
-    userToUpdate.password = user.password;
 
     return this.usersRepository.save(userToUpdate);
   }
