@@ -2,6 +2,38 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: Float!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
+
+type UserToken {
+  id: Float!
+  firstName: String!
+  lastName: String!
+  email: String!
+  token: String!
+}
+
 type Query {
-  getHello: String!
+  hello: String!
+}
+
+type Mutation {
+  register(data: UserInput!): User!
+  login(data: LoginInfo!): UserToken!
+}
+
+input UserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+}
+
+input LoginInfo {
+  email: String!
+  password: String!
 }
