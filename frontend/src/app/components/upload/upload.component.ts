@@ -17,22 +17,6 @@ export class UploadComponent implements OnInit {
   ngOnInit(): void {
     this.engineService.createScene(this.canvas);
     this.engineService.animate();
-
-    const geometry = new BoxGeometry(1, 1, 1);
-    const material = new MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new Mesh(geometry, material);
-
-    this.engineService.addToScene(cube);
-
-    // this.engineService.fileLoader
-    //   .loadAsync('assets/test.stl')
-    //   .then((geometry) => {
-    //     const mesh = this.engineService.createFileMesh(geometry);
-    //     this.engineService.addToScene(mesh);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
   }
 
   uploadFile(event: any) {
@@ -43,9 +27,11 @@ export class UploadComponent implements OnInit {
 
     const reader = new FileReader()
     reader.onload = (e: any) => {
-      console.log({ e });
-
-
+      const contents = e.target.result;
+      const geometry = this.engineService.parseSTL(contents);
+      const mesh = this.engineService.createFileMesh(geometry);
+      this.engineService.addToScene(mesh);
+      this.engineService.centerCamera(mesh);
     };
     reader.readAsText(f);
   }
