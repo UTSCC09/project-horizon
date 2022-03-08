@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ElementRef, Injectable, NgZone } from '@angular/core';
 
 @Injectable({
@@ -10,28 +12,18 @@ export class EngineService {
   private camera!: THREE.PerspectiveCamera;
   private scene!: THREE.Scene;
   private light!: THREE.AmbientLight;
+  private controls!: OrbitControls;
 
   private frameId: number | null = null;
-
-  private loader: THREE.FileLoader = new THREE.FileLoader();
-
-  get fileLoader() {
-    return this.loader;
-  }
+  private stlLoader: STLLoader = new STLLoader();
 
   constructor(private ngZone: NgZone) { }
 
   public createFileMesh(geometry: any) {
-    const material = new THREE.MeshPhysicalMaterial({
-      color: 0xb2ffc8,
-      metalness: 0.25,
-      roughness: 0.1,
-      opacity: 1.0,
-      transparent: true,
-      transmission: 0.99,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.25
-    })
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x00ff00,
+      wireframe: true
+    });
     const mesh = new THREE.Mesh(geometry, material);
 
     return mesh;
@@ -61,6 +53,8 @@ export class EngineService {
     this.light = new THREE.AmbientLight(0x404040);
     this.light.position.z = 10;
     this.scene.add(this.light);
+
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
   }
 
   public animate(): void {
@@ -83,6 +77,15 @@ export class EngineService {
 
   public addToScene(mesh: THREE.Mesh): void {
     this.scene.add(mesh);
+  }
+
+  public centerCamera(mesh: THREE.Mesh): void {
+    this.controls.target.lerp(mesh.position, 0.05);
+    this.controls.update();
+  }
+
+  parseSTL(contents: string) {
+    return this.stlLoader.parse(contents);
   }
 
   public render(): void {
