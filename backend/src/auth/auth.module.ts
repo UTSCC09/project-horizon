@@ -16,15 +16,14 @@ const passport = PassportModule.register({
   imports: [
     UserModule,
     JwtModule.register({
-      secret: process.env.SECRETKEY,
+      secret: 'FAE66439AA3F6EBDF6E16DD0EA9EFBAF6F8A4811754132A4F469D6ED2DD367F5',
       signOptions: {
-        expiresIn: process.env.EXPIRESIN,
+        expiresIn: '10d',
       },
     }),
     passport,
   ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, AuthController],
   exports: [JwtModule, passport],
 })
 export class AuthModule {}

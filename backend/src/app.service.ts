@@ -5,7 +5,7 @@ import { Query } from '@nestjs/graphql';
 export class AppService {
 
   @Query(() => String)
-  getHello(): string {
+  hello(): string {
     return 'Hello World!';
   }
 }
