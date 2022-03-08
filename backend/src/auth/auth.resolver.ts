@@ -1,17 +1,11 @@
-import {
-  Controller,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
-
+import { Injectable } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Args, Mutation } from '@nestjs/graphql';
 import { LoginInfo, User, UserInput, UserToken } from 'src/entities/user.entity';
 
 
 @Injectable()
-export class AuthController {
+export class AuthResolver {
   constructor(private readonly authService: AuthService) { }
 
   @Mutation(() => User)
