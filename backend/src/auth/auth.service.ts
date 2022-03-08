@@ -24,7 +24,7 @@ export class AuthService {
    * @param  {LoginInfoDto} userData
    * @returns Promise
    */
-  async login(userData: LoginInfo): Promise<String> {
+  async login(userData: LoginInfo): Promise<string> {
     const user = await this.getAuthenticatedUser(
       userData.email,
       userData.password,
@@ -39,17 +39,10 @@ export class AuthService {
    * @param  {string} password
    */
   public async getAuthenticatedUser(email: string, password: string) {
-    try {
-      const user = await this.userService.findByEmail(email);
-      await this.verifyPassword(password, user.password);
-      delete user.password;
-      return user;
-    } catch (error) {
-      throw new HttpException(
-        'Wrong credentials provided',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    const user = await this.userService.findByEmail(email);
+    await this.verifyPassword(password, user.password);
+    delete user.password;
+    return user;
   }
 
   /** Compare passwords

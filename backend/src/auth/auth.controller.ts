@@ -2,19 +2,20 @@ import {
   Controller,
   HttpException,
   HttpStatus,
+  Injectable,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { Args, Mutation } from '@nestjs/graphql';
-import { LoginInfo, User, UserInput } from 'src/entities/user.entity';
+import { LoginInfo, User, UserInput, UserToken } from 'src/entities/user.entity';
 
 
-@Controller()
+@Injectable()
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @Mutation(returns => User)
-  async register(@Args('userInput') userData: UserInput): Promise<User> {
+  @Mutation(() => User)
+  async register(@Args('data') userData: UserInput): Promise<User> {
 
     try {
       return await this.authService.register(userData);
@@ -24,8 +25,10 @@ export class AuthController {
   }
 
 
-  @Mutation(returns => String)
-  async login(@Args('loginInfo') userData: LoginInfo): Promise<String> {
-    return this.authService.login(userData);
+  @Mutation(() => UserToken)
+  async login(@Args('data') userData: LoginInfo): Promise<UserToken> {
+    const token = await this.authService.login(userData);
+    const user = await this.authService.getAuthenticatedUser(userData.email, userData.password);
+    return {token, ...user};
   }
 }

@@ -1,0 +1,12 @@
+mutation {
+  register(
+    data: {
+      firstName: "mo"
+      lastName: "halat"
+      email: "m@mo.com"
+      password: "123"
+    }
+  ) {
+    id
+  }
+}

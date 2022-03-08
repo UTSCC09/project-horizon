@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -8,7 +7,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -31,7 +29,6 @@ import { UserModule } from './user/user.module';
     AuthModule,
     UserModule
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
