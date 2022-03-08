@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Query } from '@nestjs/graphql';
 
 @Injectable()
-export class AppService {
+export class AppController {
 
   @Query(() => String)
   hello(): string {
