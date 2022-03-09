@@ -1,4 +1,5 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from 'src/entities/user.entity';
@@ -10,6 +11,14 @@ export interface JwtPayload {
   exp: number;
   sub: string;
 }
+
+export const RequestUser = createParamDecorator(
+  (_: unknown, context: ExecutionContext): User => {
+    const ctx = GqlExecutionContext.create(context);
+    const req = ctx.getContext().req;
+    return req.user;
+  },
+);
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

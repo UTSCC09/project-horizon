@@ -16,12 +16,13 @@ export class FileService {
     return file.filename.split('.').pop();
   }
 
-  async upload(file: FileUpload): Promise<File> {
+  async upload(file: FileUpload, user): Promise<File> {
     const newFile = new File();
     newFile.filename = file.filename;
     newFile.mimetype = file.mimetype;
     newFile.encoding = file.encoding;
     newFile.size = file.size;
+    newFile.user = user;
 
     file.createReadStream().pipe(createWriteStream(`./uploads/${newFile.id}.${this.fileType(newFile)}`));
 

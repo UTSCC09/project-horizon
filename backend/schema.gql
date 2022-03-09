@@ -54,7 +54,7 @@ type Mutation {
   login(data: LoginInfo!): UserToken!
   createPost(content: String!): Post!
   deletePost(id: String!): Float!
-  uploadFile(file: Upload!): File!
+  uploadFile(file: Upload!, postId: String!): File!
 }
 
 input UserInput {
