@@ -2,11 +2,35 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type File {
+  id: String!
+  filename: String!
+  mimetype: String!
+  encoding: String!
+  size: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Post {
+  id: String!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type User {
   id: Float!
   firstName: String!
   lastName: String!
   email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type UserToken {
@@ -14,16 +38,23 @@ type UserToken {
   firstName: String!
   lastName: String!
   email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   token: String!
 }
 
 type Query {
   hello: String!
+  getPosts: [Post!]!
+  getPost(id: String!): Post!
 }
 
 type Mutation {
   register(data: UserInput!): User!
   login(data: LoginInfo!): UserToken!
+  createPost(content: String!): Post!
+  deletePost(id: String!): Float!
+  uploadFile(file: Upload!, postId: String!): File!
 }
 
 input UserInput {
@@ -37,3 +68,6 @@ input LoginInfo {
   email: String!
   password: String!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
