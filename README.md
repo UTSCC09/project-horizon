@@ -45,17 +45,15 @@ This mainly includes:
 Our techstack relies on NodeJS on both the front and backend. We decided to use Vue.js for the frontend library because of it's simplicity
 and NestJS, Elasticsearch and Apollo for the backend because of their GraphQL support.
 - Frontend:
-  - Vue.js
-  - Compiler: Vite
+  - Angular
   - Libraries:
     - Three.js (WebGL library for rendering 3d graphics)
-    - Vuetify (UI library)
-    - Pinia (Storage)
+    - PrimeNg & Bootstrap (UI library)
     - Apollo (GraphQL api library)
 - Backend:
   - Nest.js
     - Apollo (GraphQL driver)
-  - DB: Elasticsearch
+  - DB: Postgresql
   - Auth: Passport.js/JWT
 
 ## Top 5 Technical Challenges
