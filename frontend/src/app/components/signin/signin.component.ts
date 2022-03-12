@@ -20,4 +20,8 @@ export class SigninComponent implements OnInit {
     this.form.valueChanges.subscribe(console.log);
   }
 
+  onSubmit() {
+    console.log(this.form);
+  }
+
 }
