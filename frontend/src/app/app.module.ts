@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { InMemoryCache } from '@apollo/client/core';
+import { ApolloLink, InMemoryCache } from '@apollo/client/core';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -52,9 +52,20 @@ import { MenubarModule } from 'primeng/menubar';
       useFactory: (httpLink: HttpLink) => {
         return {
           cache: new InMemoryCache(),
-          link: httpLink.create({
-            uri: 'http://localhost:3000/graphql',
-          }),
+          link: new ApolloLink((opp, forward) => {
+            const token = localStorage.getItem('token');
+            if (token) {
+              opp.setContext({
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+            }
+            return forward(opp);
+          }).concat(
+            httpLink.create({
+              uri: 'http://localhost:3000/graphql',
+          })),
         };
       },
       deps: [HttpLink],
