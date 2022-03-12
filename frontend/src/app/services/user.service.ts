@@ -8,6 +8,6 @@ export class UserService {
   constructor() { }
 
   get isLoggedIn(): boolean {
-    return false;
+    return !!localStorage.getItem('token');
   }
 }
