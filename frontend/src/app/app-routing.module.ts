@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Components
-import { UploadComponent } from './components/upload/upload.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { HomeComponent } from './components/home/home.component';
+import { RegisterComponent } from './components/register/register.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
@@ -19,10 +19,9 @@ const routes: Routes = [
     path: 'login',
     component: SigninComponent,
   },
-  // TEMPORARY ROOT
   {
-    path: 'upload',
-    component: UploadComponent,
+    path: 'register',
+    component: RegisterComponent,
   },
 ];
 
