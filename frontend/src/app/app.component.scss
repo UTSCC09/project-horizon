@@ -22,3 +22,11 @@ h1 {
 	text-decoration: none;
 	cursor: pointer;
 }
+
+.fixed-bnts {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	z-index: 1;
+	padding-right: 20px;
+}

@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Nullable } from 'src/app/models/utils.model';
 import { EngineService } from 'src/app/services/engine.service';
 import { BufferGeometry, Mesh, } from 'three';
@@ -23,7 +24,8 @@ export class UploadComponent implements OnInit {
 
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
-  constructor() {
+  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig) {
+    console.log(config);
     this.engineService = new EngineService();
   }
 

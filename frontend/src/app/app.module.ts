@@ -22,6 +22,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 
 @NgModule({
   declarations: [
@@ -44,9 +45,11 @@ import { MenubarModule } from 'primeng/menubar';
     ReactiveFormsModule,
     MenubarModule,
     ApolloModule,
+    DynamicDialogModule,
   ],
   providers: [
     MessageService,
+    DialogService,
     {
       provide: APOLLO_OPTIONS,
       useFactory: (httpLink: HttpLink) => {
