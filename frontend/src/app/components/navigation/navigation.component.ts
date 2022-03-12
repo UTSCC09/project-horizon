@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 
 @Component({
@@ -9,7 +10,7 @@ import { MenuItem } from 'primeng/api';
 export class NavigationComponent implements OnInit {
   items: MenuItem[];
 
-  constructor() {
+  constructor(private router: Router) {
     this.items = [
       {
         label: 'Posts',
@@ -39,6 +40,11 @@ export class NavigationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  logOut() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 
 }
