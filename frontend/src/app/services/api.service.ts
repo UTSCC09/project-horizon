@@ -10,7 +10,6 @@ export class ApiService {
   constructor(private apollo: Apollo) { }
 
   signIn(form: FormGroup) {
-    console.log(form.value);
 
     return this.apollo.mutate({
       mutation: gql`

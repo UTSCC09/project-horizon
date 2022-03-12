@@ -40,7 +40,6 @@ export class AuthService {
    */
   public async getAuthenticatedUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
-    console.log(user);
     await this.verifyPassword(password, user.password);
     delete user.password;
     return user;
