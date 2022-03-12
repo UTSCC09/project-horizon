@@ -1,0 +1,34 @@
+<div class="signin">
+	<div class="signin-modal">
+		<div class="modal-dialog">
+			<div class="signin-modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Sign In to Horizon</h4>
+				</div>
+				<div class="modal-content">
+					<form [formGroup]="form" (ngSubmit)="onSubmit()">
+						<div class="form-group">
+							<input type="email" class="form-control" id="email" formControlName="email" placeholder="Enter email" required>
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control" formControlName="password" id="password" placeholder="Password" required>
+						</div>
+						<div class="form-group">
+							<div class="checkbox-group flex-align">
+								<input type="checkbox" class="custom-control-input" id="remember">
+								<label class="checkbox-control-label" for="remember">Keep me signed in</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<button [disabled]="!form.valid" type="submit" class="btn btn-primary btn-block">Sign In</button>
+						</div>
+					</form>
+					<div class="new-account subtext">
+							Don't have an account?
+							<p class="text-link" routerLink="/register">Sign up</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
