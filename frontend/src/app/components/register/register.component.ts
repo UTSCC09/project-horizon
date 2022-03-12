@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-register',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  constructor(private api: ApiService) { }
 
   ngOnInit(): void {
 
@@ -16,5 +17,11 @@ export class RegisterComponent implements OnInit {
   onSubmit(e: any) {
     e.preventDefault();
     const formData = new FormData(e.target);
+
+    this.api.signUp(formData as any).subscribe(
+      (data) => {
+        console.log(data);
+      }
+    );
   }
 }

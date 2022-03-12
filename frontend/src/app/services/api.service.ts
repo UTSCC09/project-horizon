@@ -10,17 +10,18 @@ export class ApiService {
   constructor(private apollo: Apollo) { }
 
   signIn(form: FormGroup) {
+    console.log(form.value);
+
     return this.apollo.mutate({
       mutation: gql`
-        mutation($email: String!, $password: String!) {
-          signIn(email: $email, password: $password) {
+        mutation($data: LoginInfo!) {
+          login(data: $data) {
             token
           }
         }
       `,
       variables: {
-        email: form.value.email,
-        password: form.value.password
+        data: form.value
       }
     });
   }
@@ -28,17 +29,19 @@ export class ApiService {
   signUp(form: FormGroup) {
     return this.apollo.mutate({
       mutation: gql`
-        mutation($email: String!, $password: String!, $firstName: String!, $lastName: String!) {
-          signUp(email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
+        mutation($data: UserInput!) {
+          register(data: $data) {
             token
           }
         }
       `,
       variables: {
-        email: form.value.email,
-        password: form.value.password,
-        firstName: form.value.firstName,
-        lastName: form.value.lastName
+        data: {
+          email: form.value.email,
+          password: form.value.password,
+          firstName: form.value.firstName,
+          lastName: form.value.lastName
+        }
       }
     });
   }

@@ -6,7 +6,7 @@
 					<h4 class="modal-title">Sign In to Horizon</h4>
 				</div>
 				<div class="modal-content">
-					<form [formGroup]="form" (ngSubmit)="onSubmit">
+					<form [formGroup]="form" (ngSubmit)="onSubmit()">
 						<div class="form-group">
 							<input type="email" class="form-control" id="email" formControlName="email" placeholder="Enter email" required>
 						</div>
