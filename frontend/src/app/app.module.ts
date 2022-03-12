@@ -6,7 +6,7 @@ import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
 
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -23,6 +23,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,8 @@ import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
     MenubarModule,
     ApolloModule,
     DynamicDialogModule,
+    InputTextareaModule,
+    FormsModule,
   ],
   providers: [
     MessageService,
