@@ -9,6 +9,8 @@ import { BufferGeometry, Mesh, } from 'three';
   styleUrls: ['./upload.component.scss']
 })
 export class UploadComponent implements OnInit {
+  private engineService: EngineService;
+
   upload: {
     mesh: Nullable<Mesh>,
     geometry: Nullable<BufferGeometry>,
@@ -21,7 +23,9 @@ export class UploadComponent implements OnInit {
 
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
-  constructor(private engineService: EngineService) { }
+  constructor() {
+    this.engineService = new EngineService();
+  }
 
   ngOnInit(): void {
     this.engineService.createScene(this.canvas);

@@ -28,8 +28,11 @@ export class EngineService {
 
   private frameId: number | null = null;
   private stlLoader: STLLoader = new STLLoader();
+  private ngZone: NgZone;
 
-  constructor(private ngZone: NgZone) { }
+  constructor() {
+    this.ngZone = new NgZone({ enableLongStackTrace: false });
+  }
 
   public createScene(canvas: ElementRef<HTMLCanvasElement>): void {
     // The first step is to get the reference of the canvas element from our HTML document
@@ -54,9 +57,22 @@ export class EngineService {
     this.scene.add(this.camera);
 
     // soft white light
-    this.light = new THREE.AmbientLight(0x404040);
-    this.light.position.z = 10;
+    this.light = new THREE.AmbientLight(0x404040, 1);
+    this.light.position.set(10, 10, 10);
     this.scene.add(this.light);
+
+    const spotLight = new THREE.SpotLight(
+      0xffffff,
+      1,
+      200,
+      Math.PI / 4,
+      0.1,
+      2
+    );
+    spotLight.position.set(15, 40, 35);
+
+    spotLight.castShadow = true;
+    this.scene.add(spotLight);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
   }
@@ -131,9 +147,8 @@ export class EngineService {
   */
 
   public createFileMesh(geometry: any) {
-    const material = new THREE.MeshBasicMaterial({
-      color: 0x00ff00,
-      wireframe: true
+    const material = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
     });
     const mesh = new THREE.Mesh(geometry, material);
 
