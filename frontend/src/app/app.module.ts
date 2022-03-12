@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 
 import { UploadComponent } from './components/upload/upload.component';
 import { SigninComponent } from './components/signin/signin.component';
+import { RegisterComponent } from './components/register/register.component';
 
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -22,7 +23,8 @@ import { MessageService } from 'primeng/api';
     AppComponent,
     UploadComponent,
     SigninComponent,
-    HomeComponent
+    HomeComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
