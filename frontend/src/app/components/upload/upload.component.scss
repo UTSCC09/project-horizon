@@ -24,3 +24,12 @@
 	border-radius: 5px;
 	box-shadow: 0 0 5px #000;
 }
+
+.buttons {
+	display: flex;
+	flex-direction: row-reverse;
+}
+
+#canvas {
+	height: 100%;
+}

@@ -1,58 +1,74 @@
 <div class="upload">
-	<div class="row">
-		<h2>Upload</h2>
-	</div>
-	<div class="row">
-		<div class="upload-section col-md-7">
-			<div class="upload-section-header">
-				<div class="upload-section-header-content">
-					<p-fileUpload
-						mode="basic"
-						accept="*.stl"
-						[auto]="true"
-						[customUpload]="true"
-						(uploadHandler)="renderSTL($event)">
-					</p-fileUpload>
-					<p-button label="Center on Mesh" [disabled]="!upload.mesh" (onClick)="centerCanvas()"></p-button>
-					<p-button label="Snapshot" [disabled]="!upload.mesh" (onClick)="takeSnapshot()"></p-button>
-				</div>
-			</div>
-			<div class="upload-section-content">
-				<canvas #canvas id="canvas"></canvas>
+	<form action="post-upload-form">
+		<div class="row upload-post">
+			<div class="col-md-12 post-content">
+				<textarea pInputTextarea inputId="textarea" inputId="textarea" rows="3" cols="30" style="width:100%"
+					class="form-control" name="content" [(ngModel)]="postContent"></textarea>
+				<label for="textarea">Textarea</label>
 			</div>
 		</div>
-		<div class="upload-section col-md-5">
-			<div class="upload-section-header">
-				<h2>Upload Settings</h2>
+		<div class="row" [hidden]="!showModelUpload">
+			<div class="upload-section col-md-7">
+				<div class="upload-section-header">
+					<div class="upload-section-header-content">
+						<p-fileUpload
+							mode="basic"
+							accept=".stl,image/*"
+							[auto]="true"
+							[customUpload]="true"
+							(uploadHandler)="renderSTL($event)">
+						</p-fileUpload>
+						<p-button label="Center on Mesh" [disabled]="!upload.mesh" (onClick)="centerCanvas()"></p-button>
+					</div>
+				</div>
+				<div class="upload-section-content">
+					<canvas #canvas id="canvas"></canvas>
+				</div>
 			</div>
-			<div class="upload-section-content">
-				<div class="instructions">
-					<p>
-						<strong>Instructions:</strong>
-					</p>
-					<ul>
-						<li>
-							<strong>1.</strong>
-							Select the file you want to upload.
-						</li>
-						<li>
-							<strong>2.</strong>
-							Click the <strong>Snapshot</strong> button to take a snapshot of the model.
-						</li>
-						<li>
-							<strong>3.</strong>
-							Click the <strong>Upload</strong> button to upload the model.
-						</li>
-					</ul>
+			<div class="upload-section col-md-5">
+				<div class="upload-section-header">
+					<h2>Upload Settings</h2>
 				</div>
-				<div class="mesh-settings">
-					<h3>Edit mesh settings</h3>
-				</div>
-				<div class="buttons">
-					<p-button label="Save and Upload" class="p-button-success" [disabled]="!upload.snapshot" (onClick)="uploadFile()">
-					</p-button>
+				<div class="upload-section-content">
+					<div class="instructions">
+						<p>
+							<strong>Instructions:</strong>
+						</p>
+						<ul>
+							<li>
+								<strong>1.</strong>
+								Select the file you want to upload.
+							</li>
+							<li>
+								<strong>2.</strong>
+								Click the <strong>Snapshot</strong> button to take a snapshot of the model.
+							</li>
+							<li>
+								<strong>3.</strong>
+								Click the <strong>Upload</strong> button to upload the model.
+							</li>
+						</ul>
+					</div>
+					<div class="mesh-settings">
+						<h3>Edit mesh settings</h3>
+					</div>
+					<div class="upload-sections">
+						<h4>Model Snapshot</h4>
+						<p-button label="Snapshot" [disabled]="!upload.mesh" (onClick)="takeSnapshot()"></p-button>
+						<p>Snapshot Preview</p>
+						<div class="snapshot-preview" *ngIf="upload.snapshot">
+							<img [src]="upload.snapshot" alt="snapshot">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+		<div class="row">
+			<div class="buttons float-right">
+				<p-button label="Post" class="p-button-success" [disabled]="!upload.snapshot" (onClick)="uploadPost()">
+				</p-button>
+				<p-button label="Add STL" (onClick)="addModel()"></p-button>
+			</div>
+		</div>
+	</form>
 </div>
