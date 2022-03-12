@@ -10,6 +10,11 @@ export class RegisterComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
+  onSubmit(e: any) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+  }
 }

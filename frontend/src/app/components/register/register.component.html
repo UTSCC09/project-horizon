@@ -6,24 +6,24 @@
 					<h4 class="modal-title">Create a new account</h4>
 				</div>
 				<div class="modal-content">
-					<form>
+					<form (submit)="onSubmit($event)">
 						<div class="form-group">
-							<input type="email" class="form-control" id="email" placeholder="Enter email">
+							<input type="email" required class="form-control" name="email" placeholder="Enter email">
 						</div>
 						<div class="form-group">
-							<input type="password" class="form-control" id="password" placeholder="Password">
+							<input type="password" required class="form-control" name="password" placeholder="Password">
 						</div>
 						<div class="form-group">
-							<input type="password" class="form-control" id="confirm-password" placeholder="Confirm password">
+							<input type="password" required class="form-control" name="confirm-password" placeholder="Confirm password">
 						</div>
 						<div class="form-group">
 							<div class="checkbox-group flex-align">
-								<input type="checkbox" class="custom-control-input" id="remember">
+								<input type="checkbox" class="custom-control-input" name="remember">
 								<label class="checkbox-control-label" for="remember">Keep me signed in</label>
 							</div>
 						</div>
 						<div class="form-group">
-							<button type="submit" class="btn btn-primary btn-block">Sign In</button>
+							<button type="submit" class="btn btn-primary btn-block">Register</button>
 						</div>
 					</form>
 				</div>
