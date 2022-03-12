@@ -14,6 +14,8 @@ import { UploadComponent } from './components/upload/upload.component';
 import { SignInComponent } from './components/signIn/signIn.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { PostListComponent } from './components/post-list/post-list.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -33,6 +35,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     HomeComponent,
     RegisterComponent,
     NavigationComponent,
+    PostListComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

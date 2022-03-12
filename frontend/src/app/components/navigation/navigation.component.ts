@@ -15,28 +15,20 @@ export class NavigationComponent implements OnInit {
       {
         label: 'Posts',
         icon: 'pi pi-fw pi-file',
+        routerLink: [''],
+        routerLinkActiveOptions: { exact: true },
       },
       {
         label: 'Profile',
         icon: 'pi pi-fw pi-user',
-        items: [
-          {
-            label: 'New',
-            icon: 'pi pi-fw pi-user-plus',
-
-          },
-          {
-            label: 'Delete',
-            icon: 'pi pi-fw pi-user-minus',
-
-          },
-          {
-            label: 'Search',
-            icon: 'pi pi-fw pi-users',
-          }
-        ]
+        routerLink: ['/profile/me'],
+        routerLinkActiveOptions: { exact: false, },
       },
     ];
+  }
+
+  activeRoute(route: string): boolean {
+    return this.router.url === route;
   }
 
   ngOnInit(): void {
