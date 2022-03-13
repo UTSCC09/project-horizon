@@ -65,11 +65,11 @@ export class ApiService {
     });
   }
 
-  post(form: FormGroup) {
+  post(content: string, ...files: File[]) {
     return this.apollo.mutate({
       mutation: gql`
-        mutation($content: String!) {
-          createPost(content: $content) {
+        mutation($content: String!, $files: [Upload!]!) {
+          createPost(content: $content, files: $files) {
             id
             content
             createdAt
@@ -77,7 +77,11 @@ export class ApiService {
         }
       `,
       variables: {
-        content: form.value.content,
+        content,
+        files
+      },
+      context: {
+        useMultipart: true,
       }
     });
   }

@@ -24,12 +24,12 @@ export class UploadComponent implements OnInit {
     snapshotImage: Nullable<File>,
     stl: Nullable<File>
   } = {
-    mesh: null,
-    geometry: null,
-    snapshot: null,
-    snapshotImage: null,
-    stl: null
-  };
+      mesh: null,
+      geometry: null,
+      snapshot: null,
+      snapshotImage: null,
+      stl: null
+    };
 
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
@@ -66,23 +66,22 @@ export class UploadComponent implements OnInit {
     const { snapshotImage, stl } = this.upload;
     const content = this.postContent;
 
-    this.api.post(new FormGroup({content: new FormControl(content)}))
+    this.api.post(content, snapshotImage as File, stl as File)
       .subscribe(
-        ({data}: any) => {
-          console.log(data);
-          [snapshotImage, stl].forEach(file => {
-            if (file)
-            this.api.upload(file, data.createPost.id).subscribe(res => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Uploaded',
-                detail: 'File uploaded successfully'
-              });
-            });
+        ({ data }: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Post uploaded successfully!'
           });
+          this.ref.close();
         },
         error => {
-          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.message
+          });
         }
       );
 
@@ -94,7 +93,7 @@ export class UploadComponent implements OnInit {
   }
 
   centerCanvas() {
-    if(this.upload.mesh) {
+    if (this.upload.mesh) {
       this.engineService.centerCamera(this.upload.mesh);
     }
   }
