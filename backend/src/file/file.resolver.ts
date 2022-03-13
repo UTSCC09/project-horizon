@@ -22,6 +22,6 @@ export class FileResolver {
     @Args('postId') postId: string,
     @RequestUser() user: User,
     ): Promise<File> {
-      return await this.fileService.upload(file, user);
+      return await this.fileService.upload(file, user, postId);
   }
 }

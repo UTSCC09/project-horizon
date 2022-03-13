@@ -22,9 +22,6 @@ export class File {
   @Field()
   encoding: string;
 
-  @Column()
-  @Field()
-  size: number;
 
   @CreateDateColumn({ name: 'created_at' })
   @Field()

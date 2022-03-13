@@ -21,11 +21,13 @@ export class UploadComponent implements OnInit {
     mesh: Nullable<Mesh>,
     geometry: Nullable<BufferGeometry>,
     snapshot: Nullable<string>,
+    snapshotImage: Nullable<File>,
     stl: Nullable<File>
   } = {
     mesh: null,
     geometry: null,
     snapshot: null,
+    snapshotImage: null,
     stl: null
   };
 
@@ -48,22 +50,27 @@ export class UploadComponent implements OnInit {
   takeSnapshot() {
     const image = this.engineService.takeSnapshot();
     this.upload.snapshot = image;
+    this.stringToFile(image, 'snapshot.png');
   }
 
-  stringToFile(str: string, filename: string) {
-    const blob = new Blob([str], { type: 'text/plain' });
-    return new File([blob], filename, { type: 'text/plain' });
+  async stringToFile(str: string, filename: string) {
+    await fetch(str)
+      .then(res => res.blob())
+      .then(blob => {
+        const file = new File([blob], filename, { type: 'image/png' });
+        this.upload.snapshotImage = file;
+      });
   }
 
   uploadPost() {
-    const { snapshot, stl } = this.upload;
+    const { snapshotImage, stl } = this.upload;
     const content = this.postContent;
 
     this.api.post(new FormGroup({content: new FormControl(content)}))
       .subscribe(
         ({data}: any) => {
           console.log(data);
-          [this.stringToFile(snapshot as string, 'snapshot.png'), stl].forEach(file => {
+          [snapshotImage, stl].forEach(file => {
             if (file)
             this.api.upload(file, data.createPost.id).subscribe(res => {
               this.messageService.add({
@@ -107,6 +114,7 @@ export class UploadComponent implements OnInit {
         mesh,
         geometry,
         snapshot: null,
+        snapshotImage: null
       };
     };
     reader.readAsText(event.files[0]);

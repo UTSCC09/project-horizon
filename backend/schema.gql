@@ -7,7 +7,6 @@ type File {
   filename: String!
   mimetype: String!
   encoding: String!
-  size: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
