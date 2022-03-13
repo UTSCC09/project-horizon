@@ -45,24 +45,22 @@ export class ApiService {
     });
   }
 
-  upload(form: FormGroup) {
+  upload(file: File, postId: string) {
     return this.apollo.mutate({
       mutation: gql`
-        mutation($file: Upload!) {
-          upload(file: $file) {
+        mutation($file: Upload!, $postId: String!) {
+          uploadFile(file: $file, postId: $postId) {
             id
             filename
             mimetype
             encoding
             createdAt
-            user {
-              id
-            }
           }
         }
       `,
-      variables: {
-        file: form.value.file
+      variables: { file, postId },
+      context: {
+        useMultipart: true,
       }
     });
   }
@@ -75,9 +73,6 @@ export class ApiService {
             id
             content
             createdAt
-            user {
-              id
-            }
           }
         }
       `,

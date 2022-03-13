@@ -13,6 +13,7 @@ export class PostService {
   async create(data: Post): Promise<Post> {
     const post = new Post();
     post.content = data.content;
+    post.user = data.user;
 
     return this.postRepository.save(post);
   }

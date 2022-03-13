@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
+import { extractFiles } from "extract-files";
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -71,6 +72,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
           }).concat(
             httpLink.create({
               uri: 'http://localhost:3000/graphql',
+              extractFiles,
           })),
         };
       },

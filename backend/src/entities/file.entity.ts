@@ -37,6 +37,6 @@ export class File {
   @ManyToOne(() => User, user => user.files)
   user: User;
 
-  @ManyToMany(() => Post, post => post.files)
-  posts: Post[];
+  @ManyToOne(() => Post, post => post.files)
+  post: Post;
 }
