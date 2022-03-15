@@ -22,9 +22,6 @@ export class File {
   @Field()
   encoding: string;
 
-  @Column()
-  @Field()
-  size: number;
 
   @CreateDateColumn({ name: 'created_at' })
   @Field()
@@ -37,6 +34,6 @@ export class File {
   @ManyToOne(() => User, user => user.files)
   user: User;
 
-  @ManyToMany(() => Post, post => post.files)
-  posts: Post[];
+  @ManyToOne(() => Post, post => post.files)
+  post: Post;
 }

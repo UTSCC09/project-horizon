@@ -1,7 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Nullable } from 'src/app/models/utils.model';
+import { ApiService } from 'src/app/services/api.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { BufferGeometry, Mesh, } from 'three';
 
@@ -19,17 +21,24 @@ export class UploadComponent implements OnInit {
     mesh: Nullable<Mesh>,
     geometry: Nullable<BufferGeometry>,
     snapshot: Nullable<string>,
-    stl: Nullable<string>
+    snapshotImage: Nullable<File>,
+    stl: Nullable<File>
   } = {
-    mesh: null,
-    geometry: null,
-    snapshot: null,
-    stl: null
-  };
+      mesh: null,
+      geometry: null,
+      snapshot: null,
+      snapshotImage: null,
+      stl: null
+    };
 
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
-  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig, private messageService: MessageService) {
+  constructor(
+    public ref: DynamicDialogRef,
+    public config: DynamicDialogConfig,
+    private api: ApiService,
+    private messageService: MessageService,
+  ) {
     this.engineService = new EngineService();
   }
 
@@ -41,16 +50,42 @@ export class UploadComponent implements OnInit {
   takeSnapshot() {
     const image = this.engineService.takeSnapshot();
     this.upload.snapshot = image;
+    this.stringToFile(image, 'snapshot.png');
+  }
+
+  async stringToFile(str: string, filename: string) {
+    await fetch(str)
+      .then(res => res.blob())
+      .then(blob => {
+        const file = new File([blob], filename, { type: 'image/png' });
+        this.upload.snapshotImage = file;
+      });
   }
 
   uploadPost() {
-    const { snapshot, stl } = this.upload;
+    const { snapshotImage, stl } = this.upload;
     const content = this.postContent;
 
-    // TODO: upload to server
-    console.log(snapshot, stl, content);
-    this.messageService.add({severity: 'success', summary: 'Success', detail: 'Post uploaded successfully'});
-    this.ref.close();
+    this.api.post(content, snapshotImage as File, stl as File)
+      .subscribe(
+        ({ data }: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Post uploaded successfully!'
+          });
+          this.ref.close();
+        },
+        error => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.message
+          });
+        }
+      );
+
+
   }
 
   addModel() {
@@ -58,7 +93,7 @@ export class UploadComponent implements OnInit {
   }
 
   centerCanvas() {
-    if(this.upload.mesh) {
+    if (this.upload.mesh) {
       this.engineService.centerCamera(this.upload.mesh);
     }
   }
@@ -74,13 +109,13 @@ export class UploadComponent implements OnInit {
       this.engineService.centerCamera(mesh);
 
       this.upload = {
-        stl: contents,
+        stl: event.files[0],
         mesh,
         geometry,
         snapshot: null,
+        snapshotImage: null
       };
     };
-
     reader.readAsText(event.files[0]);
   }
 }

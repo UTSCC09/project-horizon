@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, OneToMany } from 'typeorm';
 import { User } from './user.entity';
 import { File } from './file.entity';
 
@@ -25,6 +25,6 @@ export class Post {
   @ManyToOne(() => User, user => user.posts)
   user: User;
 
-  @ManyToMany(() => File, file => file.posts)
+  @OneToMany(() => File, file => file.post)
   files: File[];
 }

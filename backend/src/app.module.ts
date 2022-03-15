@@ -9,7 +9,6 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 import { FileModule } from './file/file.module';
-import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
