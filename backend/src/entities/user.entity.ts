@@ -41,9 +41,12 @@ export class User {
 }
 
 @ObjectType()
-export class UserToken extends User {
+export class UserToken {
   @Field()
   token: string;
+
+  @Field(() => User)
+  user: User;
 }
 
 @InputType()
@@ -59,6 +62,9 @@ export class UserInput {
 
   @Field()
   password: string;
+
+  @Field()
+  confirmPassword: string;
 }
 
 @InputType()

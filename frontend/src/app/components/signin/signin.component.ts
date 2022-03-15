@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MutationResult } from 'apollo-angular';
 import { MessageService } from 'primeng/api';
 import { ApiService } from 'src/app/services/api.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-signIn',
@@ -16,7 +17,8 @@ export class SignInComponent {
   constructor(
     private api: ApiService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private userService: UserService,
     ) {
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -26,9 +28,8 @@ export class SignInComponent {
 
   onSubmit() {
     this.api.signIn(this.form).subscribe(
-      ({data}: MutationResult) => {
-        console.log(data.login.token)
-        if (!data.login.token) {
+      ({ data }: MutationResult) => {
+        if (!data.login.user) {
           return this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -41,7 +42,10 @@ export class SignInComponent {
           summary: 'Success',
           detail: 'You have successfully logged in.'
         });
+
+        this.userService.setUser(data.login.user);
         localStorage.setItem('token', data.login.token);
+
         this.router.navigate(['/']);
       },
       (error) => {

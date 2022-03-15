@@ -24,13 +24,8 @@ type User {
 }
 
 type UserToken {
-  id: Float!
-  firstName: String!
-  lastName: String!
-  email: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
   token: String!
+  user: User!
 }
 
 type Query {
@@ -40,7 +35,7 @@ type Query {
 }
 
 type Mutation {
-  register(data: UserInput!): User!
+  register(data: UserInput!): UserToken!
   login(data: LoginInfo!): UserToken!
   createPost(content: String!, files: [Upload!]): Post!
   deletePost(id: String!): Float!
@@ -51,6 +46,7 @@ input UserInput {
   lastName: String!
   email: String!
   password: String!
+  confirmPassword: String!
 }
 
 input LoginInfo {
