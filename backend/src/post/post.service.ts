@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/entities/post.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class PostService {
@@ -23,8 +23,8 @@ export class PostService {
     return this.postRepository.find();
   }
 
-  findOne(id: string): Promise<Post> {
-    return this.postRepository.findOne(id);
+  findOne(id: string, options?: FindOneOptions<Post>): Promise<Post> {
+    return this.postRepository.findOne(id, options);
   }
 
   async getUserPosts(userId: number): Promise<Post[]> {

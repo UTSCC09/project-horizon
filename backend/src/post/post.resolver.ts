@@ -17,7 +17,6 @@ export class PostResolver {
   constructor(
     private readonly postService: PostService,
     private readonly fileService: FileService,
-    private readonly userService: UserService,
   ) { }
 
   @Mutation(() => Post)
@@ -51,6 +50,12 @@ export class PostResolver {
   async files(@Parent() post: Post) {
     const { id } = post;
     return await this.fileService.postFiles(id);
+  }
+
+  @ResolveField()
+  async user(@Parent() post: Post) {
+    post = await this.postService.findOne(post.id, { relations: ['user'] });
+    return post.user;
   }
 
   @Mutation(() => Number)

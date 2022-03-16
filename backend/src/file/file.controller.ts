@@ -3,7 +3,6 @@ import { GqlAuthGuard } from "src/guards/gql-auth.guard";
 import { FileService } from "./file.service";
 
 @Controller()
-// @UseGuards(GqlAuthGuard)
 export class FileController {
   constructor(private fileService: FileService) {}
 
