@@ -93,4 +93,35 @@ export class ApiService {
     });
   }
 
+  getPostFiles(postId: string) {
+    return this.apollo.query({
+      query: gql`
+        query($postId: String!) {
+          postFiles(postId: $postId) {
+            id
+            filename
+            mimetype
+          }
+        }
+      `,
+      variables: { postId }
+    });
+  }
+
+  getUserPosts(userId: number) {
+    return this.apollo.query({
+      query: gql`
+        query($userId: Float!) {
+          getUserPosts(userId: $userId) {
+            id
+            content
+            createdAt
+          }
+        }
+        `,
+      variables: {
+        userId
+      }
+    })
+  }
 }

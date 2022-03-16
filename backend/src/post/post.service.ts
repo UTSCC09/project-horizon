@@ -27,6 +27,15 @@ export class PostService {
     return this.postRepository.findOne(id);
   }
 
+  async getUserPosts(userId: number): Promise<Post[]> {
+    return this.postRepository.find({
+      where: {
+        user: userId
+      },
+      relations: ['files']
+    });
+  }
+
   async update(id: string, post: Post): Promise<Post> {
     const postToUpdate = await this.postRepository.findOne(id);
     postToUpdate.content = post.content;

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User, UserInput } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Post } from 'src/entities/post.entity';
 
 @Injectable()
 export class UserService {
@@ -41,6 +42,12 @@ export class UserService {
   async findByEmail(email: string): Promise<User> {
     return this.usersRepository.findOne({ email });
   }
+
+  // async getAllPosts(id: number): Promise<Post[]> {
+  //   const user = await this.usersRepository.findOne(id);
+  //   console.log({user})
+  //   return user.posts;
+  // }
 
   async remove(id: string): Promise<void> {
     await this.usersRepository.delete(id);

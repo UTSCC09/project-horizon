@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { File } from '../entities/file.entity';
 import { FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
@@ -15,6 +15,14 @@ export class FileService {
 
   fileType(file: File): string {
     return file.filename.split('.').pop();
+  }
+
+  async findAll(options: FindManyOptions): Promise<File[]> {
+    return this.repo.find(options);
+  }
+
+  async postFiles(postId: string): Promise<File[]> {
+    return this.repo.find({ where: { post: {id: postId} } });
   }
 
   async upload(file: FileUpload, user: User): Promise<File> {

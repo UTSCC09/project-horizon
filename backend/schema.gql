@@ -2,9 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Post {
+type File {
   id: String!
-  content: String!
+  filename: String!
+  mimetype: String!
+  encoding: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -13,6 +15,13 @@ type Post {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type Post {
+  id: String!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
 
 type User {
   id: Float!
@@ -32,6 +41,8 @@ type Query {
   hello: String!
   getPosts: [Post!]!
   getPost(id: String!): Post!
+  getUserPosts(userId: Float!): [Post!]!
+  postFiles(postId: String!): [File!]!
 }
 
 type Mutation {

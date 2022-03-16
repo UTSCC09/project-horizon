@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query } from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, ResolveField, ResolveProperty, Resolver } from '@nestjs/graphql';
 import { RequestUser } from 'src/auth/jwt.strategy';
 import { Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
@@ -7,13 +7,18 @@ import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
 import { PostService } from './post.service';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { FileService } from 'src/file/file.service';
+import { UserService } from 'src/user/user.service';
+
+type Files = File[];
 
 @Injectable()
+@Resolver('Post')
 @UseGuards(GqlAuthGuard)
 export class PostResolver {
   constructor(
     private readonly postService: PostService,
     private readonly fileService: FileService,
+    private readonly userService: UserService,
   ) { }
 
   @Mutation(() => Post)
@@ -35,6 +40,19 @@ export class PostResolver {
   @Query(() => Post)
   async getPost(@Args('id') id: string): Promise<Post> {
     return await this.postService.findOne(id);
+  }
+
+  @Query(() => [Post])
+  async getUserPosts(@Args('userId') userId: number): Promise<Post[]> {
+    const posts = await this.postService.getUserPosts(userId);
+    return posts;
+  }
+
+
+  @Resolver('post_files')
+  async files(@Parent() post: Post) {
+    const { id } = post;
+    return await this.fileService.postFiles(id);
   }
 
   @Mutation(() => Number)

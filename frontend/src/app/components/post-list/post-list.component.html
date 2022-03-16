@@ -1,1 +1,12 @@
-<p>post-list works!</p>
+<div class="post-list">
+	<div class="posts-container">
+		<div class="post" *ngFor="let post of posts">
+			<div class="post-content">
+				{{ post.content }}
+				<div class="post-snapshot" *ngIf="post.files && post.files.length > 0">
+					<img src="{{ filePath(post.files[0]) }}" alt="">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
