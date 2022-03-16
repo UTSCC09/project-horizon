@@ -4,16 +4,16 @@
 name: Deploy to Firebase Hosting on PR
 'on': pull_request
 jobs:
-  build_and_preview:
-    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+  firebase-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          cd frontend
-          npm install --include=dev
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_HORIZON_C09 }}'
-          projectId: horizon-c09
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@master
+      with:
+        node-version: '14.x'
+    - run: cd frontend && npm install && npm run build
+    - uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only hosting
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
