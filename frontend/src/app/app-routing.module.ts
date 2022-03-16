@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SignInComponent } from './components/signIn/signIn.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
@@ -23,6 +24,11 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent,
   },
+  {
+    path: 'profile/:id',
+    component: ProfileComponent,
+    canActivate: [AuthGuard],
+  }
 ];
 
 @NgModule({

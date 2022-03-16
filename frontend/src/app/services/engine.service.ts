@@ -169,7 +169,7 @@ export class EngineService {
     this.controls.update();
   }
 
-  parseSTL(contents: string) {
+  parseSTL(contents: string | ArrayBuffer) {
     return this.stlLoader.parse(contents);
   }
 }

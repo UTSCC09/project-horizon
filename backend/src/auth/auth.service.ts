@@ -29,7 +29,7 @@ export class AuthService {
       userData.email,
       userData.password,
     );
-    const token = this._createToken(user);
+    const token = this.createUserToken(user);
 
     return token;
   }
@@ -81,9 +81,10 @@ export class AuthService {
    * @param  {User} {email}
    * @returns any
    */
-  private _createToken({ email }: User): string {
+  createUserToken({ email }: User): string {
     const user = { email };
     const accessToken = this.jwtService.sign(user);
+
     return accessToken;
   }
 }
