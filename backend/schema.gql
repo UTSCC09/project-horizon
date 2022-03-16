@@ -9,6 +9,9 @@ type File {
   encoding: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  user: User
+  post: Post
+  url: String!
 }
 
 """
@@ -21,6 +24,8 @@ type Post {
   content: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  user: User!
+  files: [File!]!
 }
 
 type User {
@@ -30,6 +35,8 @@ type User {
   email: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  posts: [Post!]
+  files: [File!]
 }
 
 type UserToken {
@@ -42,7 +49,7 @@ type Query {
   getPosts: [Post!]!
   getPost(id: String!): Post!
   getUserPosts(userId: Float!): [Post!]!
-  postFiles(postId: String!): [File!]!
+  file(id: String!): File!
 }
 
 type Mutation {

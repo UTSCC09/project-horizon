@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserPost } from 'src/app/models/user.model';
 import { File } from 'src/app/models/user.model';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-post-list',
@@ -13,11 +14,15 @@ export class PostListComponent {
 
   constructor() { }
 
-  filePath(file: File) {
-    return `.uploads/${file.id}.${this.fileType(file)}`;
+  fileUrl(file: File) {
+    return `${environment.apiUrl}/${file.url}`;
   }
 
-  fileType(file: File) {
-    return file.filename.split('.').pop();
+  fileType(file: File): string {
+    return file.filename.split('.').pop() || '';
+  }
+
+  isImage(file: File): boolean {
+    return file.mimetype.startsWith('image');
   }
 }

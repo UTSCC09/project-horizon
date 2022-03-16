@@ -11,8 +11,7 @@ import { UserService } from 'src/user/user.service';
 
 type Files = File[];
 
-@Injectable()
-@Resolver('Post')
+@Resolver(() => Post)
 @UseGuards(GqlAuthGuard)
 export class PostResolver {
   constructor(
@@ -25,7 +24,7 @@ export class PostResolver {
   async createPost(
     @Args('content') content: String,
     @RequestUser() user: User,
-    @Args({name: 'files', type: () => [GraphQLUpload], nullable: true}) files?: FileUpload[],
+    @Args({ name: 'files', type: () => [GraphQLUpload], nullable: true }) files?: FileUpload[],
   ): Promise<Post> {
     files = await Promise.all((await Promise.all(files)).map(file => this.fileService.upload(file, user)));
     console.log(files);
@@ -48,8 +47,7 @@ export class PostResolver {
     return posts;
   }
 
-
-  @Resolver('post_files')
+  @ResolveField()
   async files(@Parent() post: Post) {
     const { id } = post;
     return await this.fileService.postFiles(id);

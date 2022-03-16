@@ -34,9 +34,11 @@ export class User {
   updatedAt: Date;
 
   @OneToMany(() => Post, post => post.user)
+  @Field(() => [Post], { nullable: true })
   posts: Post[];
 
   @OneToMany(() => File, file => file.user)
+  @Field(() => [File], { nullable: true })
   files: File[];
 }
 

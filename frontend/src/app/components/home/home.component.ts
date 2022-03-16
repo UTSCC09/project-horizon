@@ -34,16 +34,7 @@ export class HomeComponent implements OnInit {
   getUserPosts(user: User) {
     this.apiService.getUserPosts(user.id)
       .subscribe(({ data }) => {
-        (data as any).getUserPosts.forEach((post: any, i: any) => {
-          this.apiService.getPostFiles(post.id)
-            .subscribe(({ data }) => {
-              const files: File[] = (data as any).postFiles;
-              this.userPosts[i] = {
-                ...post,
-                files
-              };
-            });
-        });
+        this.userPosts = (data as any).getUserPosts;
       });
   }
 

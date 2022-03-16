@@ -22,7 +22,6 @@ export class File {
   @Field()
   encoding: string;
 
-
   @CreateDateColumn({ name: 'created_at' })
   @Field()
   createdAt: Date;
@@ -32,8 +31,10 @@ export class File {
   updatedAt: Date;
 
   @ManyToOne(() => User, user => user.files)
+  @Field(() => User, { nullable: true })
   user: User;
 
   @ManyToOne(() => Post, post => post.files)
+  @Field(() => Post, { nullable: true })
   post: Post;
 }

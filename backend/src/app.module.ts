@@ -28,9 +28,9 @@ import { FileModule } from './file/file.module';
       synchronize: true,
     }),
     AuthModule,
-    UserModule,
     PostModule,
-    FileModule
+    FileModule,
+    UserModule,
   ],
   providers: [AppController],
 })

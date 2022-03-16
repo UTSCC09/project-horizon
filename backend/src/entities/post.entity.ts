@@ -23,8 +23,10 @@ export class Post {
   updatedAt: Date;
 
   @ManyToOne(() => User, user => user.posts)
+  @Field(() => User)
   user: User;
 
   @OneToMany(() => File, file => file.post)
+  @Field(() => [File])
   files: File[];
 }

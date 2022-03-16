@@ -26,11 +26,11 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  findOne(id: string): Promise<User> {
+  findOne(id: number): Promise<User> {
     return this.usersRepository.findOne(id);
   }
 
-  async update(id: string, user: UserInput): Promise<User> {
+  async update(id: number, user: UserInput): Promise<User> {
     const userToUpdate = await this.usersRepository.findOne(id);
     userToUpdate.firstName = user.firstName;
     userToUpdate.lastName = user.lastName;
@@ -43,13 +43,7 @@ export class UserService {
     return this.usersRepository.findOne({ email });
   }
 
-  // async getAllPosts(id: number): Promise<Post[]> {
-  //   const user = await this.usersRepository.findOne(id);
-  //   console.log({user})
-  //   return user.posts;
-  // }
-
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
   }
 }

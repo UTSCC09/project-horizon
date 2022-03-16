@@ -116,6 +116,12 @@ export class ApiService {
             id
             content
             createdAt
+            files {
+              id
+              filename
+              mimetype
+              url
+            }
           }
         }
         `,

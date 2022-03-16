@@ -17,8 +17,20 @@ export class FileService {
     return file.filename.split('.').pop();
   }
 
+  async findOne(id: string): Promise<File> {
+    return this.repo.findOne(id);
+  }
+
   async findAll(options: FindManyOptions): Promise<File[]> {
     return this.repo.find(options);
+  }
+
+  getUrl(file: File) {
+    return `uploads/${file.id}.${this.fileType(file)}`;
+  }
+
+  serveFile(file: string) {
+    return createWriteStream(`./uploads/${file}`);
   }
 
   async postFiles(postId: string): Promise<File[]> {

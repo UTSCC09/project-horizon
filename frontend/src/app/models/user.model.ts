@@ -9,6 +9,7 @@ export type File = {
 	id: string;
 	filename: string;
 	mimetype: string;
+	url: string;
 }
 
 export type User = {
