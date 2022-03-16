@@ -2,17 +2,31 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Post {
+type File {
   id: String!
-  content: String!
+  filename: String!
+  mimetype: String!
+  encoding: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  user: User
+  post: Post
+  url: String!
 }
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type Post {
+  id: String!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  user: User!
+  files: [File!]!
+}
 
 type User {
   id: Float!
@@ -21,26 +35,26 @@ type User {
   email: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  posts: [Post!]
+  files: [File!]
 }
 
 type UserToken {
-  id: Float!
-  firstName: String!
-  lastName: String!
-  email: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
   token: String!
+  user: User!
 }
 
 type Query {
   hello: String!
+  user(id: Float!): User!
   getPosts: [Post!]!
   getPost(id: String!): Post!
+  getUserPosts(userId: Float!): [Post!]!
+  file(id: String!): File!
 }
 
 type Mutation {
-  register(data: UserInput!): User!
+  register(data: UserInput!): UserToken!
   login(data: LoginInfo!): UserToken!
   createPost(content: String!, files: [Upload!]): Post!
   deletePost(id: String!): Float!
@@ -51,6 +65,7 @@ input UserInput {
   lastName: String!
   email: String!
   password: String!
+  confirmPassword: String!
 }
 
 input LoginInfo {

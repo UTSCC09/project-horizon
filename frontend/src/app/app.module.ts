@@ -15,6 +15,8 @@ import { UploadComponent } from './components/upload/upload.component';
 import { SignInComponent } from './components/signIn/signIn.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { PostListComponent } from './components/post-list/post-list.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -25,6 +27,8 @@ import { MessageService } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { environment } from 'src/environments/environment';
+import { PostComponent } from './components/post/post.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +38,9 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     HomeComponent,
     RegisterComponent,
     NavigationComponent,
+    PostListComponent,
+    ProfileComponent,
+    PostComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,7 +78,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
             return forward(opp);
           }).concat(
             httpLink.create({
-              uri: 'http://localhost:3000/graphql',
+              uri: `${environment.apiUrl}/graphql`,
               extractFiles,
           })),
         };

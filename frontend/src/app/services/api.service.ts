@@ -15,7 +15,13 @@ export class ApiService {
       mutation: gql`
         mutation($data: LoginInfo!) {
           login(data: $data) {
-            token
+            token,
+            user {
+              id
+              firstName
+              lastName
+              email
+            }
           }
         }
       `,
@@ -30,17 +36,18 @@ export class ApiService {
       mutation: gql`
         mutation($data: UserInput!) {
           register(data: $data) {
-            token
+            token,
+            user {
+              id
+              firstName
+              lastName
+              email
+            }
           }
         }
       `,
       variables: {
-        data: {
-          email: form.value.email,
-          password: form.value.password,
-          firstName: form.value.firstName,
-          lastName: form.value.lastName
-        }
+        data: form.value
       }
     });
   }
@@ -86,4 +93,47 @@ export class ApiService {
     });
   }
 
+  getPostFiles(postId: string) {
+    return this.apollo.query({
+      query: gql`
+        query($postId: String!) {
+          postFiles(postId: $postId) {
+            id
+            filename
+            mimetype
+          }
+        }
+      `,
+      variables: { postId }
+    });
+  }
+
+  getUserPosts(userId: number) {
+    return this.apollo.query({
+      query: gql`
+        query($userId: Float!) {
+          getUserPosts(userId: $userId) {
+            id
+            content
+            createdAt
+            user {
+              id
+              firstName
+              lastName
+              email
+            }
+            files {
+              id
+              filename
+              mimetype
+              url
+            }
+          }
+        }
+        `,
+      variables: {
+        userId
+      }
+    })
+  }
 }

@@ -35,9 +35,9 @@ const isProd = process.env.NODE_ENV === 'production' ||  process.env.GAE_ENV ===
       synchronize: true,
     }),
     AuthModule,
-    UserModule,
     PostModule,
-    FileModule
+    FileModule,
+    UserModule,
   ],
   providers: [AppController],
 })

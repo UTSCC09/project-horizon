@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User, UserInput } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -25,11 +25,11 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  findOne(id: string): Promise<User> {
-    return this.usersRepository.findOne(id);
+  findOne(id: number, options?: FindOneOptions<User>): Promise<User> {
+    return this.usersRepository.findOne(id, options);
   }
 
-  async update(id: string, user: UserInput): Promise<User> {
+  async update(id: number, user: UserInput): Promise<User> {
     const userToUpdate = await this.usersRepository.findOne(id);
     userToUpdate.firstName = user.firstName;
     userToUpdate.lastName = user.lastName;
@@ -42,7 +42,7 @@ export class UserService {
     return this.usersRepository.findOne({ email });
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
   }
 }

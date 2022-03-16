@@ -34,16 +34,21 @@ export class User {
   updatedAt: Date;
 
   @OneToMany(() => Post, post => post.user)
+  @Field(() => [Post], { nullable: true })
   posts: Post[];
 
   @OneToMany(() => File, file => file.user)
+  @Field(() => [File], { nullable: true })
   files: File[];
 }
 
 @ObjectType()
-export class UserToken extends User {
+export class UserToken {
   @Field()
   token: string;
+
+  @Field(() => User)
+  user: User;
 }
 
 @InputType()
@@ -59,6 +64,9 @@ export class UserInput {
 
   @Field()
   password: string;
+
+  @Field()
+  confirmPassword: string;
 }
 
 @InputType()

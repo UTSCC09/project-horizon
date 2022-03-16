@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { File } from '../entities/file.entity';
 import { FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
