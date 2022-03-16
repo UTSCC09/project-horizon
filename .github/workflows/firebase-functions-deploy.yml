@@ -28,7 +28,7 @@ jobs:
       run: |
         cd backend
         cp .env.production .env
-        npm install
+        npm install --include=dev
     # Deploying the functions to firebase
     - name:  Deploy to Firebase
       uses: w9jds/firebase-action@master
