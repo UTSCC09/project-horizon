@@ -1,0 +1,15 @@
+<div class="post-content">
+  <div class="header">
+    <h2>{{post.user.firstName}} {{post.user.lastName}}</h2>
+    <span>{{post.createdAt | date }}</span>
+  </div>
+  <hr>
+  <div class="body">
+    <p-button styleClass="p-button-sm" (onClick)="setupRenderer()"> Render </p-button>
+    <p>{{post.content}}</p>
+    <div class="scene">
+      <img *ngIf="!renderEngine && snapshot" [src]="fileUrl(snapshot)" [alt]="snapshot.filename">
+      <canvas #canvas [id]="'canvas-' + post.id" class="hidden"></canvas>
+    </div>
+  </div>
+</div>

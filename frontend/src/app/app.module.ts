@@ -27,6 +27,8 @@ import { MessageService } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { environment } from 'src/environments/environment';
+import { PostComponent } from './components/post/post.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     NavigationComponent,
     PostListComponent,
     ProfileComponent,
+    PostComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,7 +78,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
             return forward(opp);
           }).concat(
             httpLink.create({
-              uri: 'http://localhost:3000/graphql',
+              uri: `${environment.apiUrl}/graphql`,
               extractFiles,
           })),
         };

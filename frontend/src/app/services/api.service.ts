@@ -116,6 +116,12 @@ export class ApiService {
             id
             content
             createdAt
+            user {
+              id
+              firstName
+              lastName
+              email
+            }
             files {
               id
               filename

@@ -3,6 +3,7 @@ export type UserPost = {
 	content: string;
 	createdAt: string;
 	files?: File[];
+	user: User;
 };
 
 export type File = {

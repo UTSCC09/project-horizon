@@ -1,14 +1,7 @@
 <div class="post-list">
 	<div class="posts-container">
 		<div class="post" *ngFor="let post of posts">
-			<div class="post-content">
-				{{ post.content }}
-				<div class="post-snapshot">
-					<div *ngFor="let file of post.files">
-						<img *ngIf="isImage(file)" [src]="fileUrl(file)" [alt]="file.filename">
-					</div>
-				</div>
-			</div>
+			<app-post [post]="post"></app-post>
 		</div>
 	</div>
 </div>

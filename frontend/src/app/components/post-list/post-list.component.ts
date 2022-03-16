@@ -14,15 +14,4 @@ export class PostListComponent {
 
   constructor() { }
 
-  fileUrl(file: File) {
-    return `${environment.apiUrl}/${file.url}`;
-  }
-
-  fileType(file: File): string {
-    return file.filename.split('.').pop() || '';
-  }
-
-  isImage(file: File): boolean {
-    return file.mimetype.startsWith('image');
-  }
 }
