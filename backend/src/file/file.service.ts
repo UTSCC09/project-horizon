@@ -6,6 +6,8 @@ import { FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
 import { User } from 'src/entities/user.entity';
 
+const isProd = process.env.NODE_ENV === 'production' ||  process.env.GAE_ENV === 'production';
+
 @Injectable()
 export class FileService {
   constructor(
@@ -13,8 +15,37 @@ export class FileService {
     private readonly repo: Repository<File>,
   ) {}
 
+
   fileType(file: File): string {
     return file.filename.split('.').pop();
+  }
+
+  async findOne(id: string): Promise<File> {
+    return this.repo.findOne(id);
+  }
+
+  async findAll(options: FindManyOptions): Promise<File[]> {
+    return this.repo.find(options);
+  }
+
+  getUrl(file: File) {
+    if (isProd){
+      return `temp/${file.id}.${this.fileType(file)}`;
+    }
+
+    return `uploads/${file.id}.${this.fileType(file)}`;
+  }
+
+  serveFile(file: string) {
+    if (isProd) {
+      return createWriteStream(`temp/${file}`);
+    }
+
+    return createWriteStream(`./uploads/${file}`);
+  }
+
+  async postFiles(postId: string): Promise<File[]> {
+    return this.repo.find({ where: { post: {id: postId} } });
   }
 
   async upload(file: FileUpload, user: User): Promise<File> {
