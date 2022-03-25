@@ -1,0 +1,19 @@
+FROM node:14-alpine3.14 as build
+
+ENV NODE_ENV production
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build --prod
+
+# Serve these static files with NGINX.
+FROM nginx:1.21.6-alpine
+COPY --from=builder /usr/src/app/dist/project-horizon/ /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

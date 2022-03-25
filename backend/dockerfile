@@ -1,0 +1,17 @@
+FROM node:14.15.0
+
+ENV NODE_ENV production
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+COPY .env.production ./.env
+
+RUN npm build
+
+EXPOSE 3000
+CMD [ "npm", "run", "start:prod" ]
