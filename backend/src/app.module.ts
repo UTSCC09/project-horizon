@@ -26,11 +26,6 @@ const isProd = process.env.NODE_ENV === 'production' ||  process.env.GAE_ENV ===
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      ...(isProd ? {
-        extra: {
-          socketPath: process.env.DB_HOST,
-        }
-      } : {}),
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
