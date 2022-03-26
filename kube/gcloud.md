@@ -38,3 +38,13 @@ kubectl set image deployment/hello-app hello-app=REGION-docker.pkg.dev/${PROJECT
 
 gcloud compute addresses create backend-address --region=northamerica-northeast2
 <!-- https://www.googleapis.com/compute/v1/projects/horizon-c09/regions/northamerica-northeast2/addresses/backend-address -->
+
+
+gcloud artifacts repositories create horizon-front-repo --repository-format=docker
+docker build . -t northamerica-northeast2-docker.pkg.dev/horizon-c09/horizon-front-repo/frontend:v1
+docker push northamerica-northeast2-docker.pkg.dev/horizon-c09/horizon-front-repo/frontend:v1
+
+kubectl create deployment frontend --image=northamerica-northeast2-docker.pkg.dev/horizon-c09/horizon-front-repo/frontend:v1
+
+
+docker build . -t gcr.io/horizon-c09/frontend:latest

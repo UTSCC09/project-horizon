@@ -8,3 +8,5 @@
 backend/firebaseadminsdk.json
 firebase-debug.log
 **/*/.DS_Store
+
+kube/certbot
