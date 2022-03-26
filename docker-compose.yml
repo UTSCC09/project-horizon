@@ -4,6 +4,8 @@ services:
 
   backend:
     build: ./backend
+    ports:
+      - "3000:3000"
     depends_on:
       - postgres
     networks:
@@ -12,6 +14,8 @@ services:
 
   frontend:
     build: ./frontend
+    ports:
+      - "80:80"
     depends_on:
       - backend
     networks:
