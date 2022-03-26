@@ -21,6 +21,13 @@
 						<p-button label="Center on Mesh" [disabled]="!upload.mesh" (onClick)="centerCanvas()"></p-button>
 					</div>
 				</div>
+				<div class="col-md-7">
+					Controls:
+					T - Translate,
+					R - Rotate,
+					S - Scale,
+					W - Pan/Tilt Camera
+				</div>
 				<div class="upload-section-content">
 					<canvas #canvas id="canvas"></canvas>
 				</div>

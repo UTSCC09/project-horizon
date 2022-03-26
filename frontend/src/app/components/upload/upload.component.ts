@@ -15,6 +15,8 @@ import { BufferGeometry, Mesh, } from 'three';
 export class UploadComponent implements OnInit {
   private engineService: EngineService;
 
+  private sceneObjects: { geometry: BufferGeometry, mesh: Mesh }[] = [];
+
   showModelUpload: boolean = false;
   postContent: string = '';
   upload: {
@@ -84,8 +86,6 @@ export class UploadComponent implements OnInit {
           });
         }
       );
-
-
   }
 
   addModel() {
@@ -105,8 +105,13 @@ export class UploadComponent implements OnInit {
       const contents = e.target.result;
       const geometry = this.engineService.parseSTL(contents);
       const mesh = this.engineService.createFileMesh(geometry);
-      this.engineService.addToScene(mesh);
+      this.engineService.addMeshToScene(mesh);
       this.engineService.centerCamera(mesh);
+
+      const controls = this.engineService.createTransormControls(mesh);
+      this.engineService.addToScene(controls);
+
+      this.sceneObjects.push({ geometry, mesh });
 
       this.upload = {
         stl: event.files[0],

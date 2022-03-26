@@ -2,7 +2,10 @@ import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ElementRef, Injectable, NgZone } from '@angular/core';
-import { Mesh } from 'three';
+import { Mesh, Object3D } from 'three';
+import { BehaviorSubject } from 'rxjs';
+
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls'
 
 /**
  * @class EngineService
@@ -30,6 +33,11 @@ export class EngineService {
   private stlLoader: STLLoader = new STLLoader();
   private ngZone: NgZone;
 
+  private meshList: Mesh[] = [];
+  private transformControls: TransformControls[] = [];
+
+  private _mouseClick: BehaviorSubject<MouseEvent> = new BehaviorSubject(new MouseEvent('click'));
+
   constructor() {
     this.ngZone = new NgZone({ enableLongStackTrace: false });
   }
@@ -41,17 +49,17 @@ export class EngineService {
     this.renderer = new THREE.WebGLRenderer({
       preserveDrawingBuffer: true,
       canvas: this.canvas,
-      alpha: true,    // transparent background
-      antialias: true // smooth edges
+      // alpha: true,    // transparent background
+      antialias: true, // smooth edges
     });
-    // this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(window.devicePixelRatio * 2);
+    this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
 
     // create the scene
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(
-      75, this.canvas.width / this.canvas.height, 0.1, 1000
+      75, this.canvas.clientWidth / this.canvas.clientHeight, 0.1, 1000
     );
     this.camera.position.set(0, 0, 5);
     this.scene.add(this.camera);
@@ -75,6 +83,7 @@ export class EngineService {
     this.scene.add(spotLight);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.initListeners();
   }
 
   public animate(): void {
@@ -146,13 +155,86 @@ export class EngineService {
     Functions below this point are entirely original
   */
 
+  public disableControls(overide = false): void {
+    this.controls.enabled = false;
+    if (!overide) {
+      document.addEventListener('mouseup', () => {
+        this.controls.enabled = true;
+      }, {once : true});
+    }
+  }
+
+  public createTransormControls(object: Object3D): TransformControls {
+    const controls = new TransformControls(this.camera, this.renderer.domElement);
+    controls.setMode('translate');
+    this.transformControls.push(controls);
+
+    controls.enabled = false;
+
+    return controls.attach(object);
+  }
+
+  public getCollidingObjects(e: MouseEvent, objects: Object3D[]) {
+    if (!this.canvas) return [];
+
+    const mouse = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster();
+
+    mouse.x = (e.clientX / this.canvas.clientWidth) * 2 - 1;
+    mouse.y = -(e.clientY / this.canvas.clientHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, this.camera);
+
+    return raycaster.intersectObjects(objects);
+  }
+
+  public mouseClick(): BehaviorSubject<MouseEvent> {
+    return this._mouseClick;
+  }
+
+  public initListeners() {
+    this.canvas?.addEventListener('mousedown', (event: MouseEvent) => {
+      this._mouseClick.next(event);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      let mode: 'translate' | 'rotate' | 'scale' = 'translate';
+      let controller = this.controls.enabled;
+      console.log(event.key);
+      switch(event.key) {
+        // R
+        case 'r':
+          mode = 'rotate';
+          controller = false;
+          break;
+        // T
+        case 't':
+          mode = 'translate';
+          controller = false;
+          break;
+        // S
+        case 's':
+          mode = 'scale';
+          controller = false;
+          break;
+        // C
+        case 'c':
+          controller = true;
+      }
+
+      this.controls.enabled = controller;
+      this.transformControls.forEach(c => {
+        c.setMode(mode);
+        c.enabled = !controller;
+      });
+    });
+  }
+
   public createFileMesh(geometry: any) {
     const material = new THREE.MeshStandardMaterial({
       color: 0xffffff,
     });
-    const mesh = new THREE.Mesh(geometry, material);
-
-    return mesh;
+    return new THREE.Mesh(geometry, material);
   }
 
   public takeSnapshot() {
@@ -160,8 +242,13 @@ export class EngineService {
     return this.renderer.domElement.toDataURL('image/png');
   }
 
-  public addToScene(mesh: THREE.Mesh): void {
-    this.scene.add(mesh);
+  public addMeshToScene(mesh: THREE.Mesh): void {
+    this.addToScene(mesh);
+    this.meshList.push(mesh);
+  }
+
+  public addToScene(object: THREE.Object3D) {
+    this.scene.add(object);
   }
 
   public centerCamera(mesh: THREE.Mesh): void {

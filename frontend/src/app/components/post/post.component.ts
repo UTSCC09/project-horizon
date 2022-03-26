@@ -64,17 +64,9 @@ export class PostComponent implements OnInit {
         // load file contents
         const geometry = this.engineService.parseSTL(await file.arrayBuffer());
         const mesh = this.engineService.createFileMesh(geometry);
-        this.engineService.addToScene(mesh);
+
+        this.engineService.addMeshToScene(mesh);
         this.engineService.centerCamera(mesh);
-
-
-
-
-        // this.engineService.parseSTL();
-
       });
-      // .then(res => {
-      //   console.log(res);
-      // })
   }
 }
