@@ -139,6 +139,16 @@ export class EngineService {
     return new THREE.Mesh(geometry, material);
   }
 
+  createMeshSnapshot(mesh: Mesh, sceneObjects: Mesh[]) {
+    sceneObjects.forEach(o => o.visible = false);
+    mesh.visible = true;
+
+    const image = this.takeSnapshot()
+    sceneObjects.forEach(o => o.visible = true);
+
+    return image;
+  }
+
   public takeSnapshot() {
     this.render();
     return this.renderer.domElement.toDataURL('image/png');

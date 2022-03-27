@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ControlModes } from 'src/app/models/controls.model';
+import { ControlModes, Upload } from 'src/app/models/controls.model';
 import { Nullable } from 'src/app/models/utils.model';
 import { ApiService } from 'src/app/services/api.service';
 import { EngineService } from 'src/app/services/engine.service';
@@ -24,19 +24,15 @@ export class UploadComponent implements OnInit {
 
   showModelUpload: boolean = false;
   postContent: string = '';
-  upload: {
-    mesh: Nullable<Mesh>,
-    geometry: Nullable<BufferGeometry>,
-    snapshot: Nullable<string>,
-    snapshotImage: Nullable<File>,
-    stl: Nullable<File>
-  } = {
-      mesh: null,
-      geometry: null,
-      snapshot: null,
-      snapshotImage: null,
-      stl: null
-    };
+  upload: Upload = {
+    mesh: null,
+    geometry: null,
+    snapshot: null,
+    snapshotImage: null,
+    stl: null
+  };
+
+  uploads: Upload[] = [];
 
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
@@ -138,8 +134,7 @@ export class UploadComponent implements OnInit {
         this.engineService.addMeshToScene(mesh);
         this.sceneController.centerCamera(mesh);
 
-        const controls = this.sceneController.createTransormControls(mesh);
-        this.sceneObjects.push({ geometry, mesh });
+        this.sceneController.createTransormControls(mesh);
 
         this.upload = {
           stl: files[0],
@@ -148,6 +143,14 @@ export class UploadComponent implements OnInit {
           snapshot: null,
           snapshotImage: null
         };
+
+        this.uploads.push(this.upload);
+
+        this.sceneController.updateSceneControl(ControlModes.Camera);
+        const image = this.engineService.createMeshSnapshot(mesh, this.sceneObjects.map(c => c.mesh));
+        this.sceneObjects.push({ geometry, mesh });
+        this.upload.snapshot = image;
+
         event.target.value = '';
         this.loading = false;
       } catch (error) {
