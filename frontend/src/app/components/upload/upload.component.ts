@@ -136,8 +136,6 @@ export class UploadComponent implements OnInit {
         this.sceneController.centerCamera(mesh);
 
         const controls = this.sceneController.createTransormControls(mesh);
-        this.engineService.addToScene(controls);
-
         this.sceneObjects.push({ geometry, mesh });
 
         this.upload = {

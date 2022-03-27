@@ -81,11 +81,16 @@ export class SceneControlService {
     const controls = new TransformControls(this._camera, this.engineService.renderedDomElement());
     controls.setMode('translate');
     this._objectControls.push(controls);
+    controls.attach(object)
 
-    controls.enabled = false;
-    controls.visible = false;
+    this.engineService.addToScene(controls);
 
-    return controls.attach(object);
+    if (this.activeMode == ControlModes.Camera) {
+      controls.enabled = false;
+      controls.visible = false;
+    }
+
+    return controls;
   }
 
   initModeListener() {
