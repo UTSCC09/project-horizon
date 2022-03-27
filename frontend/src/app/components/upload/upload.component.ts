@@ -20,6 +20,7 @@ export class UploadComponent implements OnInit {
 
   private sceneObjects: { geometry: BufferGeometry, mesh: Mesh }[] = [];
   public justifyOptions: any[] = [];
+  loading = false;
 
   showModelUpload: boolean = false;
   postContent: string = '';
@@ -125,6 +126,8 @@ export class UploadComponent implements OnInit {
 
   renderSTL(event: any) {
     const reader = new FileReader()
+    const files = event.target.files;
+    this.loading = true
 
     reader.onload = (e: any) => {
       const contents = e.target.result;
@@ -139,12 +142,14 @@ export class UploadComponent implements OnInit {
         this.sceneObjects.push({ geometry, mesh });
 
         this.upload = {
-          stl: event.target.files[0],
+          stl: files[0],
           mesh,
           geometry,
           snapshot: null,
           snapshotImage: null
         };
+        event.target.value = '';
+        this.loading = false;
       } catch (error) {
         console.error(error);
 
@@ -155,6 +160,6 @@ export class UploadComponent implements OnInit {
         });
       }
     };
-    reader.readAsText(event.target.files[0]);
+    reader.readAsText(files[0]);
   }
 }
