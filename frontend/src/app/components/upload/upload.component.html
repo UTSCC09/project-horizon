@@ -8,26 +8,19 @@
 			</div>
 		</div>
 		<div class="row" [hidden]="!showModelUpload">
-			<div class="upload-section col-md-7">
-				<div class="upload-section-header">
-					<div class="upload-section-header-content">
-						<p-fileUpload
-							mode="basic"
-							accept=".stl,image/*"
-							[auto]="true"
-							[customUpload]="true"
-							(uploadHandler)="renderSTL($event)">
-						</p-fileUpload>
-						<p-button label="Center on Mesh" [disabled]="!upload.mesh" (onClick)="centerCanvas()"></p-button>
-					</div>
+			<div class="upload-section col-md-12">
+				<div class="choose_file">
+					<p-button label="Choose File" class="ui-button-success" icon="fa fa-plus" (onClick)="fileUpload.click()"></p-button>
+					<input #fileUpload type="file" accept=".stl" (change)="renderSTL($event)" hidden/>
 				</div>
-				<div class="col-md-7">
-					Controls:
-					T - Translate,
-					R - Rotate,
-					S - Scale,
-					W - Pan/Tilt Camera
-				</div>
+				<p-button label="Center on Mesh" [disabled]="!upload.mesh" (onClick)="centerCanvas()"></p-button>
+				<p-selectButton [options]="justifyOptions" [(ngModel)]="controlMode" optionLabel="icon" optionValue="mode">
+					<ng-template let-item>
+						<fa-icon [icon]="item.icon"></fa-icon>
+					</ng-template>
+				</p-selectButton>
+			</div>
+			<div class="col-md-12">
 				<div class="upload-section-content">
 					<canvas #canvas id="canvas"></canvas>
 				</div>

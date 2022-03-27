@@ -2,9 +2,7 @@
 	padding: 15px;
 
 	&-section {
-		* {
-			width: 100%;
-		}
+		display: flex;
 
 		&-header {
 			&-content {
