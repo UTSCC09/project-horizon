@@ -6,7 +6,7 @@ import { ControlModes, Upload } from 'src/app/models/controls.model';
 import { ApiService } from 'src/app/services/api.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
-import { BufferGeometry, GridHelper, Mesh, } from 'three';
+import { BufferGeometry, GridHelper, Mesh, MeshStandardMaterial, } from 'three';
 
 @Component({
   selector: 'app-upload',
@@ -32,6 +32,7 @@ export class UploadComponent implements OnInit {
     snapshot: null,
     snapshotImage: null,
     stl: null,
+    color: 0xffffff,
   };
 
   uploads: Upload[] = [];
@@ -117,6 +118,16 @@ export class UploadComponent implements OnInit {
     }
   }
 
+  updateColor(upload: Upload) {
+    if (!upload.mesh) return;
+    if (typeof (upload.color as any) === 'string') {
+      (upload.mesh.material as MeshStandardMaterial).color.setHex( Number((upload.color as any).replace('#', '0x')));
+    } else {
+      (upload.mesh.material as MeshStandardMaterial).color.setHex(upload.color);
+    }
+
+  }
+
   centerUpload(upload: Upload) {
     console.log("center upload", { upload })
     if (!upload.mesh) return;
@@ -162,7 +173,8 @@ export class UploadComponent implements OnInit {
           geometry,
           controls,
           snapshot: this.engineService.createMeshSnapshot(mesh, this.sceneObjects.map(c => c.mesh)),
-          snapshotImage: null
+          snapshotImage: null,
+          color: 0xffffff,
         };
 
         this.uploads.push(this.upload);

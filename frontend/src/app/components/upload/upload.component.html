@@ -45,6 +45,8 @@
 							<td>{{ upload.size | fileSize }}</td>
 							<td>{{ upload.last_modified | date }}</td>
 							<td>
+								<p-colorPicker [(ngModel)]="upload.color" (onChange)="updateColor(upload)"
+									[ngModelOptions]="{standalone: true}"></p-colorPicker>
 								<button pButton pRipple type="button" icon="pi pi-search"
 									class="p-button-rounded p-button-success p-button-text"
 									(click)="centerUpload(upload)"></button>

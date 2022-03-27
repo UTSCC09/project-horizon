@@ -1,6 +1,10 @@
 .upload {
 	padding: 15px;
 
+	 ::ng-deep .p-datatable-responsive-scroll>.p-datatable-wrapper {
+		overflow: visible;
+	}
+
 	&-section {
 		display: flex;
 
