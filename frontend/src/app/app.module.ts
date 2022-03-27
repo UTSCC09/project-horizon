@@ -32,8 +32,9 @@ import { PostComponent } from './components/post/post.component';
 import { MenuModule } from 'primeng/menu';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { TooltipModule } from 'primeng/tooltip';
 
-// import { library } from '@fortawesome/fontawesome-svg-core';
+
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 
@@ -67,6 +68,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     MenuModule,
     SelectButtonModule,
     FontAwesomeModule,
+    TooltipModule,
   ],
   providers: [
     MessageService,

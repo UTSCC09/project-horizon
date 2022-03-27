@@ -17,7 +17,7 @@
 				<p-selectButton [options]="justifyOptions" (onChange)="updateMode($event)" [ngModel]="currentMode" optionLabel="icon" optionValue="mode"
 					[ngModelOptions]="{standalone: true}">
 					<ng-template let-item>
-						<fa-icon [icon]="item.icon"></fa-icon>
+						<fa-icon [icon]="item.icon" [pTooltip]="item.tooltip"></fa-icon>
 					</ng-template>
 				</p-selectButton>
 			</div>

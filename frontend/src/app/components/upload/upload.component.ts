@@ -46,10 +46,10 @@ export class UploadComponent implements OnInit {
     this.sceneController = this.engineService.sceneController;
 
     this.justifyOptions = [
-      {icon: 'camera', mode: ControlModes.Camera},
-      {icon: 'arrows-up-down-left-right', mode: ControlModes.Translate },
-      {icon: 'rotate', mode: ControlModes.Rotate },
-      {icon: 'maximize', mode: ControlModes.Scale }
+      { icon: 'camera', mode: ControlModes.Camera, tooltip: '(C) - Camera Controls \n Right mouse to pan and Left mouse to rotate'},
+      {icon: 'arrows-up-down-left-right', mode: ControlModes.Translate, tooltip: '(T) - Show object translation controls'},
+      {icon: 'rotate', mode: ControlModes.Rotate, tooltip: '(R) - Show object rotation controls'},
+      {icon: 'maximize', mode: ControlModes.Scale, tooltip: '(S) - Show object scale controls'},
     ];
   }
 
