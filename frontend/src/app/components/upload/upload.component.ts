@@ -1,14 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { MenuItem, MessageService } from 'primeng/api';
+
+import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ControlModes } from 'src/app/models/controls.model';
 import { Nullable } from 'src/app/models/utils.model';
 import { ApiService } from 'src/app/services/api.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
 import { BufferGeometry, Mesh, } from 'three';
-
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-upload',
@@ -21,7 +20,6 @@ export class UploadComponent implements OnInit {
 
   private sceneObjects: { geometry: BufferGeometry, mesh: Mesh }[] = [];
   public justifyOptions: any[] = [];
-  public controlMode = 'camera';
 
   showModelUpload: boolean = false;
   postContent: string = '';
@@ -51,10 +49,10 @@ export class UploadComponent implements OnInit {
     this.sceneController = this.engineService.sceneController;
 
     this.justifyOptions = [
-      {icon: 'camera', mode: 'camera'},
-      {icon: 'arrows-up-down-left-right', mode: 'translate'},
-      {icon: 'rotate', mode: 'rotate'},
-      {icon: 'maximize', mode: 'scale'}
+      {icon: 'camera', mode: ControlModes.Camera},
+      {icon: 'arrows-up-down-left-right', mode: ControlModes.Translate },
+      {icon: 'rotate', mode: ControlModes.Rotate },
+      {icon: 'maximize', mode: ControlModes.Scale }
     ];
   }
 
@@ -62,6 +60,14 @@ export class UploadComponent implements OnInit {
     this.engineService.createScene(this.canvas);
     this.sceneController.setupControls();
     this.engineService.animate();
+  }
+
+  get currentMode() {
+    return this.sceneController.currentMode;
+  }
+
+  updateMode(event: any) {
+    this.sceneController.updateSceneControl(event.value);
   }
 
   takeSnapshot() {
@@ -118,7 +124,6 @@ export class UploadComponent implements OnInit {
   }
 
   renderSTL(event: any) {
-    console.log({ event })
     const reader = new FileReader()
 
     reader.onload = (e: any) => {

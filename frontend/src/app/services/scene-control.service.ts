@@ -14,6 +14,15 @@ export class SceneControlService {
 
   private _camera!: PerspectiveCamera;
   private _cameraControls!: OrbitControls;
+  private _ready: boolean = false;
+
+  get ready(): boolean {
+    return this._ready;
+  }
+
+  get currentMode(): ControlModes {
+    return this.activeMode;
+  }
 
   private activeMode: ControlModes = ControlModes.Camera;
   private modeToControl = {
@@ -31,8 +40,6 @@ export class SceneControlService {
 
   constructor(private engineService: EngineService) {
     this._objectControls = [];
-
-    this.initModeListener();
   }
 
   /**
@@ -46,11 +53,15 @@ export class SceneControlService {
     this._cameraControls = new OrbitControls(this._camera, this.engineService.renderedDomElement());
 
     this.engineService.addToScene(this._camera);
+    this._ready = true;
+    this.initModeListener();
   }
 
   public updateSceneControl(mode: ControlModes): void {
+    if (!this.ready) return;
+    this.activeMode = mode;
+
     if (this.modeToControl[mode]) {
-      this.activeMode = mode;
       this._cameraControls.enabled = false;
       this._objectControls.forEach(c => {
         c.setMode(this.modeToControl[mode] as TransformModes);
@@ -91,6 +102,7 @@ export class SceneControlService {
           break;
         case 'c':
           this.updateSceneControl(ControlModes.Camera);
+          break;
       }
     });
   }

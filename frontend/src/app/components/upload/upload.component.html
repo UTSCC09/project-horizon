@@ -14,7 +14,8 @@
 					<input #fileUpload type="file" accept=".stl" (change)="renderSTL($event)" hidden/>
 				</div>
 				<p-button label="Center on Mesh" [disabled]="!upload.mesh" (onClick)="centerCanvas()"></p-button>
-				<p-selectButton [options]="justifyOptions" [(ngModel)]="controlMode" optionLabel="icon" optionValue="mode">
+				<p-selectButton [options]="justifyOptions" (onChange)="updateMode($event)" [ngModel]="currentMode" optionLabel="icon" optionValue="mode"
+					[ngModelOptions]="{standalone: true}">
 					<ng-template let-item>
 						<fa-icon [icon]="item.icon"></fa-icon>
 					</ng-template>
