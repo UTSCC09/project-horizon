@@ -3,11 +3,10 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ControlModes, Upload } from 'src/app/models/controls.model';
-import { Nullable } from 'src/app/models/utils.model';
 import { ApiService } from 'src/app/services/api.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
-import { BufferGeometry, DoubleSide, GridHelper, Mesh, MeshBasicMaterial, PlaneBufferGeometry, } from 'three';
+import { BufferGeometry, GridHelper, Mesh, } from 'three';
 
 @Component({
   selector: 'app-upload',
@@ -21,6 +20,8 @@ export class UploadComponent implements OnInit {
   private sceneObjects: { geometry: BufferGeometry, mesh: Mesh }[] = [];
   public controlOptions: any[] = [];
   loading = false;
+
+  grid: GridHelper;
 
   showModelUpload: boolean = false;
   postContent: string = '';
@@ -45,6 +46,7 @@ export class UploadComponent implements OnInit {
   ) {
     this.engineService = new EngineService();
     this.sceneController = this.engineService.sceneController;
+    this.grid = new GridHelper(1000, 30);
 
     this.controlOptions = [
       { icon: 'camera', mode: ControlModes.Camera, tooltip: '(C) - Camera Controls \n Right mouse to pan and Left mouse to rotate'},
@@ -59,8 +61,7 @@ export class UploadComponent implements OnInit {
     this.sceneController.setupControls();
     this.engineService.animate();
 
-    const gridHelper = new GridHelper(1000, 30);
-    this.engineService.addToScene(gridHelper);
+    this.engineService.addToScene(this.grid);
   }
 
   get currentMode() {
@@ -112,8 +113,14 @@ export class UploadComponent implements OnInit {
 
   centerCanvas() {
     if (this.upload.mesh) {
-      this.sceneController.centerCamera(this.upload.mesh);
+      this.sceneController.centerCamera();
     }
+  }
+
+  centerUpload(upload: Upload) {
+    console.log("center upload", { upload })
+    if (!upload.mesh) return;
+    this.sceneController.centerCameraToObject(upload.mesh);
   }
 
   removeUpload(upload: Upload) {
@@ -144,6 +151,7 @@ export class UploadComponent implements OnInit {
 
         const controls = this.sceneController.createTransormControls(mesh);
         this.sceneController.updateSceneControl(ControlModes.Camera);
+        this.sceneController.centerCameraToObject(mesh);
 
         this.upload = {
           name: files[0].name,
@@ -158,7 +166,6 @@ export class UploadComponent implements OnInit {
         };
 
         this.uploads.push(this.upload);
-
         this.sceneObjects.push({ geometry, mesh });
       } catch (error) {
         console.error(error);

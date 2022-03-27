@@ -35,7 +35,7 @@
 							<th>Name</th>
 							<th>Size</th>
 							<th>Last Modified</th>
-							<th>Remove</th>
+							<th>Actions</th>
 						</tr>
 					</ng-template>
 					<ng-template pTemplate="body" let-upload>
@@ -45,8 +45,12 @@
 							<td>{{ upload.size | fileSize }}</td>
 							<td>{{ upload.last_modified | date }}</td>
 							<td>
-								<p-button icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (onClick)="removeUpload(upload)">
-								</p-button>
+								<button pButton pRipple type="button" icon="pi pi-search"
+									class="p-button-rounded p-button-success p-button-text"
+									(click)="centerUpload(upload)"></button>
+								<button pButton pRipple type="button" icon="pi pi-times"
+									class="p-button-rounded p-button-danger p-button-text"
+									(click)="removeUpload(upload)"></button>
 							</td>
 						</tr>
 					</ng-template>

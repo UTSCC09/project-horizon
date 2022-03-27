@@ -124,7 +124,7 @@ export class SceneControlService {
    * @param object The object to center
    * @param offset The distance multiplier to center the object
    */
-  fitCameraToCenteredObject(object: Mesh, offset: number = 1) {
+  fitCameraToCenteredObject(object: Object3D, offset: number = 1) {
     const boundingBox = new Box3().setFromObject(object);
 
     var size = new Vector3();
@@ -136,7 +136,7 @@ export class SceneControlService {
     let dy = size.z / 2 + Math.abs(size.y / 2 / Math.tan(fov / 2));
     let cameraZ = Math.max(dx, dy) * offset;
 
-    this._camera.position.set(0, -cameraZ, cameraZ);
+    this._camera.position.set(0, cameraZ, cameraZ);
 
     // set the far plane of the camera so that it easily encompasses the whole object
     const minZ = boundingBox.min.z;
@@ -163,8 +163,14 @@ export class SceneControlService {
     return raycaster.intersectObjects(objects);
   }
 
-  public centerCamera(mesh: Mesh): void {
-    this.fitCameraToCenteredObject(mesh, 1);
+  centerCamera() {
+    this._cameraControls.target = new Vector3(0, 0, 0);
+    this._cameraControls.update();
+  }
+
+  public centerCameraToObject(object: Object3D): void {
+    this.fitCameraToCenteredObject(object);
+    this._cameraControls.target.copy(object.position);
     this._cameraControls.update();
   }
 }

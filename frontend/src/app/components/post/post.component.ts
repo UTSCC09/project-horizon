@@ -70,7 +70,7 @@ export class PostComponent implements OnInit {
         const mesh = this.engineService.createFileMesh(geometry);
 
         this.engineService.addMeshToScene(mesh);
-        this.sceneController.centerCamera(mesh);
+        this.sceneController.centerCameraToObject(mesh);
       });
   }
 }
