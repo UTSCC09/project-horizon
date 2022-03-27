@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { UserPost } from 'src/app/models/user.model';
 import { File } from 'src/app/models/user.model';
 import { EngineService } from 'src/app/services/engine.service';
+import { SceneControlService } from 'src/app/services/scene-control.service';
 import { environment } from 'src/environments/environment';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
@@ -13,6 +14,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 export class PostComponent implements OnInit {
   @Input() post!: UserPost;
   private engineService: EngineService;
+  private sceneController: SceneControlService;
 
   renderEngine: boolean = false;
 
@@ -20,6 +22,7 @@ export class PostComponent implements OnInit {
 
   constructor() {
     this.engineService = new EngineService();
+    this.sceneController = this.engineService.sceneController;
   }
 
   get snapshot() {
@@ -56,6 +59,7 @@ export class PostComponent implements OnInit {
     this.canvas.nativeElement.classList.remove('hidden');
 
     this.engineService.createScene(this.canvas);
+    this.sceneController.setupControls();
     this.engineService.animate();
     fetch(this.fileUrl(this.stl))
       .then(res => res.blob())
@@ -66,7 +70,7 @@ export class PostComponent implements OnInit {
         const mesh = this.engineService.createFileMesh(geometry);
 
         this.engineService.addMeshToScene(mesh);
-        this.engineService.centerCamera(mesh);
+        this.sceneController.centerCamera(mesh);
       });
   }
 }
