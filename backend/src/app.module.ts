@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TerminusModule } from '@nestjs/terminus';
 import { AppController } from './app.controller';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -9,16 +10,19 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 import { FileModule } from './file/file.module';
+import { HealthController } from './health/health.controller';
 
 const isProd = process.env.NODE_ENV === 'production' ||  process.env.GAE_ENV === 'production';
 
 @Module({
   imports: [
+    TerminusModule,
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: isProd ? "/tmp/schema.gql" : "schema.gql",
-      playground: true,
+      playground: true, //I just wanna keep this on for now
+      path: isProd ? "/api/graphql" : "/graphql",
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -35,6 +39,7 @@ const isProd = process.env.NODE_ENV === 'production' ||  process.env.GAE_ENV ===
     UserModule,
   ],
   providers: [AppController],
+  controllers: [HealthController],
 })
 export class AppModule {
   constructor(private readonly connection: Connection) { }

@@ -48,3 +48,13 @@ kubectl create deployment frontend --image=northamerica-northeast2-docker.pkg.de
 
 
 docker build . -t gcr.io/horizon-c09/frontend:latest
+
+
+gcloud compute ssl-certificates create horizon \
+    --domains=horizon.mohamedhalat.com \
+    --global
+
+    <!-- https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#gcloud_2 -->
+    <!-- https://cloud.google.com/kubernetes-engine/docs/concepts/ingress -->
+    <!-- https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ -->
+    <!-- https://newrelic.com/blog/how-to-relic/kubernetes-health-checks -->
