@@ -1,11 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Nullable } from 'src/app/models/utils.model';
 import { ApiService } from 'src/app/services/api.service';
 import { EngineService } from 'src/app/services/engine.service';
+import { SceneControlService } from 'src/app/services/scene-control.service';
 import { BufferGeometry, Mesh, } from 'three';
+
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-upload',
@@ -14,8 +17,11 @@ import { BufferGeometry, Mesh, } from 'three';
 })
 export class UploadComponent implements OnInit {
   private engineService: EngineService;
+  private sceneController: SceneControlService;
 
   private sceneObjects: { geometry: BufferGeometry, mesh: Mesh }[] = [];
+  public justifyOptions: any[] = [];
+  public controlMode = 'camera';
 
   showModelUpload: boolean = false;
   postContent: string = '';
@@ -42,10 +48,19 @@ export class UploadComponent implements OnInit {
     private messageService: MessageService,
   ) {
     this.engineService = new EngineService();
+    this.sceneController = this.engineService.sceneController;
+
+    this.justifyOptions = [
+      {icon: 'camera', mode: 'camera'},
+      {icon: 'arrows-up-down-left-right', mode: 'translate'},
+      {icon: 'rotate', mode: 'rotate'},
+      {icon: 'maximize', mode: 'scale'}
+    ];
   }
 
   ngOnInit(): void {
     this.engineService.createScene(this.canvas);
+    this.sceneController.setupControls();
     this.engineService.animate();
   }
 
@@ -94,33 +109,49 @@ export class UploadComponent implements OnInit {
 
   centerCanvas() {
     if (this.upload.mesh) {
-      this.engineService.centerCamera(this.upload.mesh);
+      this.sceneController.centerCamera(this.upload.mesh);
     }
   }
 
+  controlLabel() {
+    return 'T';
+  }
+
   renderSTL(event: any) {
+    console.log({ event })
     const reader = new FileReader()
 
     reader.onload = (e: any) => {
       const contents = e.target.result;
-      const geometry = this.engineService.parseSTL(contents);
-      const mesh = this.engineService.createFileMesh(geometry);
-      this.engineService.addMeshToScene(mesh);
-      this.engineService.centerCamera(mesh);
 
-      const controls = this.engineService.createTransormControls(mesh);
-      this.engineService.addToScene(controls);
+      try {
+        const geometry = this.engineService.parseSTL(contents);
+        const mesh = this.engineService.createFileMesh(geometry);
+        this.engineService.addMeshToScene(mesh);
+        this.sceneController.centerCamera(mesh);
 
-      this.sceneObjects.push({ geometry, mesh });
+        const controls = this.sceneController.createTransormControls(mesh);
+        this.engineService.addToScene(controls);
 
-      this.upload = {
-        stl: event.files[0],
-        mesh,
-        geometry,
-        snapshot: null,
-        snapshotImage: null
-      };
+        this.sceneObjects.push({ geometry, mesh });
+
+        this.upload = {
+          stl: event.target.files[0],
+          mesh,
+          geometry,
+          snapshot: null,
+          snapshotImage: null
+        };
+      } catch (error) {
+        console.error(error);
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Failed to upload STL',
+          detail: 'File might be corrupted or incompatible, please try again'
+        });
+      }
     };
-    reader.readAsText(event.files[0]);
+    reader.readAsText(event.target.files[0]);
   }
 }
