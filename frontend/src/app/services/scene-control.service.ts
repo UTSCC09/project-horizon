@@ -49,7 +49,7 @@ export class SceneControlService {
     this._camera = new PerspectiveCamera(
       75, this.engineService.canvasRatio(), 0.1, 10000
     );
-    this._camera.position.set(0, 0, 5);
+    this._camera.position.set(0, 70, 80);
     this._cameraControls = new OrbitControls(this._camera, this.engineService.renderedDomElement());
 
     this.engineService.addToScene(this._camera);
@@ -110,6 +110,12 @@ export class SceneControlService {
           break;
       }
     });
+  }
+
+  removeMeshFromScene(mesh: Mesh, controls: TransformControls): void {
+    this._objectControls.splice(this._objectControls.indexOf(controls), 1);
+    controls.detach().dispose();
+    this.engineService.removeFromScene(mesh);
   }
 
   /**

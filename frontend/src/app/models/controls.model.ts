@@ -1,5 +1,6 @@
-import { BufferGeometry, Mesh } from "three"
-import { Nullable } from "./utils.model"
+import { BufferGeometry, Mesh } from "three";
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
+import { Nullable } from "./utils.model";
 
 export enum ControlModes {
 	Camera,
@@ -16,4 +17,8 @@ export type Upload = {
     snapshot: Nullable<string>,
     snapshotImage: Nullable<File>,
     stl: Nullable<File>
+    size?: number,
+    name: string,
+    last_modified?: number,
+    controls?: TransformControls,
   }

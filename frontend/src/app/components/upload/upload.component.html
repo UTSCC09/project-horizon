@@ -2,20 +2,21 @@
 	<form action="post-upload-form">
 		<div class="row upload-post">
 			<div class="col-md-12 post-content">
+				<label for="textarea">Post Description</label>
 				<textarea pInputTextarea inputId="textarea" inputId="textarea" rows="3" cols="30" style="width:100%"
 					class="form-control" name="content" [(ngModel)]="postContent"></textarea>
-				<label for="textarea">Textarea</label>
 			</div>
 		</div>
-		<div class="row" [hidden]="!showModelUpload">
+		<hr>
+		<div class="row">
 			<div class="upload-section col-md-12">
 				<div class="choose_file">
 					<p-button label="Choose File" [loading]="loading" class="ui-button-success" icon="fa fa-plus" (onClick)="fileUpload.click()"></p-button>
 					<input #fileUpload type="file" accept=".stl" (change)="renderSTL($event)" hidden/>
 				</div>
 				<p-button label="Center on Mesh" [disabled]="!upload.mesh" (onClick)="centerCanvas()"></p-button>
-				<p-selectButton [options]="justifyOptions" (onChange)="updateMode($event)" [ngModel]="currentMode" optionLabel="icon" optionValue="mode"
-					[ngModelOptions]="{standalone: true}">
+				<p-selectButton [options]="controlOptions" (onChange)="updateMode($event)" [ngModel]="currentMode"
+					optionLabel="icon" optionValue="mode" [ngModelOptions]="{standalone: true}" [disabled]="!upload.mesh">
 					<ng-template let-item>
 						<fa-icon [icon]="item.icon" [pTooltip]="item.tooltip"></fa-icon>
 					</ng-template>
@@ -25,6 +26,31 @@
 				<div class="upload-section-content">
 					<canvas #canvas id="canvas"></canvas>
 				</div>
+			</div>
+			<div class="col-md-12">
+				<p-table [value]="uploads" responsiveLayout="scroll">
+					<ng-template pTemplate="header">
+						<tr>
+							<th>Snapshot</th>
+							<th>Name</th>
+							<th>Size</th>
+							<th>Last Modified</th>
+							<th>Remove</th>
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="body" let-upload>
+						<tr>
+							<td> <img [src]="upload.snapshot" alt="snapshot" width="100" class="shadow-4"> </td>
+							<td>{{ upload.name }}</td>
+							<td>{{ upload.size | fileSize }}</td>
+							<td>{{ upload.last_modified | date }}</td>
+							<td>
+								<p-button icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (onClick)="removeUpload(upload)">
+								</p-button>
+							</td>
+						</tr>
+					</ng-template>
+				</p-table>
 			</div>
 			<div class="upload-section col-md-12">
 				<div class="upload-section-content">
@@ -68,7 +94,6 @@
 			<div class="buttons float-right">
 				<p-button label="Post" class="p-button-success" [disabled]="!upload.snapshot" (onClick)="uploadPost()">
 				</p-button>
-				<p-button label="Add STL" (onClick)="addModel()"></p-button>
 			</div>
 		</div>
 	</form>

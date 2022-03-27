@@ -1,3 +1,4 @@
+// Angular Core
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
@@ -6,11 +7,11 @@ import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
 import { extractFiles } from "extract-files";
-
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+// Components
 import { UploadComponent } from './components/upload/upload.component';
 import { SignInComponent } from './components/signIn/signIn.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -18,6 +19,10 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { PostListComponent } from './components/post-list/post-list.component';
 import { ProfileComponent } from './components/profile/profile.component';
 
+// Pipes
+import { FileSizePipe } from './pipes/file-size.pipe';
+
+// External Modules
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -33,8 +38,9 @@ import { MenuModule } from 'primeng/menu';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from 'primeng/tooltip';
+import { TableModule } from 'primeng/table';
 
-
+// External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 
@@ -49,6 +55,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     PostListComponent,
     ProfileComponent,
     PostComponent,
+    FileSizePipe,
   ],
   imports: [
     BrowserModule,
@@ -69,6 +76,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     SelectButtonModule,
     FontAwesomeModule,
     TooltipModule,
+    TableModule,
   ],
   providers: [
     MessageService,

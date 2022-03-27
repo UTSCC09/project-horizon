@@ -7,7 +7,7 @@ import { Nullable } from 'src/app/models/utils.model';
 import { ApiService } from 'src/app/services/api.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
-import { BufferGeometry, Mesh, } from 'three';
+import { BufferGeometry, DoubleSide, GridHelper, Mesh, MeshBasicMaterial, PlaneBufferGeometry, } from 'three';
 
 @Component({
   selector: 'app-upload',
@@ -19,17 +19,18 @@ export class UploadComponent implements OnInit {
   private sceneController: SceneControlService;
 
   private sceneObjects: { geometry: BufferGeometry, mesh: Mesh }[] = [];
-  public justifyOptions: any[] = [];
+  public controlOptions: any[] = [];
   loading = false;
 
   showModelUpload: boolean = false;
   postContent: string = '';
   upload: Upload = {
+    name: '',
     mesh: null,
     geometry: null,
     snapshot: null,
     snapshotImage: null,
-    stl: null
+    stl: null,
   };
 
   uploads: Upload[] = [];
@@ -45,7 +46,7 @@ export class UploadComponent implements OnInit {
     this.engineService = new EngineService();
     this.sceneController = this.engineService.sceneController;
 
-    this.justifyOptions = [
+    this.controlOptions = [
       { icon: 'camera', mode: ControlModes.Camera, tooltip: '(C) - Camera Controls \n Right mouse to pan and Left mouse to rotate'},
       {icon: 'arrows-up-down-left-right', mode: ControlModes.Translate, tooltip: '(T) - Show object translation controls'},
       {icon: 'rotate', mode: ControlModes.Rotate, tooltip: '(R) - Show object rotation controls'},
@@ -57,6 +58,9 @@ export class UploadComponent implements OnInit {
     this.engineService.createScene(this.canvas);
     this.sceneController.setupControls();
     this.engineService.animate();
+
+    const gridHelper = new GridHelper(1000, 30);
+    this.engineService.addToScene(gridHelper);
   }
 
   get currentMode() {
@@ -106,18 +110,17 @@ export class UploadComponent implements OnInit {
       );
   }
 
-  addModel() {
-    this.showModelUpload = true;
-  }
-
   centerCanvas() {
     if (this.upload.mesh) {
       this.sceneController.centerCamera(this.upload.mesh);
     }
   }
 
-  controlLabel() {
-    return 'T';
+  removeUpload(upload: Upload) {
+    if (!upload.mesh || !upload.controls) return;
+    this.sceneController.removeMeshFromScene(upload.mesh, upload.controls);
+    this.sceneObjects = this.sceneObjects.filter(c => c.mesh !== upload.mesh);
+    this.uploads = this.uploads.filter(c => c !== upload);
   }
 
   renderSTL(event: any) {
@@ -129,30 +132,34 @@ export class UploadComponent implements OnInit {
       const contents = e.target.result;
 
       try {
+        // console.log({ files, contents })
+        if (/�/.test(contents)) {
+          throw new Error('File is not a valid STL file');
+        }
+
         const geometry = this.engineService.parseSTL(contents);
         const mesh = this.engineService.createFileMesh(geometry);
+        mesh.rotateX(-Math.PI/2);
         this.engineService.addMeshToScene(mesh);
-        this.sceneController.centerCamera(mesh);
 
-        this.sceneController.createTransormControls(mesh);
+        const controls = this.sceneController.createTransormControls(mesh);
+        this.sceneController.updateSceneControl(ControlModes.Camera);
 
         this.upload = {
+          name: files[0].name,
+          size: files[0].size,
+          last_modified: files[0].lastModified,
           stl: files[0],
           mesh,
           geometry,
-          snapshot: null,
+          controls,
+          snapshot: this.engineService.createMeshSnapshot(mesh, this.sceneObjects.map(c => c.mesh)),
           snapshotImage: null
         };
 
         this.uploads.push(this.upload);
 
-        this.sceneController.updateSceneControl(ControlModes.Camera);
-        const image = this.engineService.createMeshSnapshot(mesh, this.sceneObjects.map(c => c.mesh));
         this.sceneObjects.push({ geometry, mesh });
-        this.upload.snapshot = image;
-
-        event.target.value = '';
-        this.loading = false;
       } catch (error) {
         console.error(error);
 
@@ -161,6 +168,9 @@ export class UploadComponent implements OnInit {
           summary: 'Failed to upload STL',
           detail: 'File might be corrupted or incompatible, please try again'
         });
+      } finally {
+        event.target.value = '';
+        this.loading = false;
       }
     };
     reader.readAsText(files[0]);

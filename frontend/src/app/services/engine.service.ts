@@ -4,7 +4,6 @@ import { ElementRef, Injectable, NgZone } from '@angular/core';
 import { Mesh, Object3D } from 'three';
 import { BehaviorSubject } from 'rxjs';
 
-import { TransformControls } from 'three/examples/jsm/controls/TransformControls'
 import { SceneControlService } from './scene-control.service';
 
 /**
@@ -157,6 +156,10 @@ export class EngineService {
   public addMeshToScene(mesh: Mesh): void {
     this.addToScene(mesh);
     this.meshList.push(mesh);
+  }
+
+  removeFromScene(object: Object3D) {
+    this.scene.remove(object);
   }
 
   public addToScene(object: Object3D) {
