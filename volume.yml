@@ -1,0 +1,29 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: backend-pv-volume
+  labels:
+    app: backend
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /tmp/uploads
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: backend-pv-claim
+  labels:
+    app: backend
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi

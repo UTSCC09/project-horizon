@@ -30,18 +30,14 @@ export class FileService {
 
   getUrl(file: File) {
     if (isProd){
-      return `temp/${file.id}.${this.fileType(file)}`;
+      return `/temp/uploads/${file.id}.${this.fileType(file)}`;
     }
 
-    return `uploads/${file.id}.${this.fileType(file)}`;
+    return `./uploads/${file.id}.${this.fileType(file)}`;
   }
 
-  serveFile(file: string) {
-    if (isProd) {
-      return createWriteStream(`temp/${file}`);
-    }
-
-    return createWriteStream(`./uploads/${file}`);
+  serveFile(file: File) {
+    return createWriteStream(this.getUrl(file));
   }
 
   async postFiles(postId: string): Promise<File[]> {
@@ -56,7 +52,7 @@ export class FileService {
     newFile.user = user;
     const res = await this.repo.save(newFile);
 
-    file.createReadStream().pipe(createWriteStream(`./uploads/${res.id}.${this.fileType(newFile)}`));
+    file.createReadStream().pipe(this.serveFile(res));
 
     return res;
   }

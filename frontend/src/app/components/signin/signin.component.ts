@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MutationResult } from 'apollo-angular';
@@ -8,8 +8,8 @@ import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-signIn',
-  templateUrl: './signIn.component.html',
-  styleUrls: ['./signIn.component.scss', '../../app.component.scss']
+  templateUrl: './signin.component.html',
+  styleUrls: ['./signin.component.scss', '../../app.component.scss']
 })
 export class SignInComponent {
   form: FormGroup;

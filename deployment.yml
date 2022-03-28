@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-internal
+  name: nginx
 spec:
   selector:
     app: horizon
@@ -15,7 +15,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: nestjs
 spec:
   selector:
     component: backend
@@ -47,6 +47,13 @@ spec:
               port: 3000
           ports:
             - containerPort: 3000
+          volumeMounts:
+            - name: backend-pv-volume
+              mountPath: /tmp/uploads
+      volumes:
+        - name: backend-pv-volume
+          persistentVolumeClaim:
+            claimName: backend-pv-claim
 ---
 apiVersion: apps/v1
 kind: Deployment

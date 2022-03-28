@@ -1,16 +1,17 @@
-# FROM node:14-alpine3.14 as builder
-# ENV NODE_ENV production
-# WORKDIR /usr/src/app
-# COPY package.json package-lock.json ./
-# RUN npm ci
-# COPY . .
-# RUN npm install @angular/cli -g
-# RUN npm run build --prod
+FROM node:14.17.0-alpine As builder
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm install --include=dev
+
+COPY . .
+
+RUN npm run build --prod
 
 # Serve these static files with NGINX.
 FROM nginx:1.21.6-alpine
-# COPY --from=builder /usr/src/app/dist/project-horizon/ /usr/share/nginx/html
-COPY ./dist/project-horizon/ /usr/share/nginx/html
+COPY --from=builder /usr/src/app/dist/project-horizon/ /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80

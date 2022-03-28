@@ -9,8 +9,12 @@ async function bootstrap() {
   if (process.env.NODE_ENV === 'production' ||  process.env.GAE_ENV === 'production') {
     // this way the health endpoint is not exposed externally
     app.setGlobalPrefix('api', { exclude: ['health'] });
+  } else {
+    // enable CORS for local development
+    app.enableCors();
   }
 
   await app.listen(3000);
 }
+
 bootstrap();

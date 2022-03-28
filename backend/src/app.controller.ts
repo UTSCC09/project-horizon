@@ -12,6 +12,7 @@ export class AppController {
   hello(
     @RequestUser() user: User,
   ): string {
+    console.log('Hello user', user);
     return 'Hello World!' + user?.firstName;
   }
 }
