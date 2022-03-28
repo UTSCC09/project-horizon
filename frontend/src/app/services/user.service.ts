@@ -38,7 +38,6 @@ export class UserService implements OnInit {
   }
 
   setUser(user: User) {
-    console.log()
     this._user = user;
     localStorage.setItem('user', JSON.stringify(user));
   }

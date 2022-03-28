@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { UserPost } from 'src/app/models/user.model';
 import { File } from 'src/app/models/user.model';
 import { EngineService } from 'src/app/services/engine.service';
+import { SceneControlService } from 'src/app/services/scene-control.service';
 import { environment } from 'src/environments/environment';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
@@ -13,6 +14,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 export class PostComponent implements OnInit {
   @Input() post!: UserPost;
   private engineService: EngineService;
+  private sceneController: SceneControlService;
 
   renderEngine: boolean = false;
 
@@ -20,14 +22,15 @@ export class PostComponent implements OnInit {
 
   constructor() {
     this.engineService = new EngineService();
+    this.sceneController = this.engineService.sceneController;
   }
 
   get snapshot() {
     return this.post?.files?.filter(file => this.isImage(file))[0];
   }
 
-  get stl() {
-    return this.post?.files?.filter(file => file.mimetype === 'application/octet-stream')[0];
+  get scene() {
+    return this.post?.files?.filter(file => file.mimetype === 'application/json')[0];
   }
 
 
@@ -56,25 +59,19 @@ export class PostComponent implements OnInit {
     this.canvas.nativeElement.classList.remove('hidden');
 
     this.engineService.createScene(this.canvas);
+    this.sceneController.setupControls();
     this.engineService.animate();
-    fetch(this.fileUrl(this.stl))
+    fetch(this.fileUrl(this.scene))
       .then(res => res.blob())
       .then(async blob => {
-        const file = new File([blob], this.stl?.filename || '', { type: 'application/octet-stream' });
-        // load file contents
-        const geometry = this.engineService.parseSTL(await file.arrayBuffer());
-        const mesh = this.engineService.createFileMesh(geometry);
-        this.engineService.addToScene(mesh);
-        this.engineService.centerCamera(mesh);
+        const file = new File([blob], this.scene?.filename || '', { type: 'application/json' });
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const scene = JSON.parse(reader.result as string);
+          this.engineService.loadScene(scene);
+        };
 
-
-
-
-        // this.engineService.parseSTL();
-
+        reader.readAsText(file);
       });
-      // .then(res => {
-      //   console.log(res);
-      // })
   }
 }
