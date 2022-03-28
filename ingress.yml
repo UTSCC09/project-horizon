@@ -4,10 +4,11 @@ metadata:
   name: horizon-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: horizon-ingress
+    networking.gke.io/managed-certificates: horizon-managed-cert
 spec:
   rules:
-  - http:
-      host: horizon.mohamedhalat.com
+  - host: horizon.mohamedhalat.com
+    http:
       paths:
         - path: /
           pathType: Prefix
@@ -23,3 +24,13 @@ spec:
               name: nestjs
               port:
                 number: 3000
+---
+apiVersion: networking.gke.io/v1beta1
+kind: ManagedCertificate
+metadata:
+  name: horizon-managed-cert
+  labels:
+    name: horizon-managed-cert
+spec:
+  domains:
+  - horizon.mohamedhalat.com
