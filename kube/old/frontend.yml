@@ -1,4 +1,4 @@
-
+# attempt #1 destroyed
 apiVersion: v1
 kind: Service
 metadata:
