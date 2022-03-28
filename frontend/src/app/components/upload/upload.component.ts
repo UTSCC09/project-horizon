@@ -22,18 +22,12 @@ export class UploadComponent implements OnInit {
   loading = false;
 
   grid: GridHelper;
+  backgroundColor: string = '#ffffff';
 
   showModelUpload: boolean = false;
   postContent: string = '';
-  upload: Upload = {
-    name: '',
-    mesh: null,
-    geometry: null,
-    snapshot: null,
-    snapshotImage: null,
-    stl: null,
-    color: 0xffffff,
-  };
+  snapshotImage!: File;
+  snapshotEncoded!: string;
 
   uploads: Upload[] = [];
 
@@ -73,10 +67,18 @@ export class UploadComponent implements OnInit {
     this.sceneController.updateSceneControl(event.value);
   }
 
+  updateCanvasColor() {
+    this.engineService.updateRendererColor(this.backgroundColor);
+  }
+
   takeSnapshot() {
+    this.grid.visible = false;
+    this.sceneController.hideControls();
     const image = this.engineService.takeSnapshot();
-    this.upload.snapshot = image;
+    this.snapshotEncoded = image;
     this.stringToFile(image, 'snapshot.png');
+    this.grid.visible = true;
+    this.sceneController.showControls();
   }
 
   async stringToFile(str: string, filename: string) {
@@ -84,15 +86,21 @@ export class UploadComponent implements OnInit {
       .then(res => res.blob())
       .then(blob => {
         const file = new File([blob], filename, { type: 'image/png' });
-        this.upload.snapshotImage = file;
+        this.snapshotImage = file;
       });
   }
 
   uploadPost() {
-    const { snapshotImage, stl } = this.upload;
     const content = this.postContent;
 
-    this.api.post(content, snapshotImage as File, stl as File)
+    this.sceneController.removeControls();
+    this.engineService.removeFromScene(this.grid);
+
+    const scene = this.engineService.saveAndDestroy();
+    const blob = new Blob([JSON.stringify(scene)], { type: "application/json;charset=utf-8" })
+    const sceneFile = new File([blob], 'scene.json', { type: 'application/json;charset=utf-8' })
+
+    this.api.post(content, this.snapshotImage as File, sceneFile)
       .subscribe(
         ({ data }: any) => {
           this.messageService.add({
@@ -113,9 +121,7 @@ export class UploadComponent implements OnInit {
   }
 
   centerCanvas() {
-    if (this.upload.mesh) {
-      this.sceneController.centerCamera();
-    }
+    this.sceneController.centerCamera();
   }
 
   updateColor(upload: Upload) {
@@ -129,7 +135,6 @@ export class UploadComponent implements OnInit {
   }
 
   centerUpload(upload: Upload) {
-    console.log("center upload", { upload })
     if (!upload.mesh) return;
     this.sceneController.centerCameraToObject(upload.mesh);
   }
@@ -150,7 +155,6 @@ export class UploadComponent implements OnInit {
       const contents = e.target.result;
 
       try {
-        // console.log({ files, contents })
         if (/�/.test(contents)) {
           throw new Error('File is not a valid STL file');
         }
@@ -164,7 +168,7 @@ export class UploadComponent implements OnInit {
         this.sceneController.updateSceneControl(ControlModes.Camera);
         this.sceneController.centerCameraToObject(mesh);
 
-        this.upload = {
+        const upload = {
           name: files[0].name,
           size: files[0].size,
           last_modified: files[0].lastModified,
@@ -177,7 +181,7 @@ export class UploadComponent implements OnInit {
           color: 0xffffff,
         };
 
-        this.uploads.push(this.upload);
+        this.uploads.push(upload);
         this.sceneObjects.push({ geometry, mesh });
       } catch (error) {
         console.error(error);

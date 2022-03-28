@@ -39,7 +39,9 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableModule } from 'primeng/table';
-import { ColorPickerModule } from 'primeng/colorpicker';;
+import { ColorPickerModule } from 'primeng/colorpicker';
+import { TabViewModule } from 'primeng/tabview';
+import { CheckboxModule } from 'primeng/checkbox';
 
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -79,6 +81,8 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     TooltipModule,
     TableModule,
     ColorPickerModule,
+    TabViewModule,
+    CheckboxModule,
   ],
   providers: [
     MessageService,

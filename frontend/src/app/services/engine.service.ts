@@ -106,6 +106,24 @@ export class EngineService {
     this.renderer.render(this.scene, this.sceneController.camera);
   }
 
+  public updateRendererColor(color: string): void {
+    this.renderer.setClearColor(color);
+  }
+
+  public saveAndDestroy(): any {
+    this.scene.updateMatrixWorld();
+    const data = this.scene.toJSON();
+    this.ngOnDestroy();
+    return data;
+  }
+
+  loadScene(data: any) {
+    const loader = new THREE.ObjectLoader();
+    this.scene = loader.parse(data);
+
+    this.render();
+  }
+
   public ngOnDestroy(): void {
     if (this.frameId != null) {
       cancelAnimationFrame(this.frameId);

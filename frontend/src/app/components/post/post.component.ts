@@ -29,8 +29,8 @@ export class PostComponent implements OnInit {
     return this.post?.files?.filter(file => this.isImage(file))[0];
   }
 
-  get stl() {
-    return this.post?.files?.filter(file => file.mimetype === 'application/octet-stream')[0];
+  get scene() {
+    return this.post?.files?.filter(file => file.mimetype === 'application/json')[0];
   }
 
 
@@ -61,16 +61,17 @@ export class PostComponent implements OnInit {
     this.engineService.createScene(this.canvas);
     this.sceneController.setupControls();
     this.engineService.animate();
-    fetch(this.fileUrl(this.stl))
+    fetch(this.fileUrl(this.scene))
       .then(res => res.blob())
       .then(async blob => {
-        const file = new File([blob], this.stl?.filename || '', { type: 'application/octet-stream' });
-        // load file contents
-        const geometry = this.engineService.parseSTL(await file.arrayBuffer());
-        const mesh = this.engineService.createFileMesh(geometry);
+        const file = new File([blob], this.scene?.filename || '', { type: 'application/json' });
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const scene = JSON.parse(reader.result as string);
+          this.engineService.loadScene(scene);
+        };
 
-        this.engineService.addMeshToScene(mesh);
-        this.sceneController.centerCameraToObject(mesh);
+        reader.readAsText(file);
       });
   }
 }

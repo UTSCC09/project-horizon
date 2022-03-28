@@ -1,106 +1,89 @@
 <div class="upload">
 	<form action="post-upload-form">
-		<div class="row upload-post">
-			<div class="col-md-12 post-content">
-				<label for="textarea">Post Description</label>
-				<textarea pInputTextarea inputId="textarea" inputId="textarea" rows="3" cols="30" style="width:100%"
-					class="form-control" name="content" [(ngModel)]="postContent"></textarea>
-			</div>
+		<div class="upload-section-content">
+			<canvas #canvas id="canvas"></canvas>
 		</div>
-		<hr>
-		<div class="row">
-			<div class="upload-section col-md-12">
-				<div class="choose_file">
-					<p-button label="Choose File" [loading]="loading" class="ui-button-success" icon="fa fa-plus" (onClick)="fileUpload.click()"></p-button>
-					<input #fileUpload type="file" accept=".stl" (change)="renderSTL($event)" hidden/>
-				</div>
-				<p-button label="Center on Mesh" [disabled]="!upload.mesh" (onClick)="centerCanvas()"></p-button>
-				<p-selectButton [options]="controlOptions" (onChange)="updateMode($event)" [ngModel]="currentMode"
-					optionLabel="icon" optionValue="mode" [ngModelOptions]="{standalone: true}" [disabled]="!upload.mesh">
-					<ng-template let-item>
-						<fa-icon [icon]="item.icon" [pTooltip]="item.tooltip"></fa-icon>
-					</ng-template>
-				</p-selectButton>
-			</div>
-			<div class="col-md-12">
-				<div class="upload-section-content">
-					<canvas #canvas id="canvas"></canvas>
-				</div>
-			</div>
-			<div class="col-md-12">
-				<p-table [value]="uploads" responsiveLayout="scroll">
-					<ng-template pTemplate="header">
-						<tr>
-							<th>Snapshot</th>
-							<th>Name</th>
-							<th>Size</th>
-							<th>Last Modified</th>
-							<th>Actions</th>
-						</tr>
-					</ng-template>
-					<ng-template pTemplate="body" let-upload>
-						<tr>
-							<td> <img [src]="upload.snapshot" alt="snapshot" width="100" class="shadow-4"> </td>
-							<td>{{ upload.name }}</td>
-							<td>{{ upload.size | fileSize }}</td>
-							<td>{{ upload.last_modified | date }}</td>
-							<td>
-								<p-colorPicker [(ngModel)]="upload.color" (onChange)="updateColor(upload)"
-									[ngModelOptions]="{standalone: true}"></p-colorPicker>
-								<button pButton pRipple type="button" icon="pi pi-search"
-									class="p-button-rounded p-button-success p-button-text"
-									(click)="centerUpload(upload)"></button>
-								<button pButton pRipple type="button" icon="pi pi-times"
-									class="p-button-rounded p-button-danger p-button-text"
-									(click)="removeUpload(upload)"></button>
-							</td>
-						</tr>
-					</ng-template>
-				</p-table>
-			</div>
-			<div class="upload-section col-md-12">
-				<div class="upload-section-content">
-					<div class="upload-section-header">
-						<h2>Upload Settings</h2>
+		<p-tabView>
+			<p-tabPanel header="Scene Creation">
+				<div class="row">
+					<div class="upload-section col-md-12">
+						<div class="choose_file">
+							<p-button label="Choose File" [loading]="loading" class="ui-button-success" icon="fa fa-plus"
+								(onClick)="fileUpload.click()"></p-button>
+							<input #fileUpload type="file" accept=".stl" (change)="renderSTL($event)" hidden />
+						</div>
+						<p-button label="Center on Mesh" [disabled]="!uploads.length" (onClick)="centerCanvas()"></p-button>
+						<p-selectButton [options]="controlOptions" (onChange)="updateMode($event)" [ngModel]="currentMode"
+							optionLabel="icon" optionValue="mode" [ngModelOptions]="{standalone: true}" [disabled]="!uploads.length">
+							<ng-template let-item>
+								<fa-icon [icon]="item.icon" [pTooltip]="item.tooltip"></fa-icon>
+							</ng-template>
+						</p-selectButton>
+						<p-colorPicker [(ngModel)]="backgroundColor" [ngModelOptions]="{standalone: true}" (onChange)="updateCanvasColor()">
+						</p-colorPicker>
 					</div>
-					<div class="instructions">
-						<p>
-							<strong>Instructions:</strong>
-						</p>
-						<ul>
-							<li>
-								<strong>1.</strong>
-								Select the file you want to upload.
-							</li>
-							<li>
-								<strong>2.</strong>
-								Click the <strong>Snapshot</strong> button to take a snapshot of the model.
-							</li>
-							<li>
-								<strong>3.</strong>
-								Click the <strong>Upload</strong> button to upload the model.
-							</li>
-						</ul>
+					<div class="col-md-12">
 					</div>
-					<div class="mesh-settings">
-						<h3>Edit mesh settings</h3>
+					<div class="col-md-12">
+						<p-table [value]="uploads" responsiveLayout="scroll">
+							<ng-template pTemplate="header">
+								<tr>
+									<th>Snapshot</th>
+									<th>Name</th>
+									<th>Size</th>
+									<th>Last Modified</th>
+									<th>Actions</th>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="body" let-upload>
+								<tr>
+									<td> <img [src]="upload.snapshot" alt="snapshot" width="100" class="shadow-4"> </td>
+									<td>{{ upload.name }}</td>
+									<td>{{ upload.size | fileSize }}</td>
+									<td>{{ upload.last_modified | date }}</td>
+									<td>
+										<p-colorPicker [(ngModel)]="upload.color" (onChange)="updateColor(upload)"
+											[ngModelOptions]="{standalone: true}"></p-colorPicker>
+										<button pButton pRipple type="button" icon="pi pi-search"
+											class="p-button-rounded p-button-success p-button-text" (click)="centerUpload(upload)"></button>
+										<button pButton pRipple type="button" icon="pi pi-times"
+											class="p-button-rounded p-button-danger p-button-text" (click)="removeUpload(upload)"></button>
+									</td>
+								</tr>
+							</ng-template>
+						</p-table>
 					</div>
-					<div class="upload-sections">
-						<h4>Model Snapshot</h4>
-						<p-button label="Snapshot" [disabled]="!upload.mesh" (onClick)="takeSnapshot()"></p-button>
-						<p>Snapshot Preview</p>
-						<div class="snapshot-preview" *ngIf="upload.snapshot">
-							<img [src]="upload.snapshot" alt="snapshot">
+					<div class="upload-section col-md-12">
+						<div class="upload-section-content">
+							<div class="upload-sections">
+								<h4>Model Snapshot</h4>
+								<p-button label="Snapshot" [disabled]="!uploads.length" (onClick)="takeSnapshot()"></p-button>
+								<p>Snapshot Preview</p>
+								<div class="snapshot-preview" *ngIf="snapshotEncoded">
+									<img [src]="snapshotEncoded" alt="snapshot">
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="buttons float-right">
-				<p-button label="Post" class="p-button-success" [disabled]="!upload.snapshot" (onClick)="uploadPost()">
-				</p-button>
-			</div>
-		</div>
+			</p-tabPanel>
+			<p-tabPanel header="Post">
+				<div class="row upload-post">
+					<div class="col-md-12 post-content">
+						<label for="textarea">Post Description</label>
+						<textarea pInputTextarea inputId="textarea" inputId="textarea" rows="3" cols="30" style="width:100%"
+							class="form-control" name="content" [(ngModel)]="postContent"></textarea>
+					</div>
+				</div>
+			</p-tabPanel>
+			<p-tabPanel header="Confirm">
+				<div class="row">
+					<div class="buttons float-right">
+						<p-button label="Post" class="p-button-success" [disabled]="!snapshotImage" (onClick)="uploadPost()">
+						</p-button>
+					</div>
+				</div>
+			</p-tabPanel>
+		</p-tabView>
 	</form>
 </div>

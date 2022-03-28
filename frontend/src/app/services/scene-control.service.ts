@@ -77,6 +77,15 @@ export class SceneControlService {
     }
   }
 
+  public removeControls() {
+    this._objectControls.forEach(c => {
+      this.engineService.removeFromScene(c);
+      c.detach().dispose();
+    });
+    this._cameraControls.dispose();
+    this._objectControls = [];
+  }
+
   public createTransormControls(object: Object3D): TransformControls {
     const controls = new TransformControls(this._camera, this.engineService.renderedDomElement());
     controls.setMode('translate');
@@ -110,6 +119,15 @@ export class SceneControlService {
           break;
       }
     });
+  }
+
+  hideControls() {
+    this._objectControls.forEach(c => c.visible = false);
+  }
+
+  showControls() {
+    if (this.activeMode != ControlModes.Camera)
+      this._objectControls.forEach(c => c.visible = true);
   }
 
   removeMeshFromScene(mesh: Mesh, controls: TransformControls): void {
