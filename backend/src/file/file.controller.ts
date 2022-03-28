@@ -1,8 +1,9 @@
 import { Controller, Get, Param, Response, UseGuards } from "@nestjs/common";
-import { GqlAuthGuard } from "src/guards/gql-auth.guard";
+import { AuthGuard } from "@nestjs/passport";
 import { FileService } from "./file.service";
 
 @Controller()
+// @UseGuards(AuthGuard)
 export class FileController {
   constructor(private fileService: FileService) {}
 
@@ -11,7 +12,11 @@ export class FileController {
     @Param("file") file: string,
     @Response() res: any,
   ) {
-    res.sendFile(file, { root: "uploads" });
+    if (process.env.NODE_ENV === "production") {
+      res.sendFile(file, { root: "/tmp/uploads" });
+    } else {
+      res.sendFile(file, { root: "uploads" });
+    }
   }
 
 }

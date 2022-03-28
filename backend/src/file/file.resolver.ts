@@ -17,6 +17,6 @@ export class FileResolver {
 
 	@ResolveField(() => String)
 	async url(@Parent() file: File) {
-		return this.fileService.getUrl(file);
+		return this.fileService.getUrl(file).replace('/tmp/', '');
 	}
 }

@@ -35,4 +35,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .env
+.env*.local
 /uploads
+
+/secrets

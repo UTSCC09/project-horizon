@@ -4,8 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 // Components
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
-import { SignInComponent } from './components/signIn/signIn.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { SignInComponent } from './components/signin/signin.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';

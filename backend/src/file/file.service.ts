@@ -6,12 +6,15 @@ import { FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
 import { User } from 'src/entities/user.entity';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 @Injectable()
 export class FileService {
   constructor(
     @InjectRepository(File)
     private readonly repo: Repository<File>,
   ) {}
+
 
   fileType(file: File): string {
     return file.filename.split('.').pop();
@@ -26,11 +29,15 @@ export class FileService {
   }
 
   getUrl(file: File) {
-    return `uploads/${file.id}.${this.fileType(file)}`;
+    if (isProd){
+      return `/tmp/uploads/${file.id}.${this.fileType(file)}`;
+    }
+
+    return `./uploads/${file.id}.${this.fileType(file)}`;
   }
 
-  serveFile(file: string) {
-    return createWriteStream(`./uploads/${file}`);
+  serveFile(file: File) {
+    return createWriteStream(this.getUrl(file));
   }
 
   async postFiles(postId: string): Promise<File[]> {
@@ -45,7 +52,7 @@ export class FileService {
     newFile.user = user;
     const res = await this.repo.save(newFile);
 
-    file.createReadStream().pipe(createWriteStream(`./uploads/${res.id}.${this.fileType(newFile)}`));
+    await file.createReadStream().pipe(this.serveFile(res));
 
     return res;
   }

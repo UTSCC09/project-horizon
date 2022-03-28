@@ -26,7 +26,6 @@ export class PostResolver {
     @Args({ name: 'files', type: () => [GraphQLUpload], nullable: true }) files?: FileUpload[],
   ): Promise<Post> {
     files = await Promise.all((await Promise.all(files)).map(file => this.fileService.upload(file, user)));
-    console.log(files);
     return await this.postService.create(({ content, user, files } as Post));
   }
 

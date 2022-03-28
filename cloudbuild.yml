@@ -1,0 +1,8 @@
+steps:
+- name: "gcr.io/cloud-builders/gke-deploy:stable"
+  args:
+  - run
+  - --filename=deployment.yml
+  - --location=northamerica-northeast2-a
+  - --cluster=horizon-cluster
+  - --namespace=horizon

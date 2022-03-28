@@ -1,6 +1,26 @@
 version: '3'
 
 services:
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    networks:
+      - backend-network
+      - frontend-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - frontend-network
+
   postgres:
     image: postgres:13.1
     healthcheck:
@@ -19,3 +39,9 @@ services:
       - ./db:/docker-entrypoint-initdb.d/
     ports:
       - 5432:5432
+    networks:
+      - backend-network
+
+networks:
+  frontend-network:
+  backend-network:

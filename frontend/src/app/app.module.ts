@@ -12,7 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { UploadComponent } from './components/upload/upload.component';
-import { SignInComponent } from './components/signIn/signIn.component';
+import { SignInComponent } from './components/signin/signin.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { PostListComponent } from './components/post-list/post-list.component';
@@ -29,6 +29,7 @@ import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { environment } from 'src/environments/environment';
 import { PostComponent } from './components/post/post.component';
+
 
 @NgModule({
   declarations: [
