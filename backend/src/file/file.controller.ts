@@ -12,7 +12,7 @@ export class FileController {
     @Param("file") file: string,
     @Response() res: any,
   ) {
-    if (process.env.NODE_ENV === "production" || process.env.GAE_ENV === "production") {
+    if (process.env.NODE_ENV === "production") {
       res.sendFile(file, { root: "/tmp/uploads" });
     } else {
       res.sendFile(file, { root: "uploads" });

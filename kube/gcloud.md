@@ -58,3 +58,4 @@ gcloud compute ssl-certificates create horizon \
     <!-- https://cloud.google.com/kubernetes-engine/docs/concepts/ingress -->
     <!-- https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ -->
     <!-- https://newrelic.com/blog/how-to-relic/kubernetes-health-checks -->
+    <!-- https://medium.com/@athulravindran/google-kubernetes-engine-gke-persistence-volume-nfs-on-multiple-nodes-readwritemany-4b6e8d565b08 -->

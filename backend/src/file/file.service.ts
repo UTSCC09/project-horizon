@@ -6,7 +6,7 @@ import { FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
 import { User } from 'src/entities/user.entity';
 
-const isProd = process.env.NODE_ENV === 'production' ||  process.env.GAE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production';
 
 @Injectable()
 export class FileService {
@@ -30,7 +30,7 @@ export class FileService {
 
   getUrl(file: File) {
     if (isProd){
-      return `/temp/uploads/${file.id}.${this.fileType(file)}`;
+      return `/tmp/uploads/${file.id}.${this.fileType(file)}`;
     }
 
     return `./uploads/${file.id}.${this.fileType(file)}`;
@@ -52,7 +52,7 @@ export class FileService {
     newFile.user = user;
     const res = await this.repo.save(newFile);
 
-    file.createReadStream().pipe(this.serveFile(res));
+    await file.createReadStream().pipe(this.serveFile(res));
 
     return res;
   }

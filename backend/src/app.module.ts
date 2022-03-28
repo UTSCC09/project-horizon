@@ -12,7 +12,7 @@ import { PostModule } from './post/post.module';
 import { FileModule } from './file/file.module';
 import { HealthController } from './health/health.controller';
 
-const isProd = process.env.NODE_ENV === 'production' ||  process.env.GAE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production';
 
 @Module({
   imports: [
