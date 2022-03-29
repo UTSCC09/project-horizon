@@ -183,4 +183,49 @@ export class ApiService {
       }
     });
   }
+
+  followUser(id: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation($id: Float!) {
+          followUser(userId: $id) {
+            followersCount
+            isFollowing
+
+            followers {
+              id
+              firstName
+              lastName
+            }
+          }
+        }
+      `,
+      variables: {
+        id
+      }
+    });
+  }
+
+  unfollowUser(id: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation($id: Float!) {
+          unfollowUser(userId: $id) {
+            followersCount
+            isFollowing
+
+            followers {
+              id
+              firstName
+              lastName
+            }
+          }
+        }
+      `,
+      variables: {
+        id
+      }
+    });
+  }
+
 }

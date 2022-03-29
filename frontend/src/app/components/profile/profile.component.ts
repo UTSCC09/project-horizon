@@ -14,6 +14,7 @@ export class ProfileComponent implements OnInit {
 
   user: User;
   currentUser: User;
+  loadingFollow = false;
 
   constructor(
     private router: Router,
@@ -57,6 +58,42 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  followOrUnfollow() {
+    this.loadingFollow = true;
+    if (this.user.isFollowing) {
+      this.apiService.unfollowUser(this.user.id)
+        .subscribe(({data}) => {
+          this.user.isFollowing = false;
+          this.user.followers = (data as any).unfollowUser.followers;
+          this.user.followersCount = (data as any).unfollowUser.followersCount;
+
+          this.loadingFollow = false;
+        }, (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.message
+            });
+          this.loadingFollow = false;
+        });
+    } else {
+      this.apiService.followUser(this.user.id)
+        .subscribe(({data}) => {
+          this.user.isFollowing = true;
+          this.user.followers = (data as any).followUser.followers;
+          this.user.followersCount = (data as any).followUser.followersCount;
+          this.loadingFollow = false;
+        }, (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.message
+            });
+          this.loadingFollow = false;
+        });
+    }
   }
 
 }

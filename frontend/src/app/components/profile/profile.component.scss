@@ -1,0 +1,17 @@
+.profile {
+  padding: 20px;
+
+  &-header {
+    padding: 10px 20px;
+
+    h2 {
+      color: grey;
+    }
+
+    .profile-statistics {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+  }
+}

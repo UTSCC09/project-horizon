@@ -43,6 +43,7 @@ import { TableModule } from 'primeng/table';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
+import { TagModule } from 'primeng/tag';
 
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -72,6 +73,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     NgbModule,
     ToastModule,
     BrowserAnimationsModule,
+    TagModule,
     ReactiveFormsModule,
     MenubarModule,
     ApolloModule,
