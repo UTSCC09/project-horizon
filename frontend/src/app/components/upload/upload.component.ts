@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ControlModes, Upload } from 'src/app/models/controls.model';
-import { ApiService } from 'src/app/services/api.service';
+import { PostApiService } from 'src/app/services/api/post-api.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
 import { BufferGeometry, GridHelper, Mesh, MeshStandardMaterial, } from 'three';
@@ -36,7 +36,7 @@ export class UploadComponent implements OnInit {
   constructor(
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
-    private api: ApiService,
+    private api: PostApiService,
     private messageService: MessageService,
   ) {
     this.engineService = new EngineService();

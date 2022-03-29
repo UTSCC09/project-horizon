@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { User, UserPost } from 'src/app/models/user.model';
-import { ApiService } from 'src/app/services/api.service';
+import { UserApiService } from 'src/app/services/api/user-api.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -19,8 +19,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private router: Router,
     private userService: UserService,
-    private apiService: ApiService,
     private messageService: MessageService,
+    private userApi: UserApiService,
   ) {
     let userId = this.router.url.split('/')[2];
     this.currentUser = this.userService.user as User;
@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
     }
 
     if (parseInt(userId) > 0) {
-      this.apiService.getUser(parseInt(userId))
+      this.userApi.getUser(parseInt(userId))
         .subscribe(({ data }) => {
           let user: User = JSON.parse(JSON.stringify((data as any).user));
           delete user.posts;
@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit {
   followOrUnfollow() {
     this.loadingFollow = true;
     if (this.user.isFollowing) {
-      this.apiService.unfollowUser(this.user.id)
+      this.userApi.unfollowUser(this.user.id)
         .subscribe(({data}) => {
           this.user.isFollowing = false;
           this.user.followers = (data as any).unfollowUser.followers;
@@ -79,7 +79,7 @@ export class ProfileComponent implements OnInit {
           this.loadingFollow = false;
         });
     } else {
-      this.apiService.followUser(this.user.id)
+      this.userApi.followUser(this.user.id)
         .subscribe(({data}) => {
           this.user.isFollowing = true;
           this.user.followers = (data as any).followUser.followers;
