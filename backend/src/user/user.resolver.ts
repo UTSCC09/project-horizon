@@ -42,7 +42,6 @@ export class UserResolver {
 		@Args('userId') userId: number,
 	): Promise<User> {
 		user = await this.userService.findOne(user.id);
-		console.log(user)
 		return await this.userService.unfollowUser(user, userId);
 	}
 
@@ -55,7 +54,6 @@ export class UserResolver {
 	@ResolveField()
 	async followers(@Parent() user: User): Promise<User[]> {
 		user = await this.userService.findOne(user.id, { relations: ['followers'] });
-		console.log(user)
 		return user.followers;
 	}
 
