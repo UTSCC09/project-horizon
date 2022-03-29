@@ -7,10 +7,42 @@
         <h1>{{ user.firstName }} {{user.lastName}}</h1>
         <h2>{{ user.email }}</h2>
         <h2>{{ user.id }}</h2>
+        <!-- followers and following -->
+        <div class="profile-statistics">
+            <div class="statistics-item">
+                <span class="statistics-item-number">{{ user.followersCount }}</span>
+                <span class="statistics-item-label">Followers</span>
+            </div>
+            <div class="statistics-item">
+                <span class="statistics-item-number">{{ user.followingCount }}</span>
+                <span class="statistics-item-label">Following</span>
+            </div>
+            <div class="statistics-item">
+                <span class="statistics-item-number">{{ user.postsCount }}</span>
+                <span class="statistics-item-label">Posts</span>
+            </div>
+        </div>
+        <button *ngIf="user.id != currentUser.id">{{user.isFollowing ? 'UnFollow' : 'Follow'}}</button>
     </div>
     <hr>
-    <div class="profile-posts">
-      <app-post-list *ngIf="user.posts" [posts]="user.posts">
-      </app-post-list>
-    </div>
+    <p-tabView>
+        <p-tabPanel header="Posts">
+            <div class="profile-posts">
+            <app-post-list *ngIf="user.posts" [posts]="user.posts">
+            </app-post-list>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Followers">
+            <div class="profile-followers">
+                <app-user-list *ngIf="user.followers" [users]="user.followers">
+                </app-user-list>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Following">
+            <div class="profile-following">
+                <app-user-list *ngIf="user.following" [users]="user.following">
+                </app-user-list>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
 </div>

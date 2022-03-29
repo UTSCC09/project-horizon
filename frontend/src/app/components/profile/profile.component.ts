@@ -13,6 +13,7 @@ import { UserService } from 'src/app/services/user.service';
 export class ProfileComponent implements OnInit {
 
   user: User;
+  currentUser: User;
 
   constructor(
     private router: Router,
@@ -20,16 +21,14 @@ export class ProfileComponent implements OnInit {
     private apiService: ApiService,
     private messageService: MessageService,
   ) {
-    const userId = this.router.url.split('/')[2];
+    let userId = this.router.url.split('/')[2];
+    this.currentUser = this.userService.user as User;
 
     if (userId === 'me') {
-      this.user = this.userService.user as User;
-      this.apiService.getUserPosts(this.user.id).subscribe(({ data }) => {
-        this.user.posts = (data as any).getUserPosts;
-      }, (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.message });
-      });
-    } else if (parseInt(userId) > 0) {
+      userId = "" + this.userService.user?.id;
+    }
+
+    if (parseInt(userId) > 0) {
       this.apiService.getUser(parseInt(userId))
         .subscribe(({ data }) => {
           let user: User = JSON.parse(JSON.stringify((data as any).user));

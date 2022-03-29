@@ -18,6 +18,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { PostListComponent } from './components/post-list/post-list.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 // Pipes
 import { FileSizePipe } from './pipes/file-size.pipe';
@@ -60,6 +61,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     ProfileComponent,
     PostComponent,
     FileSizePipe,
+    UserListComponent,
   ],
   imports: [
     BrowserModule,

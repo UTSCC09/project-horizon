@@ -19,5 +19,13 @@ export type User = {
 	lastName: string;
 	email: string;
 
+	followersCount?: number;
+	followingCount?: number;
+
+	followers?: User[];
+	following?: User[];
+	isFollowing?: boolean;
+
+	postsCount?: number;
 	posts?: UserPost[];
 }

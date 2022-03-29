@@ -145,6 +145,24 @@ export class ApiService {
             firstName
             lastName
             email
+            followersCount
+            followingCount
+            postsCount
+
+            isFollowing
+
+            followers {
+              id
+              firstName
+              lastName
+            }
+
+            following {
+              id
+              firstName
+              lastName
+            }
+
             posts {
               id
               content
