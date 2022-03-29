@@ -1,5 +1,5 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToOne } from 'typeorm';
 import { Post } from './post.entity';
 import { File } from './file.entity';
 
@@ -40,6 +40,27 @@ export class User {
   @OneToMany(() => File, file => file.user)
   @Field(() => [File], { nullable: true })
   files: File[];
+
+  @ManyToMany(() => User, user => user.following)
+  @JoinTable()
+  @Field(() => [User], { nullable: true })
+  followers: User[];
+
+  @ManyToMany(() => User, user => user.followers)
+  @Field(() => [User], { nullable: true })
+  following: User[];
+
+  @Field(() => Number, { defaultValue: 0 })
+  followersCount: number;
+
+  @Field(() => Number, { defaultValue: 0 })
+  followingCount: number;
+
+  @Field(() => Number, { defaultValue: 0 })
+  postsCount: number;
+
+  @Field(() => Boolean, { defaultValue: false })
+  isFollowing: boolean;
 }
 
 @ObjectType()

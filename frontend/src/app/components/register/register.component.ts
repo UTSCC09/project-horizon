@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MutationResult } from 'apollo-angular';
 import { MessageService } from 'primeng/api';
-import { ApiService } from 'src/app/services/api.service';
+import { AuthApiService } from 'src/app/services/api/auth-api.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -13,7 +12,7 @@ import { UserService } from 'src/app/services/user.service';
 export class RegisterComponent implements OnInit {
 
   constructor(
-    private api: ApiService,
+    private api: AuthApiService,
     private messageService: MessageService,
     private router: Router,
     private userService: UserService

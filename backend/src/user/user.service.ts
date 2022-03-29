@@ -45,4 +45,24 @@ export class UserService {
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
   }
+
+  async followUser(user: User, userId: number): Promise<User> {
+    const other = await this.usersRepository.findOne(userId);
+    if (user.following) {
+      user.following.push(other);
+    } else {
+      user.following = [other];
+    }
+
+    this.usersRepository.save(user);
+    return other;
+  }
+
+  async unfollowUser(user: User, userId: number): Promise<User> {
+    const other = await this.usersRepository.findOne(userId);
+    user.following = user.following?.filter(u => u.id !== other.id) || [];
+    this.usersRepository.save(user);
+    return other;
+  }
+
 }

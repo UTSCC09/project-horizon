@@ -1,56 +1,11 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Apollo, gql } from 'apollo-angular';
+import { BaseApiService } from './base-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
-
-  constructor(private apollo: Apollo) { }
-
-  signIn(form: FormGroup) {
-
-    return this.apollo.mutate({
-      mutation: gql`
-        mutation($data: LoginInfo!) {
-          login(data: $data) {
-            token,
-            user {
-              id
-              firstName
-              lastName
-              email
-            }
-          }
-        }
-      `,
-      variables: {
-        data: form.value
-      }
-    });
-  }
-
-  signUp(form: FormGroup) {
-    return this.apollo.mutate({
-      mutation: gql`
-        mutation($data: UserInput!) {
-          register(data: $data) {
-            token,
-            user {
-              id
-              firstName
-              lastName
-              email
-            }
-          }
-        }
-      `,
-      variables: {
-        data: form.value
-      }
-    });
-  }
+export class PostApiService extends BaseApiService {
 
   upload(file: File, postId: string) {
     return this.apollo.mutate({

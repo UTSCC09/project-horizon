@@ -37,6 +37,12 @@ type User {
   updatedAt: DateTime!
   posts: [Post!]
   files: [File!]
+  followers: [User!]
+  following: [User!]
+  followersCount: Float!
+  followingCount: Float!
+  postsCount: Float!
+  isFollowing: Boolean!
 }
 
 type UserToken {
@@ -56,6 +62,8 @@ type Query {
 type Mutation {
   register(data: UserInput!): UserToken!
   login(data: LoginInfo!): UserToken!
+  followUser(userId: Float!): User!
+  unfollowUser(userId: Float!): User!
   createPost(content: String!, files: [Upload!]): Post!
   deletePost(id: String!): Float!
 }
