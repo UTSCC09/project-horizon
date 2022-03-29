@@ -10,7 +10,6 @@ export class ApiService {
   constructor(private apollo: Apollo) { }
 
   signIn(form: FormGroup) {
-
     return this.apollo.mutate({
       mutation: gql`
         mutation($data: LoginInfo!) {
@@ -135,5 +134,35 @@ export class ApiService {
         userId
       }
     })
+  }
+
+  getUser(userId: number) {
+    return this.apollo.query({
+      query: gql`
+        query($userId: Float!) {
+          user(id: $userId) {
+            id
+            firstName
+            lastName
+            email
+            posts {
+              id
+              content
+              createdAt
+
+              files {
+                id
+                filename
+                mimetype
+                url
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        userId
+      }
+    });
   }
 }

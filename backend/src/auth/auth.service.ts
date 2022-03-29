@@ -40,6 +40,13 @@ export class AuthService {
    */
   public async getAuthenticatedUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new HttpException(
+        'Invalid credentials',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
     await this.verifyPassword(password, user.password);
     delete user.password;
     return user;

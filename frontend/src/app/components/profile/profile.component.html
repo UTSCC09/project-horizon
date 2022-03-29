@@ -1,2 +1,16 @@
 <app-navigation></app-navigation>
-<p>profile works!</p>
+<div class="profile-header">
+    <div class="profile-header-image">
+        <!-- <img src="{{ user.avatar }}" alt=""> -->
+    </div>
+    <div class="profile-header-content">
+        <h1>{{ user.firstName }} {{user.lastName}}</h1>
+        <h2>{{ user.email }}</h2>
+        <h2>{{ user.id }}</h2>
+    </div>
+    <hr>
+    <div class="profile-posts">
+      <app-post-list *ngIf="user.posts" [posts]="user.posts">
+      </app-post-list>
+    </div>
+</div>
