@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Box3, Mesh, Object3D, PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three';
 import { EngineService } from './engine.service';
 
@@ -10,7 +10,7 @@ import { ControlModes, TransformModes } from '../models/controls.model';
 @Injectable({
   providedIn: 'root'
 })
-export class SceneControlService {
+export class SceneControlService implements OnDestroy {
 
   private _camera!: PerspectiveCamera;
   private _cameraControls!: OrbitControls;
@@ -190,5 +190,10 @@ export class SceneControlService {
     this.fitCameraToCenteredObject(object);
     this._cameraControls.target.copy(object.position);
     this._cameraControls.update();
+  }
+
+  ngOnDestroy() {
+    this.removeControls();
+    this._ready = false;
   }
 }

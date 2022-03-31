@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { UserPost } from 'src/app/models/user.model';
 import { File } from 'src/app/models/user.model';
+import { EngineManagerService } from 'src/app/services/engine-manager.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
 import { environment } from 'src/environments/environment';
@@ -20,9 +21,16 @@ export class PostComponent implements OnInit {
 
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
-  constructor() {
-    this.engineService = new EngineService();
+  constructor(private em: EngineManagerService) {
+    this.engineService = new EngineService(em);
     this.sceneController = this.engineService.sceneController;
+
+    this.em.onEngineReset().subscribe((engine) => {
+      if (engine == this.engineService) {
+        this.renderEngine = false;
+        this.canvas.nativeElement.classList.add('hidden');
+      }
+    })
   }
 
   get snapshot() {
