@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ControlModes, Upload } from 'src/app/models/controls.model';
 import { PostApiService } from 'src/app/services/api/post-api.service';
+import { EngineManagerService } from 'src/app/services/engine-manager.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
 import { BufferGeometry, GridHelper, Mesh, MeshStandardMaterial, } from 'three';
@@ -38,8 +39,10 @@ export class UploadComponent implements OnInit {
     public config: DynamicDialogConfig,
     private api: PostApiService,
     private messageService: MessageService,
+    private engineManager: EngineManagerService,
   ) {
-    this.engineService = new EngineService();
+    this.engineService = new EngineService(engineManager);
+    this.engineService.setPriority(1);
     this.sceneController = this.engineService.sceneController;
     this.grid = new GridHelper(1000, 30);
 
