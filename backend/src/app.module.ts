@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 import { FileModule } from './file/file.module';
 import { HealthController } from './health/health.controller';
+import { CommentModule } from './comment/comment.module';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -37,6 +38,7 @@ const isProd = process.env.NODE_ENV === 'production';
     PostModule,
     FileModule,
     UserModule,
+    CommentModule,
   ],
   providers: [AppController],
   controllers: [HealthController],

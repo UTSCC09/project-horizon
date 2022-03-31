@@ -23,7 +23,7 @@ export class PostService {
     return this.postRepository.find();
   }
 
-  findOne(id: string, options?: FindOneOptions<Post>): Promise<Post> {
+  findOne(id: number, options?: FindOneOptions<Post>): Promise<Post> {
     return this.postRepository.findOne(id, options);
   }
 
@@ -36,14 +36,14 @@ export class PostService {
     });
   }
 
-  async update(id: string, post: Post): Promise<Post> {
+  async update(id: number, post: Post): Promise<Post> {
     const postToUpdate = await this.postRepository.findOne(id);
     postToUpdate.content = post.content;
 
     return this.postRepository.save(postToUpdate);
   }
 
-  async remove(id: string): Promise<number> {
+  async remove(id: number): Promise<number> {
     return await (await this.postRepository.delete(id)).affected;
   }
 }

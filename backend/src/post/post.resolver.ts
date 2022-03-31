@@ -35,7 +35,7 @@ export class PostResolver {
   }
 
   @Query(() => Post)
-  async getPost(@Args('id') id: string): Promise<Post> {
+  async getPost(@Args('id') id: number): Promise<Post> {
     return await this.postService.findOne(id);
   }
 
@@ -57,8 +57,14 @@ export class PostResolver {
     return post.user;
   }
 
+  @ResolveField()
+  async comments(@Parent() post: Post) {
+    post = await this.postService.findOne(post.id, { relations: ['comments'] });
+    return post.comments;
+  }
+
   @Mutation(() => Number)
-  async deletePost(@Args('id') id: string): Promise<number> {
+  async deletePost(@Args('id') id: number): Promise<number> {
     return await this.postService.remove(id);
   }
 }

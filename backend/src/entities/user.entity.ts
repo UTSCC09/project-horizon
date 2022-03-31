@@ -2,6 +2,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToOne } from 'typeorm';
 import { Post } from './post.entity';
 import { File } from './file.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 @ObjectType()
@@ -36,6 +37,10 @@ export class User {
   @OneToMany(() => Post, post => post.user)
   @Field(() => [Post], { nullable: true })
   posts: Post[];
+
+  @OneToMany(() => Comment, comment => comment.user)
+  @Field(() => [File], { nullable: true })
+  comments: Comment[];
 
   @OneToMany(() => File, file => file.user)
   @Field(() => [File], { nullable: true })

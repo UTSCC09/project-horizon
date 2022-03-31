@@ -19,13 +19,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Post {
+type Comment {
   id: String!
+  text: String!
+  createdAt: DateTime!
+  user: User
+  post: Post
+}
+
+type Post {
+  id: Float!
   content: String!
   createdAt: DateTime!
   updatedAt: DateTime!
   user: User!
   files: [File!]!
+  comments: [Comment!]!
 }
 
 type User {
@@ -36,6 +45,7 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   posts: [Post!]
+  comments: [File!]
   files: [File!]
   followers: [User!]
   following: [User!]
@@ -54,7 +64,7 @@ type Query {
   hello: String!
   user(id: Float!): User!
   getPosts: [Post!]!
-  getPost(id: String!): Post!
+  getPost(id: Float!): Post!
   getUserPosts(userId: Float!): [Post!]!
   file(id: String!): File!
 }
@@ -65,7 +75,8 @@ type Mutation {
   followUser(userId: Float!): User!
   unfollowUser(userId: Float!): User!
   createPost(content: String!, files: [Upload!]): Post!
-  deletePost(id: String!): Float!
+  deletePost(id: Float!): Float!
+  createComment(text: String!, postId: Float!): Comment!
 }
 
 input UserInput {
