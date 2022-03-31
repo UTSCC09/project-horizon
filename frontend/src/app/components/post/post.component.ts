@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { UserPost } from 'src/app/models/user.model';
-import { File } from 'src/app/models/user.model';
+import { UserPost } from 'src/app/models/post.model';
+import { File } from 'src/app/models/post.model';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
 import { environment } from 'src/environments/environment';

@@ -11,5 +11,8 @@
       <img *ngIf="!renderEngine && snapshot" [src]="fileUrl(snapshot)" [alt]="snapshot.filename">
       <canvas #canvas [id]="'canvas-' + post.id" class="hidden"></canvas>
     </div>
+    <div class="comments" *ngIf="post.comments">
+      <app-comment-list [comments]="post.comments"></app-comment-list>
+    </div>
   </div>
 </div>

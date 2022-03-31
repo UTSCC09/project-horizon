@@ -1,10 +1,18 @@
 export type UserPost = {
-	id: string;
+	id: number;
 	content: string;
 	createdAt: string;
 	files?: File[];
 	user: User;
+	comments?: Comment[];
 };
+
+export type Comment = {
+	id: number;
+	text: string;
+	createdAt: string;
+	user: User;
+}
 
 export type File = {
 	id: string;

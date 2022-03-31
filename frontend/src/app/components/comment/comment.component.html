@@ -1,0 +1,10 @@
+<div class="header">
+  <h4>
+    <a [href]="'/profile/' + comment.user.id">
+      {{comment.user.firstName}} {{comment.user.lastName}}
+    </a>
+  </h4>
+  <span>{{comment.createdAt | date }}</span>
+</div>
+<hr>
+<p>{{comment.text}}</p>

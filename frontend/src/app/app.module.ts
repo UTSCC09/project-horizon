@@ -19,6 +19,8 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { PostListComponent } from './components/post-list/post-list.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { CommentComponent } from './components/comment/comment.component';
+import { CommentListComponent } from './components/comment-list/comment-list.component';
 
 // Pipes
 import { FileSizePipe } from './pipes/file-size.pipe';
@@ -63,6 +65,8 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     PostComponent,
     FileSizePipe,
     UserListComponent,
+    CommentComponent,
+    CommentListComponent,
   ],
   imports: [
     BrowserModule,

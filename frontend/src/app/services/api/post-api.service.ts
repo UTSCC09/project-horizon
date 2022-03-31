@@ -71,6 +71,16 @@ export class PostApiService extends BaseApiService {
             id
             content
             createdAt
+            comments {
+              id
+              text
+              createdAt
+              user {
+                id
+                firstName
+                lastName
+              }
+            }
             user {
               id
               firstName
