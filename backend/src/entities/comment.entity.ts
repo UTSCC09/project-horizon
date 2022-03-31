@@ -8,7 +8,7 @@ import { User } from './user.entity';
 export class Comment {
   @Field()
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   @Field()
@@ -25,4 +25,10 @@ export class Comment {
   @ManyToOne(() => Post, post => post.comments)
   @Field(() => Post, { nullable: true })
   post: Post;
+
+  @ManyToMany(() => User, user => user.likedComments)
+  likes: User[];
+
+  @Field(() => Number, { defaultValue: 0 })
+  likesCount: number;
 }

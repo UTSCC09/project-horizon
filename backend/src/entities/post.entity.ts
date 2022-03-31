@@ -34,4 +34,10 @@ export class Post {
   @OneToMany(() => Comment, comment => comment.post)
   @Field(() => [Comment])
   comments: Comment[];
+
+  @ManyToMany(() => User, user => user.likedPosts)
+  likes: User[];
+
+  @Field(() => Number, { defaultValue: 0 })
+  likesCount: number;
 }

@@ -64,7 +64,10 @@ export class PostResolver {
   }
 
   @Mutation(() => Number)
-  async deletePost(@Args('id') id: number): Promise<number> {
-    return await this.postService.remove(id);
+  async deletePost(
+    @Args('id') id: number,
+    @RequestUser() user: User,
+  ): Promise<number> {
+    return await this.postService.remove(id, user);
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from 'src/entities/comment.entity';
+import { User } from 'src/entities/user.entity';
 import { Repository, FindOneOptions } from 'typeorm';
 
 @Injectable()
@@ -23,14 +24,25 @@ export class CommentService {
     return this.commentRepository.find();
   }
 
-  async getPostComments(postId: string): Promise<Comment[]> {
+  async getPostComments(postId: number): Promise<Comment[]> {
     return this.commentRepository.find({
       where: { post: { id: postId } },
     });
   }
 
-  findOne(id: string, options?: FindOneOptions<Comment>): Promise<Comment> {
+  async findOne(id: number, options?: FindOneOptions<Comment>): Promise<Comment> {
     return this.commentRepository.findOne(id, options);
   }
 
+  async unlike(commentId: number, user: User) {
+    const comment = await this.commentRepository.findOne(commentId);
+    comment.likes = comment.likes.filter(like => like.id !== user.id);
+    return this.commentRepository.save(comment);
+  }
+
+  async like(commentId: number, user: User) {
+    const comment = await this.commentRepository.findOne(commentId);
+    comment.likes.push(user);
+    return this.commentRepository.save(comment);
+  }
 }

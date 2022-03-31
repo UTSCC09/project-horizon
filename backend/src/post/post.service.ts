@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/entities/post.entity';
+import { User } from 'src/entities/user.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 
 @Injectable()
@@ -43,7 +44,12 @@ export class PostService {
     return this.postRepository.save(postToUpdate);
   }
 
-  async remove(id: number): Promise<number> {
+  async remove(id: number, user: User): Promise<number> {
+    const postToRemove = await this.postRepository.findOne(id);
+    if (postToRemove.user.id !== user.id) {
+      throw new Error('You are not allowed to remove this post');
+    }
+
     return await (await this.postRepository.delete(id)).affected;
   }
 }

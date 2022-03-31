@@ -20,11 +20,12 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Comment {
-  id: String!
+  id: Float!
   text: String!
   createdAt: DateTime!
   user: User
   post: Post
+  likesCount: Float!
 }
 
 type Post {
@@ -35,6 +36,7 @@ type Post {
   user: User!
   files: [File!]!
   comments: [Comment!]!
+  likesCount: Float!
 }
 
 type User {
@@ -77,6 +79,8 @@ type Mutation {
   createPost(content: String!, files: [Upload!]): Post!
   deletePost(id: Float!): Float!
   createComment(text: String!, postId: Float!): Comment!
+  likeComment(commentId: Float!): Comment!
+  unlikeComment(commentId: Float!): Comment!
 }
 
 input UserInput {

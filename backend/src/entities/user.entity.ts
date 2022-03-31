@@ -66,6 +66,12 @@ export class User {
 
   @Field(() => Boolean, { defaultValue: false })
   isFollowing: boolean;
+
+  @ManyToMany(() => Comment, comment => comment.likes)
+  likedComments: Comment[];
+
+  @ManyToMany(() => Post, post => post.likes)
+  likedPosts: Post[];
 }
 
 @ObjectType()
