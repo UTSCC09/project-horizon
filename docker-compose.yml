@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-
   backend:
     build: ./backend
     ports:
@@ -39,6 +38,18 @@ services:
       - ./db:/docker-entrypoint-initdb.d/
     ports:
       - 5432:5432
+    networks:
+      - backend-network
+
+  redis:
+    image: redis:5.0.3
+    restart: always
+    environment:
+      - REDIS_PASSWORD=docker
+      - REDIS_HOST=localhost
+      - REDIS_PORT=6379
+    ports:
+      - 6379:6379
     networks:
       - backend-network
 
