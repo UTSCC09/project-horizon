@@ -46,6 +46,8 @@ import { ColorPickerModule } from 'primeng/colorpicker';
 import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
+
 
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -72,6 +74,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     BrowserModule,
     AppRoutingModule,
     FileUploadModule,
+    DialogModule,
     HttpClientModule,
     ButtonModule,
     NgbModule,
@@ -115,7 +118,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
             httpLink.create({
               uri: `${environment.apiUrl}/graphql`,
               extractFiles,
-          })),
+            })),
         };
       },
       deps: [HttpLink],

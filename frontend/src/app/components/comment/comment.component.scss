@@ -1,0 +1,21 @@
+.comment {
+  padding: 5px;
+  display: flex;
+  flex-direction: column-reverse;
+
+  &-header {
+    font-size: 18px;
+    display: flex;
+    align-items: baseline;
+
+    button {
+      width: 4%;
+      height: 4%;
+    }
+  }
+
+  &-date {
+    font-size: 12px;
+    color: #8c8c8c;
+  }
+}

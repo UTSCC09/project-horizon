@@ -5,14 +5,24 @@
   </div>
   <hr>
   <div class="body">
-    <p-button styleClass="p-button-sm" (onClick)="setupRenderer()"> Render </p-button>
     <p>{{post.content}}</p>
     <div class="scene">
       <img *ngIf="!renderEngine && snapshot" [src]="fileUrl(snapshot)" [alt]="snapshot.filename">
       <canvas #canvas [id]="'canvas-' + post.id" class="hidden"></canvas>
+    </div>
+    <div class="buttons">
+      <p-button styleClass="p-button-sm" (onClick)="setupRenderer()"> Render </p-button>
+      <p-button styleClass="p-button-sm" (onClick)="toggleAddCommentDialog()"> Add Comment </p-button>
     </div>
     <div class="comments" *ngIf="post.comments && post.comments.length > 0">
       <app-comment-list [comments]="post.comments"></app-comment-list>
     </div>
   </div>
 </div>
+
+<p-dialog header="Add Comment" [(visible)]="showAddComment" [modal]="true" [style]="{width: '50vw'}">
+  <form  (ngSubmit)="addComment()">
+    <textarea pInputTextarea [(ngModel)]="commentText" [style]="{width: '100%'}"></textarea>
+    <p-button type="submit" label="Add Comment" class="p-button-success"></p-button>
+  </form>
+</p-dialog>
