@@ -1,5 +1,5 @@
-import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, ResolveField, ResolveProperty, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { RequestUser } from 'src/auth/jwt.strategy';
 import { Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
@@ -7,17 +7,23 @@ import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
 import { PostService } from './post.service';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { FileService } from 'src/file/file.service';
-import { UserService } from 'src/user/user.service';
+
+import { RedisService } from 'src/redis/redis.service';
 
 type Files = File[];
 
 @Resolver(() => Post)
 @UseGuards(GqlAuthGuard)
 export class PostResolver {
+  private redisClient;
+
   constructor(
     private readonly postService: PostService,
     private readonly fileService: FileService,
-  ) { }
+    private readonly redisService: RedisService,
+  ) {
+    this.redisClient = this.redisService.getClient();
+  }
 
   @Mutation(() => Post)
   async createPost(
