@@ -9,6 +9,8 @@ import { PostResolver } from './post.resolver';
 import { PostService } from './post.service';
 import { FileResolver } from 'src/file/file.resolver';
 
+import { RedisModule } from 'src/redis/redis.module';
+
 
 @Module({
   imports: [
@@ -16,6 +18,7 @@ import { FileResolver } from 'src/file/file.resolver';
     AuthModule,
     FileModule,
     UserModule,
+    RedisModule,
   ],
   controllers: [],
   providers: [PostResolver, PostService, FileResolver],

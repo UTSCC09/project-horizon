@@ -13,6 +13,8 @@ import { FileModule } from './file/file.module';
 import { HealthController } from './health/health.controller';
 import { CommentModule } from './comment/comment.module';
 
+import { RedisModule } from './redis/redis.module';
+
 const isProd = process.env.NODE_ENV === 'production';
 
 @Module({
@@ -39,6 +41,7 @@ const isProd = process.env.NODE_ENV === 'production';
     FileModule,
     UserModule,
     CommentModule,
+    RedisModule,
   ],
   providers: [AppController],
   controllers: [HealthController],

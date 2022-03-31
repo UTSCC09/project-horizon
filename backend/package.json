@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^8.4.3",
     "@nestjs/terminus": "^8.0.6",
     "@nestjs/typeorm": "^8.0.3",
+    "@types/ioredis": "^4.28.10",
     "apollo-server-express": "^3.6.6",
     "bcrypt": "^5.0.1",
     "express": "^4.17.3",

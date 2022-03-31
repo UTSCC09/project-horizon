@@ -1,11 +1,13 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { UserPost, Comment } from 'src/app/models/post.model';
-import { File } from 'src/app/models/post.model';
+import { UserPost, Comment, File } from 'src/app/models/post.model';
+
 import { CommentApiService } from 'src/app/services/api/comment-api.service';
+import { EngineManagerService } from 'src/app/services/engine-manager.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
 import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
@@ -20,21 +22,27 @@ export class PostComponent implements OnInit {
   commentText: string = '';
   commentLoading: boolean = false;
 
-  private commentApi: CommentApiService;
-  private messageService: MessageService;
-
   renderEngine: boolean = false;
 
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
   constructor(
-    commentApi: CommentApiService,
-    messageService: MessageService,
+    private commentApi: CommentApiService,
+    private messageService: MessageService,
+    private em: EngineManagerService,
   ) {
     this.commentApi = commentApi;
     this.messageService = messageService;
-    this.engineService = new EngineService();
+
+    this.engineService = new EngineService(em);
     this.sceneController = this.engineService.sceneController;
+
+    this.em.onEngineReset().subscribe((engine) => {
+      if (engine == this.engineService) {
+        this.renderEngine = false;
+        this.canvas.nativeElement.classList.add('hidden');
+      }
+    })
   }
 
   get snapshot() {
