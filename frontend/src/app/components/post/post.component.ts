@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { UserPost, Comment, File } from 'src/app/models/post.model';
 
@@ -99,24 +99,26 @@ export class PostComponent implements OnInit {
     this.showAddComment = !this.showAddComment;
   }
 
-  addComment() {
+  submitComment() {
     this.commentLoading = true;
+
     this.commentApi.addComment(this.post.id, this.commentText)
-      .subscribe(({data}) => {
-          let comment = (data as any).addComment as Comment
+      .subscribe(({ data }) => {
+          let comment = (data as any).createComment as Comment
           comment.user = this.post.user;
+
           this.post?.comments?.push(comment);
+
           this.showAddComment = false;
           this.commentText = '';
-          this.commentLoading = false;
         },
         (err) => {
-          this.commentLoading = false;
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: err.message,
           });
-        });
+        }),
+        () => this.commentLoading = false;
   }
 }

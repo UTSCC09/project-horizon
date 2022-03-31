@@ -21,8 +21,9 @@
 </div>
 
 <p-dialog header="Add Comment" [(visible)]="showAddComment" [modal]="true" [style]="{width: '50vw'}">
-  <form  (ngSubmit)="addComment()">
-    <textarea pInputTextarea [(ngModel)]="commentText" [style]="{width: '100%'}"></textarea>
+  <form (ngSubmit)="submitComment()">
+    <textarea pInputTextarea [(ngModel)]="commentText" [style]="{width: '100%'}"
+      [ngModelOptions]="{standalone: true}"></textarea>
     <p-button type="submit" label="Add Comment" class="p-button-success"></p-button>
   </form>
 </p-dialog>

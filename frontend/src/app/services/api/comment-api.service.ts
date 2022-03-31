@@ -6,7 +6,6 @@ import { gql } from 'apollo-angular';
   providedIn: 'root'
 })
 export class CommentApiService extends BaseApiService {
-
   addComment(postId: number, text: string) {
     return this.apollo.mutate({
       mutation: gql`
@@ -24,5 +23,4 @@ export class CommentApiService extends BaseApiService {
       },
     });
   }
-
 }

@@ -6,7 +6,6 @@ import { BaseApiService } from './base-api.service';
   providedIn: 'root'
 })
 export class PostApiService extends BaseApiService {
-
   upload(file: File, postId: string) {
     return this.apollo.mutate({
       mutation: gql`
@@ -60,6 +59,42 @@ export class PostApiService extends BaseApiService {
         }
       `,
       variables: { postId }
+    });
+  }
+
+  getFeed() {
+    return this.apollo.query({
+      query: gql`
+        query {
+          feed {
+            id
+            content
+            createdAt
+            comments {
+              id
+              text
+              createdAt
+              user {
+                id
+                firstName
+                lastName
+              }
+            }
+            user {
+              id
+              firstName
+              lastName
+              email
+            }
+            files {
+              id
+              filename
+              mimetype
+              url
+            }
+          }
+        }
+      `,
     });
   }
 

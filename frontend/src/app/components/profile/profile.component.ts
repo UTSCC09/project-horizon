@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit {
             }
           });
           this.user = user;
-          this.user.posts = posts;
+          this.user.posts = JSON.parse(JSON.stringify(posts));
         }, (error) => {
           this.messageService.add({
             severity: 'error',

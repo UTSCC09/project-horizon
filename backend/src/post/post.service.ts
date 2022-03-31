@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
+import { UserService } from 'src/user/user.service';
 import { FindOneOptions, Repository } from 'typeorm';
 
 @Injectable()
@@ -9,6 +10,7 @@ export class PostService {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    private readonly userService: UserService,
   ) { }
 
   async create(data: Post): Promise<Post> {
@@ -28,12 +30,38 @@ export class PostService {
     return this.postRepository.findOne(id, options);
   }
 
+  findByIds(ids: number[]): Promise<Post[]> {
+    return this.postRepository.findByIds(ids);
+  }
+
+  async userFeed(user: User): Promise<number[]> {
+    if (!user.following || !user.following.length) {
+      return Promise.resolve([]);
+    }
+
+    // Get the most recent posts from the users were following
+    const str = `
+      SELECT p.id
+      FROM post p
+      where p."userId" in (
+        ${user.following.map(u => `${u.id}`).join(',')}
+      )
+    `;
+
+    console.log(str);
+
+    return this.postRepository.query(str)
+  }
+
   async getUserPosts(userId: number): Promise<Post[]> {
     return this.postRepository.find({
       where: {
         user: userId
       },
-      relations: ['files']
+      relations: ['files'],
+      order: {
+        createdAt: 'DESC'
+      }
     });
   }
 

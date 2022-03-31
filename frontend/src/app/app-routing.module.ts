@@ -9,6 +9,7 @@ import { SignInComponent } from './components/signin/signin.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
+import { NotificationTabComponent } from './components/notification-tab/notification-tab.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,11 @@ const routes: Routes = [
   {
     path: 'profile/:id',
     component: ProfileComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'notifications',
+    component: NotificationTabComponent,
     canActivate: [AuthGuard],
   }
 ];

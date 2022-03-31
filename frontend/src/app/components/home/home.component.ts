@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
-import { User, UserPost } from 'src/app/models/post.model';
+import { User, UserPost, Comment } from 'src/app/models/post.model';
 import { PostApiService } from 'src/app/services/api/post-api.service';
 import { UserApiService } from 'src/app/services/api/user-api.service';
 import { UserService } from 'src/app/services/user.service';
@@ -34,9 +34,9 @@ export class HomeComponent implements OnInit {
   }
 
   getUserPosts(user: User) {
-    this.postApi.getUserPosts(user.id)
+    this.postApi.getFeed()
       .subscribe(({ data }) => {
-        this.userPosts = (data as any).getUserPosts;
+        this.userPosts = JSON.parse(JSON.stringify((data as any).feed))
       });
   }
 

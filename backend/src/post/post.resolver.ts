@@ -7,22 +7,19 @@ import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
 import { PostService } from './post.service';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { FileService } from 'src/file/file.service';
-
-import { RedisService } from 'src/redis/redis.service';
+import { UserService } from 'src/user/user.service';
 
 type Files = File[];
 
 @Resolver(() => Post)
 @UseGuards(GqlAuthGuard)
 export class PostResolver {
-  private redisClient;
 
   constructor(
     private readonly postService: PostService,
     private readonly fileService: FileService,
-    private readonly redisService: RedisService,
+    private readonly userService: UserService,
   ) {
-    this.redisClient = this.redisService.getClient();
   }
 
   @Mutation(() => Post)
@@ -33,6 +30,19 @@ export class PostResolver {
   ): Promise<Post> {
     files = await Promise.all((await Promise.all(files)).map(file => this.fileService.upload(file, user)));
     return await this.postService.create(({ content, user, files } as Post));
+  }
+
+
+  @Query(() => [Post])
+  async feed(
+    @RequestUser() user: User,
+  ): Promise<Post[]> {
+    user = await this.userService.findOne(user.id, { relations: ['following'] });
+    const postIds = await this.postService.userFeed(user);
+
+    console.log({postIds})
+
+    return this.postService.findByIds(postIds);
   }
 
   @Query(() => [Post])
@@ -65,8 +75,9 @@ export class PostResolver {
 
   @ResolveField()
   async comments(@Parent() post: Post) {
-    post = await this.postService.findOne(post.id, { relations: ['comments'] });
-    return post.comments;
+    post = await this.postService.findOne(post.id, { relations: ['comments'] } );
+
+    return post.comments.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
   @Mutation(() => Number)

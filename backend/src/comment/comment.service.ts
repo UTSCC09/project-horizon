@@ -2,21 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from 'src/entities/comment.entity';
 import { User } from 'src/entities/user.entity';
+import { RedisService } from 'src/redis/redis.service';
 import { Repository, FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class CommentService {
+  private redisClient;
+
   constructor(
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
-  ) { }
+    private readonly redisService: RedisService,
+  ) {
+    this.redisClient = this.redisService.getClient();
+  }
 
   async create(data: Comment): Promise<Comment> {
     const comment = new Comment();
     comment.text = data.text;
     comment.user = data.user;
     comment.post = data.post;
-    console.log(data);
     return this.commentRepository.save(comment);
   }
 
