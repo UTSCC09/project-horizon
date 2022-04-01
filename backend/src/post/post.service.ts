@@ -34,7 +34,7 @@ export class PostService {
     return this.postRepository.findByIds(ids);
   }
 
-  async userFeed(user: User): Promise<number[]> {
+  async userFeed(user: User, page: number, limit: number): Promise<number[]> {
     if (!user.following || !user.following.length) {
       return Promise.resolve([]);
     }
@@ -46,6 +46,9 @@ export class PostService {
       where p."userId" in (
         ${user.following.map(u => `${u.id}`).join(',')}
       )
+      ORDER BY p."created_at" DESC
+      LIMIT ${limit}
+      OFFSET ${page * limit}
     `;
 
     console.log(str);

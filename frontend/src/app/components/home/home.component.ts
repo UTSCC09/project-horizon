@@ -30,11 +30,11 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-   this.getUserPosts(user);
+   this.getUserPosts();
   }
 
-  getUserPosts(user: User) {
-    this.postApi.getFeed()
+  getUserPosts(page: number = 0, limit: number = 1) {
+    this.postApi.getFeed(page, limit)
       .subscribe(({ data }) => {
         this.userPosts = JSON.parse(JSON.stringify((data as any).feed))
       });

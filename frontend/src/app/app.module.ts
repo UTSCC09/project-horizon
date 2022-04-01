@@ -48,7 +48,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
-
+import {DataViewModule} from 'primeng/dataview';
 
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -97,6 +97,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     ColorPickerModule,
     TabViewModule,
     CheckboxModule,
+    DataViewModule,
   ],
   providers: [
     MessageService,

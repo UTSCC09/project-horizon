@@ -9,8 +9,6 @@ import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { FileService } from 'src/file/file.service';
 import { UserService } from 'src/user/user.service';
 
-type Files = File[];
-
 @Resolver(() => Post)
 @UseGuards(GqlAuthGuard)
 export class PostResolver {
@@ -35,10 +33,12 @@ export class PostResolver {
 
   @Query(() => [Post])
   async feed(
+    @Args('page') page: number,
+    @Args('limit') limit: number,
     @RequestUser() user: User,
   ): Promise<Post[]> {
     user = await this.userService.findOne(user.id, { relations: ['following'] });
-    const postIds = await this.postService.userFeed(user);
+    const postIds = await this.postService.userFeed(user, page, limit);
 
     console.log({postIds})
 

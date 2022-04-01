@@ -62,11 +62,11 @@ export class PostApiService extends BaseApiService {
     });
   }
 
-  getFeed() {
+  getFeed(page: number, limit: number = 25) {
     return this.apollo.query({
       query: gql`
-        query {
-          feed {
+        query($page: Float!, $limit: Float!) {
+          feed(page: $page, limit: $limit) {
             id
             content
             createdAt
@@ -95,6 +95,7 @@ export class PostApiService extends BaseApiService {
           }
         }
       `,
+      variables: { page, limit }
     });
   }
 

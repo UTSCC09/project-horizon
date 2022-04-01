@@ -65,7 +65,7 @@ type UserToken {
 type Query {
   hello: String!
   user(id: Float!): User!
-  feed: [Post!]!
+  feed(page: Float!, limit: Float!): [Post!]!
   getPosts: [Post!]!
   getPost(id: Float!): Post!
   getUserPosts(userId: Float!): [Post!]!
