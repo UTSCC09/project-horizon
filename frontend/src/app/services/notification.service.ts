@@ -38,6 +38,7 @@ export class NotificationService {
     const message: string = `${user.firstName} ${user.lastName} commented on your post`;
 
     this.messageService.add({
+      life: 7000,
       severity: 'success',
       summary: 'New Comment',
       detail: message,
@@ -50,6 +51,7 @@ export class NotificationService {
 
     const message: string = `${user.firstName} ${user.lastName} liked your comment`;
     this.messageService.add({
+      life: 7000,
       severity: 'success',
       summary: 'New Like',
       detail: message,
@@ -61,6 +63,7 @@ export class NotificationService {
     const message: string = `${user.firstName} ${user.lastName} is now following you`;
     this.messageService.add({
       severity: 'success', summary: 'New Follower', detail: message,
+      life: 7000,
       data: {
         link: {
           url: `/profile/${user.id}`,
