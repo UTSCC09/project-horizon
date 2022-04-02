@@ -70,6 +70,7 @@ export class PostApiService extends BaseApiService {
             id
             content
             createdAt
+            liked
             comments {
               id
               text
@@ -107,6 +108,7 @@ export class PostApiService extends BaseApiService {
             id
             content
             createdAt
+            liked
             comments {
               id
               text
@@ -136,5 +138,35 @@ export class PostApiService extends BaseApiService {
         userId
       }
     })
+  }
+
+  likePost(postId: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation likePost($postId: Float!) {
+          likePost(postId: $postId) {
+            id
+          }
+        }
+      `,
+      variables: {
+        postId,
+      },
+    });
+  }
+
+  unlikePost(postId: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation unlikePost($postId: Float!) {
+          unlikePost(postId: $postId) {
+            id
+          }
+        }
+      `,
+      variables: {
+        postId,
+      },
+    });
   }
 }

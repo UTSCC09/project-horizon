@@ -13,30 +13,24 @@ import { UploadComponent } from '../upload/upload.component';
   styleUrls: ['./home.component.scss', '../../app.component.scss']
 })
 export class HomeComponent implements OnInit {
-  public userPosts: UserPost[] = [];
+  public posts: UserPost[] = [];
 
   constructor(
     public dialogService: DialogService,
-    private userApi: UserApiService,
     private postApi: PostApiService,
-    private userService: UserService,
     private messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
-    const user = this.userService.user;
-    if (!user) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please make sure you are logged in' });
-      return;
-    }
-
-   this.getUserPosts(user);
+   this.getFeed();
   }
 
-  getUserPosts(user: User) {
+  getFeed() {
     this.postApi.getFeed()
       .subscribe(({ data }) => {
-        this.userPosts = JSON.parse(JSON.stringify((data as any).feed))
+        this.posts = JSON.parse(JSON.stringify((data as any).feed))
+      }, (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to get posts' });
       });
   }
 

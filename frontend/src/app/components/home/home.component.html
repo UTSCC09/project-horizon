@@ -11,7 +11,7 @@
 					<p>Consider inviting some friends to join and following them.</p>
 				</div>
 			</ng-template>
-			<app-post-list #postList [posts]="userPosts" *ngIf="(userPosts.length > 0); else noFeed">
+			<app-post-list #postList [posts]="posts" *ngIf="(posts.length > 0); else noFeed">
 			</app-post-list>
 		</div>
 		<div class="col-md-6 friends">

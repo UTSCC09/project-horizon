@@ -38,6 +38,7 @@ type Post {
   files: [File!]!
   comments: [Comment!]!
   likesCount: Float!
+  liked: Boolean!
 }
 
 type User {
@@ -80,6 +81,8 @@ type Mutation {
   unfollowUser(userId: Float!): User!
   createPost(content: String!, files: [Upload!]): Post!
   deletePost(id: Float!): Float!
+  likePost(postId: Float!): Post!
+  unlikePost(postId: Float!): Post!
   createComment(text: String!, postId: Float!): Comment!
   likeComment(commentId: Float!): Comment!
   unlikeComment(commentId: Float!): Comment!

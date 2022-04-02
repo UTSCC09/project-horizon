@@ -41,4 +41,7 @@ export class Post {
 
   @Field(() => Number, { defaultValue: 0 })
   likesCount: number;
+
+  @Field(() => Boolean, { defaultValue: false })
+  liked: boolean;
 }

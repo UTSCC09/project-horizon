@@ -5,6 +5,8 @@ export type UserPost = {
 	files?: File[];
 	user: User;
 	comments?: Comment[];
+
+	liked?: boolean;
 };
 
 export type Comment = {
