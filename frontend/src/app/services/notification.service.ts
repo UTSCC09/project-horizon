@@ -46,9 +46,7 @@ export class NotificationService implements OnDestroy {
   handleComment(data: any) {
     const user = data.payload.user;
     const comment = data.payload.comment;
-    const message: string = `${user.firstName} ${user.lastName} commented on your post \n
-      <a href="http://localhost:4200/profile/5">Click here to see</a>
-    `;
+    const message: string = `${user.firstName} ${user.lastName} commented on your post`;
     this.messageService.add({
       severity: 'success',
       summary: 'New Comment',
@@ -72,7 +70,13 @@ export class NotificationService implements OnDestroy {
     const user = data.payload.user;
     const message: string = `${user.firstName} ${user.lastName} is now following you`;
     this.messageService.add({
-      severity: 'success', summary: 'New Follower', detail: message
+      severity: 'success', summary: 'New Follower', detail: message,
+      data: {
+        link: {
+          url: `/profile/${user.id}`,
+          label: 'Click here to see'
+        }
+      }
     });
   }
 }
