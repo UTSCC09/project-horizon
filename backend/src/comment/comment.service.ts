@@ -72,18 +72,20 @@ export class CommentService {
   }
 
   async unlike(commentId: number, user: User) {
-    const comment = await this.commentRepository.findOne(commentId);
+    const comment = await this.commentRepository.findOne(commentId, { relations: ['likes'] });
     comment.likes = comment.likes.filter(like => like.id !== user.id);
     return this.commentRepository.save(comment);
   }
 
   async like(commentId: number, user: User) {
-    const comment = await this.commentRepository.findOne(commentId);
-    comment.likes.push(user);
-    console.log({ comment });
+    const comment = await this.commentRepository.findOne(commentId, { relations: ['likes'] });
+    if (comment.likes) {
+      comment.likes.push(user);
+    } else {
+      comment.likes = [user];
+    }
 
     this.publishLike(comment, user);
-
     return this.commentRepository.save(comment);
   }
 
@@ -107,5 +109,10 @@ export class CommentService {
         createdAt: comment.createdAt
       })
     );
+  }
+
+  async isLiked(commentId: number, user: User) {
+    const comment = await this.commentRepository.findOne(commentId, { relations: ['likes'] });
+    return comment.likes.some(like => like.id === user.id);
   }
 }

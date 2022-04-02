@@ -19,17 +19,17 @@ export class NavigationComponent implements OnInit {
         routerLinkActiveOptions: { exact: true },
       },
       {
+        label: 'Discover',
+        icon: 'pi pi-fw pi-search',
+        routerLink: ['/discover'],
+        routerLinkActiveOptions: { exact: false, },
+      },
+      {
         label: 'Profile',
         icon: 'pi pi-fw pi-user',
         routerLink: ['/profile/me'],
         routerLinkActiveOptions: { exact: false, },
       },
-      {
-        label: 'Notifications',
-        icon: 'pi pi-fw pi-bell',
-        routerLink: ['/notifications'],
-        routerLinkActiveOptions: { exact: false, },
-      }
     ];
   }
 

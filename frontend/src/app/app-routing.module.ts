@@ -29,6 +29,11 @@ const routes: Routes = [
     component: ProfileComponent,
     canActivate: [AuthGuard],
   },
+  {
+    path: 'discover',
+    component: HomeComponent,
+    canActivate: [AuthGuard],
+  }
 ];
 
 @NgModule({

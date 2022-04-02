@@ -2,7 +2,7 @@
 	<div class="posts-container">
 		<p-dataView [value]="posts" [paginator]="true" [lazy]="true" scrollable="true" [rows]="1" [lazy]="true"
 			(onLazyLoad)="loadPage($event)"
-			[totalRecords]="totalRecords">
+			[totalRecords]="total">
 			<ng-template pTemplate="listItem" let-post>
 				<app-post [post]="post"></app-post>
 			</ng-template>

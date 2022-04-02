@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Nullable } from '../models/utils.model';
 import { EngineService } from './engine.service';
 
 @Injectable({

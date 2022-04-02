@@ -8,6 +8,7 @@ import { UserPost, Comment } from 'src/app/models/post.model';
 })
 export class PostListComponent {
   @Input() posts: UserPost[] = [];
+  @Input() total: number = 0;
   @Output() getPage = new EventEmitter();
 
   userPosts: UserPost[] = [];
@@ -16,7 +17,6 @@ export class PostListComponent {
   constructor() { }
 
   loadPage(e: any) {
-    console.log({ emit: e.first })
     this.getPage.emit(e.first);
   }
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Post } from 'src/entities/post.entity';
+import { PaginatedPost, Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, In, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class PostService {
@@ -34,28 +34,54 @@ export class PostService {
     return this.postRepository.findByIds(ids);
   }
 
-  async userFeed(user: User, page: number, limit: number): Promise<number[]> {
+  async discover(id: number, page: number, limit: number): Promise<PaginatedPost> {
+    const [posts, total] = await this.postRepository.findAndCount(
+      {
+        where: {
+          user: Not(id)
+        },
+        relations: ['files'],
+        take: limit,
+        skip: page * limit,
+        order: {
+          createdAt: 'DESC'
+        }
+      },
+    );
+
+    return {
+      total,
+      posts,
+      page,
+      limit,
+    };
+  }
+
+  async userFeed(user: User, page: number, limit: number): Promise<PaginatedPost> {
     if (!user.following || !user.following.length) {
-      return Promise.resolve([]);
+      return Promise.resolve({ total: 0, posts: [] });
     }
 
     // Get the most recent posts from the users were following
-    const str = `
-      SELECT p.id
-      FROM post p
-      where p."userId" in (
-        ${user.following.map(u => `${u.id}`).join(',')}
-      )
-      ORDER BY p."created_at" DESC
-      LIMIT ${limit}
-      OFFSET ${page * limit}
-    `;
+    const [posts, total] = await this.postRepository.findAndCount({
+      where: {
+        user: In(user.following.map(u => u.id))
+      },
+      relations: ['files'],
+      take: limit,
+      skip: page * limit,
+    })
 
-    return this.postRepository.query(str)
+    return {
+      total,
+      posts,
+      page,
+      limit,
+    }
   }
 
-  async getUserPosts(userId: number): Promise<Post[]> {
-    return this.postRepository.find({
+  async getUserPosts(userId: number, page: number = 0, limit: number = 10): Promise<PaginatedPost> {
+    const posts = await this.postRepository.find({
       where: {
         user: userId
       },
@@ -64,6 +90,19 @@ export class PostService {
         createdAt: 'DESC'
       }
     });
+
+    const total = await this.postRepository.count({
+      where: {
+        user: userId
+      }
+    });
+
+    return {
+      total,
+      posts,
+      page,
+      limit,
+    }
   }
 
   async update(id: number, post: Post): Promise<Post> {
@@ -80,5 +119,27 @@ export class PostService {
     }
 
     return await (await this.postRepository.delete(id)).affected;
+  }
+
+  async unlike(postId: number, user: User) {
+    const post = await this.postRepository.findOne(postId, { relations: ['likes'] });
+    post.likes = post.likes.filter(like => like.id !== user.id);
+    return this.postRepository.save(post);
+  }
+
+  async like(postId: number, user: User) {
+    const post = await this.postRepository.findOne(postId, { relations: ['likes'] });
+    if (post.likes) {
+      post.likes.push(user);
+    } else {
+      post.likes = [user];
+    }
+
+    return this.postRepository.save(post);
+  }
+
+  async isLiked(postId: number, user: User) {
+    const post = await this.postRepository.findOne(postId, { relations: ['likes'] });
+    return post.likes.some(like => like.id === user.id);
   }
 }

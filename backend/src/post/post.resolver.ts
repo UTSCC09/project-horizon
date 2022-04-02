@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { RequestUser } from 'src/auth/jwt.strategy';
-import { Post } from 'src/entities/post.entity';
+import { PaginatedPost, Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
 import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
 import { PostService } from './post.service';
@@ -30,17 +30,23 @@ export class PostResolver {
     return await this.postService.create(({ content, user, files } as Post));
   }
 
-
-  @Query(() => [Post])
+  @Query(() => PaginatedPost)
   async feed(
     @Args('page') page: number,
     @Args('limit') limit: number,
     @RequestUser() user: User,
-  ): Promise<Post[]> {
+  ): Promise<PaginatedPost> {
     user = await this.userService.findOne(user.id, { relations: ['following'] });
-    const postIds = await this.postService.userFeed(user, page, limit);
+    return this.postService.userFeed(user, page, limit);
+  }
 
-    return this.postService.findByIds(postIds);
+  @Query(() => PaginatedPost)
+  async discover(
+    @Args('page') page: number,
+    @Args('limit') limit: number,
+    @RequestUser() user: User,
+  ): Promise<PaginatedPost> {
+    return this.postService.discover(user.id, page, limit);
   }
 
   @Query(() => [Post])
@@ -53,10 +59,13 @@ export class PostResolver {
     return await this.postService.findOne(id);
   }
 
-  @Query(() => [Post])
-  async getUserPosts(@Args('userId') userId: number): Promise<Post[]> {
-    const posts = await this.postService.getUserPosts(userId);
-    return posts;
+  @Query(() => PaginatedPost)
+  async getUserPosts(
+    @Args('page') page: number,
+    @Args('limit') limit: number,
+    @Args('userId') userId: number
+  ): Promise<PaginatedPost> {
+    return this.postService.getUserPosts(userId, page, limit);
   }
 
   @ResolveField()
@@ -73,7 +82,7 @@ export class PostResolver {
 
   @ResolveField()
   async comments(@Parent() post: Post) {
-    post = await this.postService.findOne(post.id, { relations: ['comments'] } );
+    post = await this.postService.findOne(post.id, { relations: ['comments'] });
 
     return post.comments.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
@@ -84,5 +93,29 @@ export class PostResolver {
     @RequestUser() user: User,
   ): Promise<number> {
     return await this.postService.remove(id, user);
+  }
+
+  @Mutation(() => Post)
+  async likePost(
+    @Args('postId') postId: number,
+    @RequestUser() user: User,
+  ) {
+    return await this.postService.like(postId, user);
+  }
+
+  @Mutation(() => Post)
+  async unlikePost(
+    @Args('postId') postId: number,
+    @RequestUser() user: User,
+  ) {
+    return await this.postService.unlike(postId, user);
+  }
+
+  @ResolveField()
+  async liked(
+    @Parent() post: Post,
+    @RequestUser() user: User,
+  ) {
+    return await this.postService.isLiked(post.id, user);
   }
 }
