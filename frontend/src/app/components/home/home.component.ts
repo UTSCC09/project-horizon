@@ -1,12 +1,11 @@
-import { AfterContentInit, Component, OnInit } from '@angular/core';
+import { AfterContentInit, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { DialogService } from 'primeng/dynamicdialog';
-import { User, UserPost, Comment } from 'src/app/models/post.model';
+import { UserPost } from 'src/app/models/post.model';
 import { PostApiService } from 'src/app/services/api/post-api.service';
 import { UserApiService } from 'src/app/services/api/user-api.service';
 import { UserService } from 'src/app/services/user.service';
-import { UploadComponent } from '../upload/upload.component';
+
 
 @Component({
   selector: 'app-home',
@@ -24,8 +23,6 @@ export class HomeComponent implements AfterContentInit {
   page: number = 0;
 
   constructor(
-    public dialogService: DialogService,
-    private userApi: UserApiService,
     private postApi: PostApiService,
     private userService: UserService,
     private messageService: MessageService,
@@ -75,16 +72,5 @@ export class HomeComponent implements AfterContentInit {
     } else {
       this.getFeed(page, limit);
     }
-  }
-
-  showPostDialog() {
-    this.dialogService.open(UploadComponent, {
-      header: 'Create Post',
-      width: '90%',
-      contentStyle: {
-        'max-height': '90vh',
-        overflow: 'auto'
-      }
-    });
   }
 }

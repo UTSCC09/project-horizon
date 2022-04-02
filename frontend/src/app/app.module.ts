@@ -22,6 +22,7 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { CommentListComponent } from './components/comment-list/comment-list.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import { NewPostComponent } from './components/new-post/new-post.component';
 
 // Pipes
 import { FileSizePipe } from './pipes/file-size.pipe';
@@ -72,6 +73,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     CommentComponent,
     CommentListComponent,
     LoaderComponent,
+    NewPostComponent,
   ],
   imports: [
     BrowserModule,
