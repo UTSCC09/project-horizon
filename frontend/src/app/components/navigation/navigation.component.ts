@@ -24,12 +24,6 @@ export class NavigationComponent implements OnInit {
         routerLink: ['/profile/me'],
         routerLinkActiveOptions: { exact: false, },
       },
-      {
-        label: 'Notifications',
-        icon: 'pi pi-fw pi-bell',
-        routerLink: ['/notifications'],
-        routerLinkActiveOptions: { exact: false, },
-      }
     ];
   }
 

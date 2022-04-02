@@ -21,7 +21,6 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { CommentListComponent } from './components/comment-list/comment-list.component';
-import { NotificationTabComponent } from './components/notification-tab/notification-tab.component';
 
 // Pipes
 import { FileSizePipe } from './pipes/file-size.pipe';
@@ -70,7 +69,6 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     UserListComponent,
     CommentComponent,
     CommentListComponent,
-    NotificationTabComponent,
   ],
   imports: [
     BrowserModule,
