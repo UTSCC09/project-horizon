@@ -24,6 +24,13 @@ export class UserResolver {
 		return this.userService.findOne(id);
 	}
 
+	@Query(() => [User])
+	async search(
+		@Args('query') query: string,
+	): Promise<User[]> {
+		return this.userService.search(query);
+	}
+
 	@Query(() => Notification)
 	async notifications(@RequestUser() user: User) {
 		const channel = `notifications:${user.id}`;

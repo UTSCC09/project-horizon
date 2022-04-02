@@ -41,6 +41,24 @@ export class UserApiService extends BaseApiService {
     });
   }
 
+  searchUser(query: string) {
+    return this.apollo.query({
+      query: gql`
+        query($query: String!) {
+          search(query: $query) {
+            id
+            firstName
+            lastName
+            email
+          }
+        }
+      `,
+      variables: {
+        query
+      }
+    });
+  }
+
   followUser(id: number) {
     return this.apollo.mutate({
       mutation: gql`

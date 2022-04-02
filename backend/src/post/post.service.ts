@@ -65,7 +65,7 @@ export class PostService {
 
   async userFeed(user: User, page: number, limit: number): Promise<PaginatedPost> {
     if (!user.following || !user.following.length) {
-      return Promise.resolve({ total: 0, posts: [] });
+      return Promise.resolve({ total: 0, posts: [], page, limit });
     }
 
     // Get the most recent posts from the users were following
@@ -76,7 +76,7 @@ export class PostService {
       relations: ['files'],
       take: limit,
       skip: page * limit,
-    })
+    });
 
     return {
       total,
