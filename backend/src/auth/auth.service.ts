@@ -17,6 +17,14 @@ export class AuthService {
    * @returns Promise
    */
   async register(userData: UserInput): Promise<User> {
+    const user = await this.userService.findByEmail(userData.email);
+    if (user) {
+      throw new HttpException(
+        'Email already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     return this.userService.create(userData);
   }
 
