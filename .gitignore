@@ -1,12 +1,9 @@
 .vscode/settings.json
-.firebase
 
 /**/dist
 /**/node_modules
-/**/*/package-lock.json
+/**/package-lock.json
 /**/.angular
-backend/firebaseadminsdk.json
-firebase-debug.log
 **/*/.DS_Store
 
 kube/certbot
