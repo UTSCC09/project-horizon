@@ -68,3 +68,6 @@ gcloud projects add-iam-policy-binding $GKE_PROJECT \
 gcloud projects add-iam-policy-binding $GKE_PROJECT \
 	--member=serviceAccount:$SA_EMAIL \
 	--role=roles/storage.admin
+
+
+kubectl autoscale deployment backend --max 3 --min 1 --cpu-percent 50

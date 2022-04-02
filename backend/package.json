@@ -27,6 +27,8 @@
     "@nestjs/platform-express": "^8.4.3",
     "@nestjs/terminus": "^8.0.6",
     "@nestjs/typeorm": "^8.0.3",
+    "@ntegral/nestjs-sentry": "^3.0.7",
+    "@sentry/node": "^6.19.3",
     "apollo-server-express": "^3.6.6",
     "bcrypt": "^5.0.1",
     "express": "^4.17.3",

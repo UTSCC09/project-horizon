@@ -14,6 +14,10 @@ import { HealthController } from './health/health.controller';
 import { CommentModule } from './comment/comment.module';
 
 import { RedisModule } from './redis/redis.module';
+import { SentryModule } from '@ntegral/nestjs-sentry';
+
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { GraphqlInterceptor } from '@ntegral/nestjs-sentry';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -35,6 +39,13 @@ const isProd = process.env.NODE_ENV === 'production';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    SentryModule.forRoot({
+      dsn: process.env.SENTRY_DSN,
+      debug: false,
+      environment: isProd ? 'production' : 'dev',
+      release: null,
+      logLevels: ['error', 'warn'],
+    }),
     AuthModule,
     PostModule,
     FileModule,
@@ -42,7 +53,13 @@ const isProd = process.env.NODE_ENV === 'production';
     CommentModule,
     RedisModule,
   ],
-  providers: [AppController],
+  providers: [
+    AppController,
+    {
+      provide: APP_INTERCEPTOR,
+      useFactory: () => new GraphqlInterceptor(),
+    },
+  ],
   controllers: [HealthController],
 })
 export class AppModule {}
