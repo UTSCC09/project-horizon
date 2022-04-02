@@ -54,9 +54,24 @@ and NestJS, Postgresql and Apollo for the backend because of their GraphQL suppo
   - Auth: Passport.js/JWT
 
 ## Deployment
-<!-- **Task:** Explain how you have deployed your application.  -->
+Our entire application is deployed on Google Cloud Platform's (GCP) Google Kubernetes Engine (GKE).
+This proved to be more challenging then we initially though as we had to deploy a variety of services, but also had to fix a suprising amount of issues. The deployments consist of the following (linked are the relevant kubernetes YML files):
+- [Frontend and backend deployments and service](/kube/deployment.yml)
+- [Ingress Controller and SSL](kube/ingress.yml)
+- [Postgresql DB](/kube/psql.yml)
+- [Redis deployement and service](/kube/redis.yml)
+- [Persistant volume for storing files](/kube/volume.yml)
 
-Kubernetes on Google cloud platform
+As for how the actual deployment works, we use a seperate deployment and node port services for both the frontend and backend. Both of these container images are built using docker and pushed onto the GCP container registry.
+
+We then use an ingress controller to route traffic to the correct node port. This ingress controller was also given a static IP, hostname and an SSL certificate to allow secure connection to the entire application.
+
+We also use persistent volumes to store the files uploaded by the users. This is done to ensure that the files are not lost when the application is restarted.
+
+Finally, we have seperate services/deployments for both postgresql and redis which are not given an external ip and thus not accessible outside the cluster. A health check is also added to the backend's postgressql service to ensure that the database is accessible before a new pod is set as the active one, which took us a long time to figure out and debug.
+
+
+**Note:** For some more information on the first/second attempt at deploying the application as well as our sources for the deployment, please refer to the [gcloud.md](/kube/gcloud.md) file.
 
 ## Maintenance
 <!-- **Task:** Explain how you monitor your deployed app to make sure that everything is working as expected. -->
