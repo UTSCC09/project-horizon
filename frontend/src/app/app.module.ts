@@ -55,6 +55,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
+import { NotificationService } from './services/notification.service';
 
 
 @NgModule({

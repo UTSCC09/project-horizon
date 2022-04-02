@@ -1,18 +1,65 @@
-import { UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { RequestUser } from 'src/auth/jwt.strategy';
-import { User } from 'src/entities/user.entity';
+import { User, Notification } from 'src/entities/user.entity';
 import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
+import { RedisService } from 'src/redis/redis.service';
 import { UserService } from './user.service';
 
 @Resolver(() => User)
 @UseGuards(GqlAuthGuard)
 export class UserResolver {
-	constructor(private readonly userService: UserService) { }
+	private subscriber;
+	private activeChannels: string[] = [];
+
+	constructor(
+		private readonly userService: UserService,
+		private readonly redis: RedisService,
+	) {
+		this.subscriber = this.redis.subscriber;
+	}
 
 	@Query(() => User)
 	async user(@Args('id') id: number) {
 		return this.userService.findOne(id);
+	}
+
+	@Query(() => Notification)
+	async notifications(@RequestUser() user: User) {
+		const channel = `notifications:${user.id}`;
+		this.activeChannels.push(channel);
+		this.subscriber.subscribe(...this.activeChannels, (err, count) => {
+			if (err) {
+				//  return 500
+				throw new HttpException(
+					'Failed to subscribe to notifications',
+					HttpStatus.INTERNAL_SERVER_ERROR,
+				);
+			}
+
+			if (count == 0) {
+				throw new HttpException(
+					'Failed to subscribe to notifications channel',
+					HttpStatus.INTERNAL_SERVER_ERROR,
+				);
+			}
+
+			console.log(`subscribed to notifications:${user.id} ${count} channels`);
+		});
+
+		return await new Promise((resolve, reject) => {
+			this.subscriber.on('message', (msgChannel, message) => {
+				if (msgChannel != channel) return;
+
+				const notification = JSON.parse(message);
+				console.log(notification);
+
+				this.subscriber.unsubscribe(channel);
+				this.activeChannels = this.activeChannels.filter(c => c !== channel);
+
+				return resolve(notification);
+			});
+		});
 	}
 
 	@ResolveField()

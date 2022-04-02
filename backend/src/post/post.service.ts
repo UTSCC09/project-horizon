@@ -1,17 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedPost, Post } from 'src/entities/post.entity';
-import { User } from 'src/entities/user.entity';
+import { User, NotificationType } from 'src/entities/user.entity';
+import { RedisService } from 'src/redis/redis.service';
 import { UserService } from 'src/user/user.service';
 import { FindOneOptions, In, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class PostService {
+  private publisher;
+
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
     private readonly userService: UserService,
-  ) { }
+    private readonly redis: RedisService,
+  ) {
+    this.publisher = this.redis.publisher;
+  }
 
   async create(data: Post): Promise<Post> {
     const post = new Post();
@@ -128,14 +134,38 @@ export class PostService {
   }
 
   async like(postId: number, user: User) {
-    const post = await this.postRepository.findOne(postId, { relations: ['likes'] });
+    const post = await this.postRepository.findOne(postId, { relations: ['likes', 'user'] });
     if (post.likes) {
       post.likes.push(user);
     } else {
       post.likes = [user];
     }
 
+    this.publishLike(post, user);
+
     return this.postRepository.save(post);
+  }
+
+  async publishLike(post: Post, soureUser: User) {
+    this.publisher.publish(`notifications:${post.user.id}`,
+      JSON.stringify({
+        type: NotificationType.POST_LIKE,
+        sourceId: soureUser.id,
+        createdAt: new Date().toISOString(),
+        payload: JSON.stringify({
+          post: {
+            id: post.id,
+            content: post.content,
+          },
+          user: {
+            id: soureUser.id,
+            firstName: soureUser.firstName,
+            lastName: soureUser.lastName,
+            email: soureUser.email
+          }
+        })
+      })
+    );
   }
 
   async isLiked(postId: number, user: User) {

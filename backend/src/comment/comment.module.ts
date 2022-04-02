@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import { Comment } from 'src/entities/comment.entity';
 import { RedisModule } from 'src/redis/redis.module';
+import { PostModule } from 'src/post/post.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment]), AuthModule, RedisModule],
+  imports: [TypeOrmModule.forFeature([Comment]), AuthModule, RedisModule, PostModule],
   providers: [CommentService, CommentResolver],
 })
 export class CommentModule {}

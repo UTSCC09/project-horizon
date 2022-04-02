@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { UserPost } from 'src/app/models/post.model';
 import { PostApiService } from 'src/app/services/api/post-api.service';
 import { UserApiService } from 'src/app/services/api/user-api.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { UserService } from 'src/app/services/user.service';
 
 
@@ -27,6 +28,7 @@ export class HomeComponent implements AfterContentInit {
     private messageService: MessageService,
     private router: Router,
     private userService: UserService,
+    private notificationService: NotificationService,
   ) { }
 
   ngAfterContentInit(): void {

@@ -1,2 +1,16 @@
 <router-outlet></router-outlet>
-<p-toast></p-toast>
+<p-toast position="bottom-center">
+	<ng-template let-message pTemplate="message">
+		<span [class]="'p-toast-message-icon pi' + (message.icon ? ' ' + message.icon : '')"
+			[ngClass]="{'pi-info-circle': message.severity == 'info', 'pi-exclamation-triangle': message.severity == 'warn',
+                        'pi-times-circle': message.severity == 'error', 'pi-check' :message.severity == 'success'}"></span>
+		<div class="p-toast-message-text">
+			<div class="p-toast-summary">{{message.summary}}</div>
+			<div class="p-toast-detail">
+				{{ message.detail }}
+				<br *ngIf="message.data?.link">
+				<a *ngIf="message.data?.link" href="{{message.data.link.url}}" target="_blank">{{message.data.link.label}}</a>
+			</div>
+		</div>
+	</ng-template>
+</p-toast>
