@@ -22,6 +22,7 @@ COPY package*.json ./
 RUN npm install --only=production
 
 COPY . .
+RUN rm -rf uploads
 COPY .env.production .env
 COPY --from=development /usr/src/app/dist ./dist
 

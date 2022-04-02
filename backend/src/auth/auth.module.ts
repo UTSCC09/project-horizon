@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from 'src/user/user.module';
@@ -15,11 +16,12 @@ const passport = PassportModule.register({
 @Module({
   imports: [
     UserModule,
-    JwtModule.register({
-      secret: process.env.SECRETKEY,
-      signOptions: {
-        expiresIn: process.env.EXPIRESIN,
-      },
+    ConfigModule,
+    JwtModule.registerAsync({
+      useFactory: async () => ({
+        secret: process.env.SECRETKEY,
+        signOptions: { expiresIn: process.env.EXPIRESIN },
+      }),
     }),
     passport,
   ],
