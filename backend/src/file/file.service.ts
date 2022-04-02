@@ -40,7 +40,7 @@ export class FileService {
     return createWriteStream(this.getUrl(file));
   }
 
-  async postFiles(postId: string): Promise<File[]> {
+  async postFiles(postId: number): Promise<File[]> {
     return this.repo.find({ where: { post: {id: postId} } });
   }
 

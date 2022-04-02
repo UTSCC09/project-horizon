@@ -6,7 +6,6 @@ import { BaseApiService } from './base-api.service';
   providedIn: 'root'
 })
 export class UserApiService extends BaseApiService {
-
   getUser(userId: number) {
     return this.apollo.query({
       query: gql`
@@ -33,24 +32,29 @@ export class UserApiService extends BaseApiService {
               firstName
               lastName
             }
-
-            posts {
-              id
-              content
-              createdAt
-
-              files {
-                id
-                filename
-                mimetype
-                url
-              }
-            }
           }
         }
       `,
       variables: {
         userId
+      }
+    });
+  }
+
+  searchUser(query: string) {
+    return this.apollo.query({
+      query: gql`
+        query($query: String!) {
+          search(query: $query) {
+            id
+            firstName
+            lastName
+            email
+          }
+        }
+      `,
+      variables: {
+        query
       }
     });
   }

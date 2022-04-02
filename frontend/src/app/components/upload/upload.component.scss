@@ -5,6 +5,11 @@
 		overflow: visible;
 	}
 
+	&-snapshot-preview {
+		max-width: 100%;
+		border: 1px black solid;
+	}
+
 	::ng-deep #canvas {
 		width: 100%;
 		height: 100%;
@@ -16,6 +21,7 @@
 
 	&-section {
 		display: flex;
+		padding-top: 20px;
 
 		&-header {
 			&-content {

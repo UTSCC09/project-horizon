@@ -27,12 +27,15 @@
     "@nestjs/platform-express": "^8.4.3",
     "@nestjs/terminus": "^8.0.6",
     "@nestjs/typeorm": "^8.0.3",
+    "@ntegral/nestjs-sentry": "^3.0.7",
+    "@sentry/node": "^6.19.3",
     "apollo-server-express": "^3.6.6",
     "bcrypt": "^5.0.1",
     "express": "^4.17.3",
     "graphql": "^16.3.0",
     "graphql-tools": "^8.2.3",
     "graphql-upload": "^13.0.0",
+    "ioredis": "^5.0.3",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "pg": "^8.7.3",
@@ -41,6 +44,7 @@
     "typeorm": "^0.2.45"
   },
   "devDependencies": {
+    "@types/ioredis": "^4.28.10",
     "@nestjs/cli": "^8.2.4",
     "@nestjs/schematics": "^8.0.8",
     "@types/babel__core": "^7.1.19",

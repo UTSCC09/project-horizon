@@ -19,9 +19,14 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { PostListComponent } from './components/post-list/post-list.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { CommentComponent } from './components/comment/comment.component';
+import { CommentListComponent } from './components/comment-list/comment-list.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { NewPostComponent } from './components/new-post/new-post.component';
 
 // Pipes
 import { FileSizePipe } from './pipes/file-size.pipe';
+import { NgPipesModule } from 'ngx-pipes';
 
 // External Modules
 import { FileUploadModule } from 'primeng/fileupload';
@@ -44,11 +49,14 @@ import { ColorPickerModule } from 'primeng/colorpicker';
 import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
+import { DataViewModule } from 'primeng/dataview';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
-
 
 @NgModule({
   declarations: [
@@ -63,11 +71,17 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     PostComponent,
     FileSizePipe,
     UserListComponent,
+    CommentComponent,
+    CommentListComponent,
+    LoaderComponent,
+    NewPostComponent,
   ],
   imports: [
+    AutoCompleteModule,
     BrowserModule,
     AppRoutingModule,
     FileUploadModule,
+    DialogModule,
     HttpClientModule,
     ButtonModule,
     NgbModule,
@@ -88,6 +102,9 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     ColorPickerModule,
     TabViewModule,
     CheckboxModule,
+    DataViewModule,
+    ProgressSpinnerModule,
+    NgPipesModule,
   ],
   providers: [
     MessageService,
@@ -111,7 +128,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
             httpLink.create({
               uri: `${environment.apiUrl}/graphql`,
               extractFiles,
-          })),
+            })),
         };
       },
       deps: [HttpLink],

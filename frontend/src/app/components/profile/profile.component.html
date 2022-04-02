@@ -1,6 +1,6 @@
 <app-navigation></app-navigation>
+<app-new-post></app-new-post>
 <div class="profile">
-
     <div class="profile-header">
         <div class="profile-header-content">
             <h1>{{ user.firstName }} {{user.lastName}}</h1>
@@ -22,7 +22,7 @@
         <p-tabView>
             <p-tabPanel header="Posts">
                 <div class="profile-posts">
-                    <app-post-list *ngIf="user.posts" [posts]="user.posts">
+                    <app-post-list *ngIf="posts.length > 0" [posts]="posts">
                     </app-post-list>
                 </div>
             </p-tabPanel>

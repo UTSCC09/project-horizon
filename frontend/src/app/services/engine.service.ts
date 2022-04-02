@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-import { ElementRef, Injectable, NgZone } from '@angular/core';
+import { ElementRef, Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Mesh, Object3D } from 'three';
 import { BehaviorSubject } from 'rxjs';
 
 import { SceneControlService } from './scene-control.service';
+import { EngineManagerService } from './engine-manager.service';
 
 /**
  * @class EngineService
@@ -20,7 +21,7 @@ import { SceneControlService } from './scene-control.service';
 @Injectable({
   providedIn: 'root'
 })
-export class EngineService {
+export class EngineService implements OnDestroy {
   private _canvas!: HTMLCanvasElement | null;
   private renderer!: THREE.WebGLRenderer;
   private scene!: THREE.Scene;
@@ -34,11 +35,20 @@ export class EngineService {
   private _sceneController: SceneControlService;
 
   private _mouseClick: BehaviorSubject<MouseEvent> = new BehaviorSubject(new MouseEvent('click'));
+  private _rendering: boolean = false;
 
-  constructor() {
-    this.ngZone = new NgZone({ enableLongStackTrace: false });
-    this._sceneController = new SceneControlService(this);
-    this.stlLoader = new STLLoader();
+  /**
+   * Priority of this engine instance
+   * Used to determine which engine to destroy when there are multiple instances
+   */
+  private _priority: number = 0;
+
+  get rendering(): boolean {
+    return this._rendering;
+  }
+
+  get priority(): number {
+    return this._priority;
   }
 
   get sceneController() {
@@ -49,7 +59,19 @@ export class EngineService {
     return this._canvas;
   }
 
+  constructor(private manager: EngineManagerService) {
+    this.ngZone = new NgZone({ enableLongStackTrace: false });
+    this._sceneController = new SceneControlService(this);
+    this.stlLoader = new STLLoader();
+  }
+
+  public setPriority(priority: number) {
+    this._priority = priority;
+  }
+
   public createScene(canvas: ElementRef<HTMLCanvasElement>): void {
+    this.manager.activateEngine(this);
+
     // The first step is to get the reference of the canvas element from our HTML document
     this._canvas = canvas.nativeElement;
 
@@ -91,6 +113,7 @@ export class EngineService {
     // because it could trigger heavy changeDetection cycles.
     this.ngZone.runOutsideAngular(() => {
       if (document.readyState !== 'loading') {
+        this._rendering = true;
         this.render();
       } else {
         window.addEventListener('DOMContentLoaded', this.render.bind(this));
@@ -113,7 +136,7 @@ export class EngineService {
   public saveAndDestroy(): any {
     this.scene.updateMatrixWorld();
     const data = this.scene.toJSON();
-    this.ngOnDestroy();
+    this.resetState();
     return data;
   }
 
@@ -125,6 +148,10 @@ export class EngineService {
   }
 
   public ngOnDestroy(): void {
+    this.resetState();
+  }
+
+  public resetState(): void {
     if (this.frameId != null) {
       cancelAnimationFrame(this.frameId);
     }
@@ -133,6 +160,8 @@ export class EngineService {
       this.renderer.dispose();
       this._canvas = null;
     }
+
+    this._rendering = false;
   }
 
   /*

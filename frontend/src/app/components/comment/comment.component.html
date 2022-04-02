@@ -1,0 +1,16 @@
+<div class="comment">
+  <div class="comment-header">
+    <span class="comment-author">
+      <a [href]="'/profile/' + comment.user.id">{{comment.user.firstName}} {{comment.user.lastName}}:</a>
+    </span>
+    <span class="comment-text">
+      {{comment.text}}
+    </span>
+  </div>
+  <div class="comment-sub">
+    <span class="comment-date">{{ date(comment.createdAt) | timeAgo }}</span>
+    <span *ngIf="!isMe()" class="like-comment"
+      (click)="likeUnlike()">{{ comment.liked ? 'Unlike' : 'Like'}}</span>
+    <span *ngIf="isMe()">You</span>
+  </div>
+</div>

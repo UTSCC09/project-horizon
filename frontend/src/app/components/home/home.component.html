@@ -1,8 +1,23 @@
 <app-navigation></app-navigation>
+<app-new-post></app-new-post>
 <div class="app-content">
-	<app-post-list [posts]="userPosts">
-	</app-post-list>
-</div>
-<div class="fixed-bnts">
-	<p-button icon="pi pi-plus sm" styleClass="p-button-sm" (onClick)="showPostDialog()"></p-button>
+	<div class="app-content-container row">
+		<div class="col-md-2 spacer">
+		</div>
+		<div class="col-lg-8 post-list">
+			<h1 class="text-center">{{ title }}</h1>
+			<app-post-list [posts]="userPosts" [total]="total" *ngIf="(!loading && userPosts.length > 0); else noFeed"
+				(getPage)="updateFeed($event)">
+			</app-post-list>
+			<ng-template #noFeed>
+				<div class="no-feed" *ngIf="!loading">
+					<h2>Sorry, there are no posts available</h2>
+					<p>Consider inviting some friends to join and following them.</p>
+				</div>
+			</ng-template>
+			<app-loader [loading]="loading"></app-loader>
+		</div>
+		<div class="col-md-2 friends">
+		</div>
+	</div>
 </div>

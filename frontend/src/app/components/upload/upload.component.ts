@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ControlModes, Upload } from 'src/app/models/controls.model';
 import { PostApiService } from 'src/app/services/api/post-api.service';
+import { EngineManagerService } from 'src/app/services/engine-manager.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
 import { BufferGeometry, GridHelper, Mesh, MeshStandardMaterial, } from 'three';
@@ -20,6 +21,7 @@ export class UploadComponent implements OnInit {
   private sceneObjects: { geometry: BufferGeometry, mesh: Mesh }[] = [];
   public controlOptions: any[] = [];
   loading = false;
+  keepGrid = false;
 
   grid: GridHelper;
   backgroundColor: string = '#ffffff';
@@ -38,8 +40,10 @@ export class UploadComponent implements OnInit {
     public config: DynamicDialogConfig,
     private api: PostApiService,
     private messageService: MessageService,
+    private engineManager: EngineManagerService,
   ) {
-    this.engineService = new EngineService();
+    this.engineService = new EngineService(engineManager);
+    this.engineService.setPriority(1);
     this.sceneController = this.engineService.sceneController;
     this.grid = new GridHelper(1000, 30);
 
@@ -72,7 +76,7 @@ export class UploadComponent implements OnInit {
   }
 
   takeSnapshot() {
-    this.grid.visible = false;
+    if (!this.keepGrid) this.grid.visible = false;
     this.sceneController.hideControls();
     const image = this.engineService.takeSnapshot();
     this.snapshotEncoded = image;
@@ -94,7 +98,7 @@ export class UploadComponent implements OnInit {
     const content = this.postContent;
 
     this.sceneController.removeControls();
-    this.engineService.removeFromScene(this.grid);
+    if (!this.keepGrid) this.engineService.removeFromScene(this.grid);
 
     const scene = this.engineService.saveAndDestroy();
     const blob = new Blob([JSON.stringify(scene)], { type: "application/json;charset=utf-8" })
@@ -126,12 +130,7 @@ export class UploadComponent implements OnInit {
 
   updateColor(upload: Upload) {
     if (!upload.mesh) return;
-    if (typeof (upload.color as any) === 'string') {
-      (upload.mesh.material as MeshStandardMaterial).color.setHex( Number((upload.color as any).replace('#', '0x')));
-    } else {
-      (upload.mesh.material as MeshStandardMaterial).color.setHex(upload.color);
-    }
-
+    (upload.mesh.material as MeshStandardMaterial).color.setHex( Number(upload.color.replace('#', '0x')));
   }
 
   centerUpload(upload: Upload) {
@@ -178,7 +177,7 @@ export class UploadComponent implements OnInit {
           controls,
           snapshot: this.engineService.createMeshSnapshot(mesh, this.sceneObjects.map(c => c.mesh)),
           snapshotImage: null,
-          color: 0xffffff,
+          color: '0xffffff',
         };
 
         this.uploads.push(upload);
@@ -197,5 +196,9 @@ export class UploadComponent implements OnInit {
       }
     };
     reader.readAsText(files[0]);
+  }
+
+  changeTab(event: any) {
+    this.sceneController.updateKeyListener(event.index != 0);
   }
 }

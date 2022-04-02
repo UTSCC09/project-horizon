@@ -1,7 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UserPost } from 'src/app/models/user.model';
-import { File } from 'src/app/models/user.model';
-import { environment } from 'src/environments/environment';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UserPost, Comment } from 'src/app/models/post.model';
 
 @Component({
   selector: 'app-post-list',
@@ -9,9 +7,16 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./post-list.component.scss']
 })
 export class PostListComponent {
-
   @Input() posts: UserPost[] = [];
+  @Input() total: number = 0;
+  @Output() getPage = new EventEmitter();
+
+  userPosts: UserPost[] = [];
+  totalRecords: number = 200;
 
   constructor() { }
 
+  loadPage(e: any) {
+    this.getPage.emit(e.first);
+  }
 }

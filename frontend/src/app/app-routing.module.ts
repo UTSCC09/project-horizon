@@ -28,6 +28,11 @@ const routes: Routes = [
     path: 'profile/:id',
     component: ProfileComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'discover',
+    component: HomeComponent,
+    canActivate: [AuthGuard],
   }
 ];
 

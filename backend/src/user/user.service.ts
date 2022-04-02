@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserInput } from 'src/entities/user.entity';
-import { FindOneOptions, Repository } from 'typeorm';
+import { NotificationType, User, UserInput } from 'src/entities/user.entity';
+import { FindOneOptions, Repository, In, Like } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class UserService {
+  private publisher;
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-  ) { }
+    private readonly redisService: RedisService,
+  ) {
+    this.publisher = this.redisService.publisher;
+  }
 
   async create(data: UserInput): Promise<User> {
     const user = new User();
@@ -46,23 +52,51 @@ export class UserService {
     await this.usersRepository.delete(id);
   }
 
+  search(query: string): Promise<User[]> {
+    return this.usersRepository.find({
+      where: [
+        { firstName: Like(`${query}%`) },
+        { lastName: Like(`${query}%`) },
+        { email: Like(`${query}%`) },
+      ],
+    });;
+  }
+
   async followUser(user: User, userId: number): Promise<User> {
-    const other = await this.usersRepository.findOne(userId);
+    const other = await this.usersRepository.findOne(userId, { relations: ['following'] });
     if (user.following) {
       user.following.push(other);
     } else {
       user.following = [other];
     }
 
+    this.publishFollow(user, userId);
     this.usersRepository.save(user);
     return other;
   }
 
   async unfollowUser(user: User, userId: number): Promise<User> {
-    const other = await this.usersRepository.findOne(userId);
+    const other = await this.usersRepository.findOne(userId, { relations: ['following'] });
     user.following = user.following?.filter(u => u.id !== other.id) || [];
     this.usersRepository.save(user);
     return other;
   }
 
+  async publishFollow(source: User, follow_id: number) {
+    this.publisher.publish(`notifications:${follow_id}`,
+      JSON.stringify({
+        type: NotificationType.FOLLOW,
+        sourceId: source.id,
+        payload: JSON.stringify({
+          user: {
+            firstName: source.firstName,
+            lastName: source.lastName,
+            email: source.email,
+            id: source.id,
+          },
+        }),
+        createdAt: new Date().toISOString()
+      })
+    )
+  }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Box3, Mesh, Object3D, PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three';
 import { EngineService } from './engine.service';
 
@@ -10,11 +10,13 @@ import { ControlModes, TransformModes } from '../models/controls.model';
 @Injectable({
   providedIn: 'root'
 })
-export class SceneControlService {
+export class SceneControlService implements OnDestroy {
 
   private _camera!: PerspectiveCamera;
   private _cameraControls!: OrbitControls;
   private _ready: boolean = false;
+
+  private ignoreKeyboard: boolean = false;
 
   get ready(): boolean {
     return this._ready;
@@ -104,6 +106,7 @@ export class SceneControlService {
 
   initModeListener() {
     document.addEventListener('keydown', (event) => {
+      if (this.ignoreKeyboard) return;
       switch(event.key) {
         case 'r':
           this.updateSceneControl(ControlModes.Rotate);
@@ -190,5 +193,15 @@ export class SceneControlService {
     this.fitCameraToCenteredObject(object);
     this._cameraControls.target.copy(object.position);
     this._cameraControls.update();
+  }
+
+  ngOnDestroy() {
+    this.removeControls();
+    this._ready = false;
+  }
+
+  updateKeyListener(val: boolean) {
+    this.ignoreKeyboard = val;
+    if (val) this.updateSceneControl(ControlModes.Camera);
   }
 }

@@ -59,3 +59,15 @@ gcloud compute ssl-certificates create horizon \
     <!-- https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ -->
     <!-- https://newrelic.com/blog/how-to-relic/kubernetes-health-checks -->
     <!-- https://medium.com/@athulravindran/google-kubernetes-engine-gke-persistence-volume-nfs-on-multiple-nodes-readwritemany-4b6e8d565b08 -->
+
+
+gcloud iam service-accounts create $SA_NAME
+gcloud projects add-iam-policy-binding $GKE_PROJECT \
+	--member=serviceAccount:$SA_EMAIL \
+	--role=roles/container.admin
+gcloud projects add-iam-policy-binding $GKE_PROJECT \
+	--member=serviceAccount:$SA_EMAIL \
+	--role=roles/storage.admin
+
+
+kubectl autoscale deployment backend --max 3 --min 1 --cpu-percent 50

@@ -1,14 +1,15 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, OneToMany, JoinTable } from 'typeorm';
 import { User } from './user.entity';
 import { File } from './file.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 @ObjectType()
 export class Post {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn()
   @Field()
-  id: string;
+  id: number;
 
   @Column()
   @Field()
@@ -29,4 +30,33 @@ export class Post {
   @OneToMany(() => File, file => file.post)
   @Field(() => [File])
   files: File[];
+
+  @OneToMany(() => Comment, comment => comment.post)
+  @Field(() => [Comment])
+  comments: Comment[];
+
+  @ManyToMany(() => User, user => user.likedPosts)
+  @JoinTable()
+  likes: User[];
+
+  @Field(() => Number, { defaultValue: 0 })
+  likesCount: number;
+
+  @Field(() => Boolean, { defaultValue: false })
+  liked: boolean;
+}
+
+@ObjectType()
+export class PaginatedPost {
+  @Field(() => [Post])
+  posts: Post[];
+
+  @Field()
+  total: number;
+
+  @Field()
+  limit?: number;
+
+  @Field()
+  page?: number;
 }

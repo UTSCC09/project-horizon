@@ -2,6 +2,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToOne } from 'typeorm';
 import { Post } from './post.entity';
 import { File } from './file.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 @ObjectType()
@@ -37,6 +38,10 @@ export class User {
   @Field(() => [Post], { nullable: true })
   posts: Post[];
 
+  @OneToMany(() => Comment, comment => comment.user)
+  @Field(() => [File], { nullable: true })
+  comments: Comment[];
+
   @OneToMany(() => File, file => file.user)
   @Field(() => [File], { nullable: true })
   files: File[];
@@ -61,6 +66,12 @@ export class User {
 
   @Field(() => Boolean, { defaultValue: false })
   isFollowing: boolean;
+
+  @ManyToMany(() => Comment, comment => comment.likes)
+  likedComments: Comment[];
+
+  @ManyToMany(() => Post, post => post.likes)
+  likedPosts: Post[];
 }
 
 @ObjectType()
@@ -97,4 +108,26 @@ export class LoginInfo {
 
   @Field()
   password: string;
+}
+
+@ObjectType()
+export class Notification {
+  @Field()
+  sourceId: number;
+
+  @Field()
+  type: NotificationType;
+
+  @Field()
+  payload: string;
+
+  @Field()
+  createdAt: string;
+}
+
+export enum NotificationType {
+	COMMENT = 'comment',
+	LIKE = 'like',
+	FOLLOW = 'follow',
+  POST_LIKE = 'post_like',
 }
