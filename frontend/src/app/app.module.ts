@@ -26,6 +26,7 @@ import { NewPostComponent } from './components/new-post/new-post.component';
 
 // Pipes
 import { FileSizePipe } from './pipes/file-size.pipe';
+import { NgPipesModule } from 'ngx-pipes';
 
 // External Modules
 import { FileUploadModule } from 'primeng/fileupload';
@@ -55,8 +56,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
-import { NotificationService } from './services/notification.service';
-
 
 @NgModule({
   declarations: [
@@ -103,6 +102,7 @@ import { NotificationService } from './services/notification.service';
     CheckboxModule,
     DataViewModule,
     ProgressSpinnerModule,
+    NgPipesModule,
   ],
   providers: [
     MessageService,

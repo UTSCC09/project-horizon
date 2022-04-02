@@ -1,12 +1,13 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { UserPost, Comment, File } from 'src/app/models/post.model';
+import { UserPost, Comment, File, User } from 'src/app/models/post.model';
 
 import { CommentApiService } from 'src/app/services/api/comment-api.service';
 import { PostApiService } from 'src/app/services/api/post-api.service';
 import { EngineManagerService } from 'src/app/services/engine-manager.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
+import { UserService } from 'src/app/services/user.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -14,15 +15,16 @@ import { environment } from 'src/environments/environment';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss']
 })
-export class PostComponent implements OnInit {
+export class PostComponent {
   @Input() post!: UserPost;
 
-  showAddComment: boolean = false;
   private engineService: EngineService;
   private sceneController: SceneControlService;
+  private user: User | null;
   commentText: string = '';
-  commentLoading: boolean = false;
 
+  commentLoading: boolean = false;
+  showAddComment: boolean = false;
   renderEngine: boolean = false;
 
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
@@ -32,10 +34,12 @@ export class PostComponent implements OnInit {
     private messageService: MessageService,
     private postApi: PostApiService,
     private em: EngineManagerService,
+    private userService: UserService
   ) {
     this.commentApi = commentApi;
     this.postApi = postApi;
     this.messageService = messageService;
+    this.user = this.userService.user;
 
     this.engineService = new EngineService(em);
     this.sceneController = this.engineService.sceneController;
@@ -54,11 +58,6 @@ export class PostComponent implements OnInit {
 
   get scene() {
     return this.post?.files?.filter(file => file.mimetype === 'application/json')[0];
-  }
-
-
-  ngOnInit(): void {
-
   }
 
   fileUrl(file?: File) {
@@ -128,7 +127,7 @@ export class PostComponent implements OnInit {
           let comment = (data as any).createComment as Comment
           comment.user = this.post.user;
 
-          this.post?.comments?.push(comment);
+          this.post.comments = [comment, ...(this.post.comments || [])];
 
           this.showAddComment = false;
           this.commentText = '';
@@ -141,5 +140,13 @@ export class PostComponent implements OnInit {
           });
         }),
         () => this.commentLoading = false;
+  }
+
+  date(date: string) {
+    return new Date(date);
+  }
+
+  isMe() {
+    return this.post.user.id === this.user?.id;
   }
 }

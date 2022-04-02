@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from 'src/entities/comment.entity';
 import { User, NotificationType } from 'src/entities/user.entity';
@@ -51,8 +51,11 @@ export class CommentService {
     comment.user = data.user;
     comment.post = data.post;
 
-    const newComment = await this.commentRepository.save(comment)
-    this.notify(newComment);
+    const newComment = await this.commentRepository.save(comment);
+    const postOwner = await this.postService.findOne(newComment.post.id, { relations: ['user'] });
+
+    if (data.user.id != postOwner.user.id)
+      this.notify(newComment);
 
     return newComment;
   }
@@ -79,13 +82,20 @@ export class CommentService {
 
   async like(commentId: number, user: User) {
     const comment = await this.commentRepository.findOne(commentId, { relations: ['likes', 'user'] });
+    if (user.id != comment.user.id)
+      this.publishLike(comment, user);
+    else
+      throw new HttpException(
+        'You cannot like your own comment',
+        HttpStatus.BAD_REQUEST
+      );
+
     if (comment.likes) {
       comment.likes.push(user);
     } else {
       comment.likes = [user];
     }
 
-    this.publishLike(comment, user);
     return this.commentRepository.save(comment);
   }
 

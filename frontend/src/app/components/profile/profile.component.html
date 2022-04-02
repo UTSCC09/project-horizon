@@ -22,7 +22,7 @@
         <p-tabView>
             <p-tabPanel header="Posts">
                 <div class="profile-posts">
-                    <app-post-list *ngIf="user.posts" [posts]="user.posts">
+                    <app-post-list *ngIf="posts.length > 0" [posts]="posts">
                     </app-post-list>
                 </div>
             </p-tabPanel>

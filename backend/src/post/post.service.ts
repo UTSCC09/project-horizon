@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedPost, Post } from 'src/entities/post.entity';
 import { User, NotificationType } from 'src/entities/user.entity';
@@ -135,13 +135,20 @@ export class PostService {
 
   async like(postId: number, user: User) {
     const post = await this.postRepository.findOne(postId, { relations: ['likes', 'user'] });
+    if (post.user.id !== user.id)
+      this.publishLike(post, user);
+    else
+      throw new HttpException(
+        'You cannot like your own post',
+        HttpStatus.BAD_REQUEST
+      );
+
     if (post.likes) {
       post.likes.push(user);
     } else {
       post.likes = [user];
     }
 
-    this.publishLike(post, user);
 
     return this.postRepository.save(post);
   }
