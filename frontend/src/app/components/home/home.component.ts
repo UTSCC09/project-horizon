@@ -4,6 +4,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { User, UserPost, Comment } from 'src/app/models/post.model';
 import { PostApiService } from 'src/app/services/api/post-api.service';
 import { UserApiService } from 'src/app/services/api/user-api.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { UserService } from 'src/app/services/user.service';
 import { UploadComponent } from '../upload/upload.component';
 
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit {
     private postApi: PostApiService,
     private userService: UserService,
     private messageService: MessageService,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit(): void {

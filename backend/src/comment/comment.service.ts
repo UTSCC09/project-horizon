@@ -1,20 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from 'src/entities/comment.entity';
-import { User } from 'src/entities/user.entity';
+import { User, NotificationType } from 'src/entities/user.entity';
+import { PostService } from 'src/post/post.service';
 import { RedisService } from 'src/redis/redis.service';
 import { Repository, FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class CommentService {
-  private redisClient;
+  private publisher;
 
   constructor(
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
     private readonly redisService: RedisService,
+    private readonly postService: PostService,
   ) {
-    this.redisClient = this.redisService.getClient();
+    this.publisher = this.redisService.publisher;
+  }
+
+  async notify(comment: Comment) {
+    const post = await this.postService.findOne(comment.post.id, { relations: ['user'] })
+
+    this.publisher.publish(`notifications:${post.user.id}`,
+      JSON.stringify({
+        type: NotificationType.COMMENT,
+        sourceId: comment.id,
+        payload: JSON.stringify(comment),
+        createdAt: comment.createdAt
+      })
+    );
   }
 
   async create(data: Comment): Promise<Comment> {
@@ -22,7 +37,11 @@ export class CommentService {
     comment.text = data.text;
     comment.user = data.user;
     comment.post = data.post;
-    return this.commentRepository.save(comment);
+
+    const newComment = await this.commentRepository.save(comment)
+    this.notify(newComment);
+
+    return newComment;
   }
 
   async findAll(): Promise<Comment[]> {

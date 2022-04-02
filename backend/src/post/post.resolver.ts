@@ -40,8 +40,6 @@ export class PostResolver {
     user = await this.userService.findOne(user.id, { relations: ['following'] });
     const postIds = await this.postService.userFeed(user, page, limit);
 
-    console.log({postIds})
-
     return this.postService.findByIds(postIds);
   }
 

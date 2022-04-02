@@ -53,6 +53,7 @@ import {DataViewModule} from 'primeng/dataview';
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
+import { NotificationService } from './services/notification.service';
 
 
 @NgModule({

@@ -62,9 +62,17 @@ type UserToken {
   user: User!
 }
 
+type Notification {
+  sourceId: Float!
+  type: String!
+  payload: String!
+  createdAt: String!
+}
+
 type Query {
   hello: String!
   user(id: Float!): User!
+  notifications: Notification!
   feed(page: Float!, limit: Float!): [Post!]!
   getPosts: [Post!]!
   getPost(id: Float!): Post!

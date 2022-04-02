@@ -51,8 +51,6 @@ export class PostService {
       OFFSET ${page * limit}
     `;
 
-    console.log(str);
-
     return this.postRepository.query(str)
   }
 

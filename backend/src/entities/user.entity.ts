@@ -109,3 +109,24 @@ export class LoginInfo {
   @Field()
   password: string;
 }
+
+@ObjectType()
+export class Notification {
+  @Field()
+  sourceId: number;
+
+  @Field()
+  type: NotificationType;
+
+  @Field()
+  payload: string;
+
+  @Field()
+  createdAt: string;
+}
+
+export enum NotificationType {
+	COMMENT = 'comment',
+	LIKE = 'like',
+	FOLLOW = 'follow',
+}
