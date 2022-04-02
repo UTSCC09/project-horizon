@@ -9,6 +9,6 @@
   </div>
   <div class="comment-sub">
     <span class="comment-date">{{comment.createdAt | date }}</span>
-    <span class="like-comment">Like</span>
+    <span class="like-comment" (click)="likeUnlike()">{{ comment.liked ? 'Unlike' : 'Like'}}</span>
   </div>
 </div>

@@ -23,4 +23,35 @@ export class CommentApiService extends BaseApiService {
       },
     });
   }
+
+  likeComment(commentId: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation likeComment($commentId: Float!) {
+          likeComment(commentId: $commentId) {
+            id
+          }
+        }
+      `,
+      variables: {
+        commentId,
+      },
+    });
+  }
+
+  unlikeComment(commentId: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation unlikeComment($commentId: Float!) {
+          unlikeComment(commentId: $commentId) {
+            id
+          }
+        }
+      `,
+      variables: {
+        commentId,
+      },
+    });
+  }
+
 }

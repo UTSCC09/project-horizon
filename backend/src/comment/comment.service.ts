@@ -40,14 +40,19 @@ export class CommentService {
   }
 
   async unlike(commentId: number, user: User) {
-    const comment = await this.commentRepository.findOne(commentId);
+    const comment = await this.commentRepository.findOne(commentId, { relations: ['likes'] });
     comment.likes = comment.likes.filter(like => like.id !== user.id);
     return this.commentRepository.save(comment);
   }
 
   async like(commentId: number, user: User) {
-    const comment = await this.commentRepository.findOne(commentId);
-    comment.likes.push(user);
+    const comment = await this.commentRepository.findOne(commentId, { relations: ['likes'] });
+    if (comment.likes) {
+      comment.likes.push(user);
+    } else {
+      comment.likes = [user];
+    }
+
     return this.commentRepository.save(comment);
   }
 
