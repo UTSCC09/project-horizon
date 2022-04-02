@@ -50,7 +50,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(req: any, payload: JwtPayload): Promise<User> {
     const token = req.headers?.authorization?.replace('Bearer ', '');
 
-    if (this.bl.blacklisted(token)) {
+    if (await this.bl.blacklisted(token)) {
       throw new HttpException('Session Expired', HttpStatus.UNAUTHORIZED);
     }
 

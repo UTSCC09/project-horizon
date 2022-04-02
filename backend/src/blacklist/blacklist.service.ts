@@ -17,8 +17,8 @@ export class BlacklistService {
 		this.cached_blacklist.push(token);
 	}
 
-	public blacklisted(token: string): boolean {
+	async blacklisted(token: string): Promise<boolean> {
 		if (this.cached_blacklist.includes(token)) return true;
-		return !!this._blacklist.get(token);
+		return !!(await this._blacklist.get(token));
 	}
 }

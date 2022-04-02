@@ -118,8 +118,10 @@ import { far } from '@fortawesome/free-regular-svg-icons';
           link: onError(({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
               graphQLErrors.forEach((err) => {
-                if (err.extensions['exception'].status == 401) {
-                  window.location.href = 'login';
+                if (err?.extensions['exception'] && err.extensions['exception'].status == 401) {
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('user');
+                  window.location.reload();
                 }
               }
               );
