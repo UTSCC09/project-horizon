@@ -50,4 +50,15 @@ export class AuthApiService extends BaseApiService {
     });
   }
 
+  logout() {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation {
+          logout {
+            message
+          }
+        }
+      `
+    });
+  }
 }

@@ -1,15 +1,17 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { JwtPayload } from './jwt.strategy';
+import { AuthToken, JwtPayload } from './jwt.strategy';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginInfo, User, UserInput } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { BlacklistService } from '../blacklist/blacklist.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly blacklistService: BlacklistService,
   ) { }
 
   /** Create user with user data
@@ -102,5 +104,9 @@ export class AuthService {
     const accessToken = this.jwtService.sign(user);
 
     return accessToken;
+  }
+
+  invalidateUser(token: string): void {
+    this.blacklistService.blacklist(token);
   }
 }

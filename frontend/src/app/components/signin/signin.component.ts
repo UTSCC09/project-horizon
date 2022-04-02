@@ -44,7 +44,6 @@ export class SignInComponent {
         });
 
         this.userService.setUser(data.login.user);
-        localStorage.setItem('token', data.login.token);
 
         this.router.navigate(['/']);
       },
