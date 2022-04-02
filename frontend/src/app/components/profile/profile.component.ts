@@ -22,8 +22,12 @@ export class ProfileComponent implements OnInit {
     private messageService: MessageService,
     private userApi: UserApiService,
   ) {
-    let userId = this.router.url.split('/')[2];
+    this.user = this.userService.user as User;
     this.currentUser = this.userService.user as User;
+  }
+
+  ngOnInit() {
+    let userId = this.router.url.split('/')[2];
 
     if (userId === 'me') {
       userId = "" + this.userService.user?.id;
@@ -53,11 +57,6 @@ export class ProfileComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User not found' });
       this.router.navigate(['/']);
     }
-
-    this.user = this.userService.user as User;
-  }
-
-  ngOnInit() {
   }
 
   followOrUnfollow() {
@@ -89,5 +88,4 @@ export class ProfileComponent implements OnInit {
         }, errored);
     }
   }
-
 }
