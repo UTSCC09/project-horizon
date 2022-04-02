@@ -21,7 +21,6 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { CommentListComponent } from './components/comment-list/comment-list.component';
-import { NotificationTabComponent } from './components/notification-tab/notification-tab.component';
 
 // Pipes
 import { FileSizePipe } from './pipes/file-size.pipe';
@@ -71,7 +70,6 @@ import { NotificationService } from './services/notification.service';
     UserListComponent,
     CommentComponent,
     CommentListComponent,
-    NotificationTabComponent,
   ],
   imports: [
     BrowserModule,

@@ -7,8 +7,7 @@ import { NotificationApiService } from './api/notification-api.service';
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService implements OnDestroy {
-  private _notification: Subject<any> = new Subject<any>();
+export class NotificationService {
   private notificationHandlers = {
     [Type.COMMENT]: this.handleComment.bind(this),
     [Type.LIKE]: this.handleLike.bind(this),
@@ -22,7 +21,6 @@ export class NotificationService implements OnDestroy {
     this.subscriber.notification.subscribe(({ data }) => {
       const notification = JSON.parse(JSON.stringify(data.notifications));
       notification.payload = JSON.parse(notification.payload);
-      this._notification.next(notification);
 
       if (Object.values(Type).includes(notification.type)) {
         const type: Type = notification.type as Type;
@@ -35,18 +33,10 @@ export class NotificationService implements OnDestroy {
     });
   }
 
-  get notification() {
-    return this._notification;
-  }
-
-  ngOnDestroy() {
-    this._notification.complete();
-  }
-
   handleComment(data: any) {
     const user = data.payload.user;
-    const comment = data.payload.comment;
     const message: string = `${user.firstName} ${user.lastName} commented on your post`;
+
     this.messageService.add({
       severity: 'success',
       summary: 'New Comment',
