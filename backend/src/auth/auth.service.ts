@@ -60,7 +60,7 @@ export class AuthService {
     plainTextPassword: string,
     hashedPassword: string,
   ) {
-    // should be using salted hash
+
     const isPasswordMatching = await bcrypt.compare(
       plainTextPassword,
       hashedPassword,

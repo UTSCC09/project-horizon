@@ -16,9 +16,9 @@ const passport = PassportModule.register({
   imports: [
     UserModule,
     JwtModule.register({
-      secret: 'FAE66439AA3F6EBDF6E16DD0EA9EFBAF6F8A4811754132A4F469D6ED2DD367F5',
+      secret: process.env.SECRETKEY,
       signOptions: {
-        expiresIn: '10d',
+        expiresIn: process.env.EXPIRESIN,
       },
     }),
     passport,

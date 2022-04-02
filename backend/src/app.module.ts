@@ -24,7 +24,6 @@ const isProd = process.env.NODE_ENV === 'production';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: isProd ? "/tmp/schema.gql" : "schema.gql",
-      playground: true, //I just wanna keep this on for now
       path: isProd ? "/api/graphql" : "/graphql",
     }),
     TypeOrmModule.forRoot({
@@ -46,6 +45,4 @@ const isProd = process.env.NODE_ENV === 'production';
   providers: [AppController],
   controllers: [HealthController],
 })
-export class AppModule {
-  constructor(private readonly connection: Connection) { }
-}
+export class AppModule {}
