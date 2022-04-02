@@ -78,7 +78,7 @@ export class CommentService {
   }
 
   async like(commentId: number, user: User) {
-    const comment = await this.commentRepository.findOne(commentId, { relations: ['likes'] });
+    const comment = await this.commentRepository.findOne(commentId, { relations: ['likes', 'user'] });
     if (comment.likes) {
       comment.likes.push(user);
     } else {

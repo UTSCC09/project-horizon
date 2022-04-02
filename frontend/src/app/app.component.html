@@ -8,8 +8,8 @@
 			<div class="p-toast-summary">{{message.summary}}</div>
 			<div class="p-toast-detail">
 				{{ message.detail }}
-				<br *ngIf="message.data.link">
-				<a *ngIf="message.data.link" href="{{message.data.link.url}}" target="_blank">{{message.data.link.label}}</a>
+				<br *ngIf="message.data?.link">
+				<a *ngIf="message.data?.link" href="{{message.data.link.url}}" target="_blank">{{message.data.link.label}}</a>
 			</div>
 		</div>
 	</ng-template>

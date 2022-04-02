@@ -26,6 +26,7 @@ type Comment {
   user: User
   post: Post
   likesCount: Float!
+  liked: Boolean!
 }
 
 type Post {
@@ -37,6 +38,14 @@ type Post {
   files: [File!]!
   comments: [Comment!]!
   likesCount: Float!
+  liked: Boolean!
+}
+
+type PaginatedPost {
+  posts: [Post!]!
+  total: Float!
+  limit: Float!
+  page: Float!
 }
 
 type User {
@@ -73,10 +82,11 @@ type Query {
   hello: String!
   user(id: Float!): User!
   notifications: Notification!
-  feed(page: Float!, limit: Float!): [Post!]!
+  feed(page: Float!, limit: Float!): PaginatedPost!
+  discover(page: Float!, limit: Float!): PaginatedPost!
   getPosts: [Post!]!
   getPost(id: Float!): Post!
-  getUserPosts(userId: Float!): [Post!]!
+  getUserPosts(page: Float!, limit: Float!, userId: Float!): PaginatedPost!
   file(id: String!): File!
 }
 
@@ -87,6 +97,8 @@ type Mutation {
   unfollowUser(userId: Float!): User!
   createPost(content: String!, files: [Upload!]): Post!
   deletePost(id: Float!): Float!
+  likePost(postId: Float!): Post!
+  unlikePost(postId: Float!): Post!
   createComment(text: String!, postId: Float!): Comment!
   likeComment(commentId: Float!): Comment!
   unlikeComment(commentId: Float!): Comment!

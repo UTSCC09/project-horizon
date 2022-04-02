@@ -12,6 +12,7 @@ export class NotificationService {
     [Type.COMMENT]: this.handleComment.bind(this),
     [Type.LIKE]: this.handleLike.bind(this),
     [Type.FOLLOW]: this.handleFollow.bind(this),
+    [Type.POST_LIKE]: this.handlePostLike.bind(this),
   }
 
   constructor(
@@ -50,6 +51,19 @@ export class NotificationService {
     const comment = data.payload.comment;
 
     const message: string = `${user.firstName} ${user.lastName} liked your comment`;
+    this.messageService.add({
+      life: 7000,
+      severity: 'success',
+      summary: 'New Like',
+      detail: message,
+    });
+  }
+
+  handlePostLike(data: any) {
+    const user = data.payload.user;
+    const post = data.payload.post;
+
+    const message: string = `${user.firstName} ${user.lastName} liked your post`;
     this.messageService.add({
       life: 7000,
       severity: 'success',
