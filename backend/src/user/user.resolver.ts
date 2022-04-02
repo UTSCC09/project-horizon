@@ -10,6 +10,7 @@ import { UserService } from './user.service';
 @UseGuards(GqlAuthGuard)
 export class UserResolver {
 	private subscriber;
+	private activeChannels: string[] = [];
 
 	constructor(
 		private readonly userService: UserService,
@@ -25,7 +26,9 @@ export class UserResolver {
 
 	@Query(() => Notification)
 	async notifications(@RequestUser() user: User) {
-		this.subscriber.subscribe(`notifications:${user.id}`, (err, count) => {
+		const channel = `notifications:${user.id}`;
+		this.activeChannels.push(channel);
+		this.subscriber.subscribe(...this.activeChannels, (err, count) => {
 			if (err) {
 				//  return 500
 				throw new HttpException(
@@ -45,11 +48,15 @@ export class UserResolver {
 		});
 
 		return await new Promise((resolve, reject) => {
-			this.subscriber.on('message', (channel, message) => {
+			this.subscriber.on('message', (msgChannel, message) => {
+				if (msgChannel != channel) return;
+
 				const notification = JSON.parse(message);
 				console.log(notification);
 
-				this.subscriber.unsubscribe();
+				this.subscriber.unsubscribe(channel);
+				this.activeChannels = this.activeChannels.filter(c => c !== channel);
+
 				return resolve(notification);
 			});
 		});

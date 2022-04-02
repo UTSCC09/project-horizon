@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { User, UserPost } from 'src/app/models/post.model';
 import { UserApiService } from 'src/app/services/api/user-api.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class ProfileComponent implements OnInit {
     private userService: UserService,
     private messageService: MessageService,
     private userApi: UserApiService,
+    private notificationService: NotificationService,
   ) {
     let userId = this.router.url.split('/')[2];
     this.currentUser = this.userService.user as User;

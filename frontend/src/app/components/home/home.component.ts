@@ -18,7 +18,6 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public dialogService: DialogService,
-    private userApi: UserApiService,
     private postApi: PostApiService,
     private userService: UserService,
     private messageService: MessageService,
@@ -32,7 +31,6 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    this.messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: 'Please make sure you are logged in' });
     this.getUserPosts();
   }
 
