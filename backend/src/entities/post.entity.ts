@@ -45,3 +45,18 @@ export class Post {
   @Field(() => Boolean, { defaultValue: false })
   liked: boolean;
 }
+
+@ObjectType()
+export class PaginatedPost {
+  @Field(() => [Post])
+  posts: Post[];
+
+  @Field()
+  total: number;
+
+  @Field()
+  limit?: number;
+
+  @Field()
+  page?: number;
+}

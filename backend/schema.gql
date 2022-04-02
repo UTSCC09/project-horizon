@@ -41,6 +41,13 @@ type Post {
   liked: Boolean!
 }
 
+type PaginatedPost {
+  posts: [Post!]!
+  total: Float!
+  limit: Float!
+  page: Float!
+}
+
 type User {
   id: Float!
   firstName: String!
@@ -67,10 +74,11 @@ type UserToken {
 type Query {
   hello: String!
   user(id: Float!): User!
-  feed: [Post!]!
+  feed(page: Float!, limit: Float!): PaginatedPost!
+  discover(page: Float!, limit: Float!): PaginatedPost!
   getPosts: [Post!]!
   getPost(id: Float!): Post!
-  getUserPosts(userId: Float!): [Post!]!
+  getUserPosts(page: Float!, limit: Float!, userId: Float!): PaginatedPost!
   file(id: String!): File!
 }
 

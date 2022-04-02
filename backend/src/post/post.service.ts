@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Post } from 'src/entities/post.entity';
+import { PaginatedPost, Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, In, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class PostService {
@@ -34,27 +34,54 @@ export class PostService {
     return this.postRepository.findByIds(ids);
   }
 
-  async userFeed(user: User): Promise<number[]> {
+  async discover(id: number, page: number, limit: number): Promise<PaginatedPost> {
+    const [posts, total] = await this.postRepository.findAndCount(
+      {
+        where: {
+          user: Not(id)
+        },
+        relations: ['files'],
+        take: limit,
+        skip: page * limit,
+        order: {
+          createdAt: 'DESC'
+        }
+      },
+    );
+
+    return {
+      total,
+      posts,
+      page,
+      limit,
+    };
+  }
+
+  async userFeed(user: User, page: number, limit: number): Promise<PaginatedPost> {
     if (!user.following || !user.following.length) {
-      return Promise.resolve([]);
+      return Promise.resolve({ total: 0, posts: [] });
     }
 
     // Get the most recent posts from the users were following
-    const str = `
-      SELECT p.id
-      FROM post p
-      where p."userId" in (
-        ${user.following.map(u => `${u.id}`).join(',')}
-      )
-    `;
+    const [posts, total] = await this.postRepository.findAndCount({
+      where: {
+        user: In(user.following.map(u => u.id))
+      },
+      relations: ['files'],
+      take: limit,
+      skip: page * limit,
+    })
 
-    console.log(str);
-
-    return this.postRepository.query(str)
+    return {
+      total,
+      posts,
+      page,
+      limit,
+    }
   }
 
-  async getUserPosts(userId: number): Promise<Post[]> {
-    return this.postRepository.find({
+  async getUserPosts(userId: number, page: number = 0, limit: number = 10): Promise<PaginatedPost> {
+    const posts = await this.postRepository.find({
       where: {
         user: userId
       },
@@ -63,6 +90,19 @@ export class PostService {
         createdAt: 'DESC'
       }
     });
+
+    const total = await this.postRepository.count({
+      where: {
+        user: userId
+      }
+    });
+
+    return {
+      total,
+      posts,
+      page,
+      limit,
+    }
   }
 
   async update(id: number, post: Post): Promise<Post> {

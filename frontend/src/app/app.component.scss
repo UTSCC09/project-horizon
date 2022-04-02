@@ -23,14 +23,21 @@ h1 {
 	cursor: pointer;
 }
 
-.fixed-bnts {
-	position: fixed;
-	bottom: 0;
-	right: 0;
-	z-index: 1;
-	padding-right: 20px;
-}
-
 .hidden {
 	display: none;
+}
+
+:host {
+	::ng-deep .fixed-bnts {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		z-index: 1;
+		padding-right: 20px;
+	}
+
+	::ng-deep .new-post-btn {
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
 }

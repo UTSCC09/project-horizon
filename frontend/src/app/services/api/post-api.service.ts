@@ -6,6 +6,35 @@ import { BaseApiService } from './base-api.service';
   providedIn: 'root'
 })
 export class PostApiService extends BaseApiService {
+  private POST_CONTENT: string = `
+    id
+    content
+    createdAt
+    comments {
+      id
+      text
+      createdAt
+      user {
+        id
+        firstName
+        lastName
+      }
+    }
+    liked
+    user {
+      id
+      firstName
+      lastName
+      email
+    }
+    files {
+      id
+      filename
+      mimetype
+      url
+    }
+  `;
+
   upload(file: File, postId: string) {
     return this.apollo.mutate({
       mutation: gql`
@@ -62,80 +91,60 @@ export class PostApiService extends BaseApiService {
     });
   }
 
-  getFeed() {
+  getFeed(page: number, limit: number = 25) {
     return this.apollo.query({
       query: gql`
-        query {
-          feed {
-            id
-            content
-            createdAt
-            liked
-            comments {
-              id
-              text
-              createdAt
-              liked
-              user {
-                id
-                firstName
-                lastName
-              }
+        query($page: Float!, $limit: Float!) {
+          feed(page: $page, limit: $limit) {
+            posts {
+              ${this.POST_CONTENT}
             }
-            user {
-              id
-              firstName
-              lastName
-              email
-            }
-            files {
-              id
-              filename
-              mimetype
-              url
-            }
+            total
+            page
+            limit
           }
         }
       `,
+      variables: { page, limit }
     });
   }
 
-  getUserPosts(userId: number) {
+  getDiscover(page: number, limit: number) {
     return this.apollo.query({
       query: gql`
-        query($userId: Float!) {
-          getUserPosts(userId: $userId) {
-            id
-            content
-            createdAt
-            liked
-            comments {
-              id
-              text
-              createdAt
-              user {
-                id
-                firstName
-                lastName
-              }
+        query($page: Float!, $limit: Float!) {
+          discover(page: $page, limit: $limit) {
+            posts {
+              ${this.POST_CONTENT}
             }
-            user {
-              id
-              firstName
-              lastName
-              email
+            total
+            page
+            limit
+          }
+        }
+      `,
+      variables: { page, limit }
+    });
+  }
+
+  getUserPosts(userId: number, page: number, limit: number) {
+    return this.apollo.query({
+      query: gql`
+        query($userId: Float!, $page: Float!, $limit: Float!) {
+          getUserPosts(userId: $userId, page: $page, limit: $limit) {
+            posts {
+              ${this.POST_CONTENT}
             }
-            files {
-              id
-              filename
-              mimetype
-              url
-            }
+            total
+            page
+            limit
           }
         }
         `,
       variables: {
-        userId
+        userId,
+        page,
+        limit,
       }
     })
   }

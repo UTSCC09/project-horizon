@@ -21,7 +21,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { CommentListComponent } from './components/comment-list/comment-list.component';
-import { NotificationTabComponent } from './components/notification-tab/notification-tab.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { NewPostComponent } from './components/new-post/new-post.component';
 
 // Pipes
 import { FileSizePipe } from './pipes/file-size.pipe';
@@ -48,7 +49,8 @@ import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
-
+import { DataViewModule } from 'primeng/dataview';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -70,7 +72,8 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     UserListComponent,
     CommentComponent,
     CommentListComponent,
-    NotificationTabComponent,
+    LoaderComponent,
+    NewPostComponent,
   ],
   imports: [
     BrowserModule,
@@ -97,6 +100,8 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     ColorPickerModule,
     TabViewModule,
     CheckboxModule,
+    DataViewModule,
+    ProgressSpinnerModule,
   ],
   providers: [
     MessageService,
