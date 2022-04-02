@@ -11,7 +11,7 @@ jobs:
   build-frontend:
     runs-on: ubuntu-latest
     defaults:
-      run: 
+      run:
         working-directory: 'frontend'
     strategy:
       matrix:
@@ -23,18 +23,18 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache-dependency-path: '**/package-lock.json' 
+        cache-dependency-path: '**/package-lock.json'
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
   build-backend:
     runs-on: ubuntu-latest
     defaults:
-      run: 
+      run:
         working-directory: 'backend'
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
     - uses: actions/checkout@v3
@@ -42,7 +42,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache-dependency-path: '**/package-lock.json' 
+        cache-dependency-path: '**/package-lock.json'
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
