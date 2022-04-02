@@ -36,6 +36,8 @@ h1 {
 }
 
 :host {
+	background-color: var(--surface-ground);
+
 	::ng-deep .p-toast-detail {
 		white-space: pre-line;
 	}
