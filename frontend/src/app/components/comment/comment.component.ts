@@ -44,7 +44,6 @@ export class CommentComponent {
   }
 
   isMe() {
-    // console.log({user: this.user, comment: this.comment});
     return this.comment.user.id === this.user?.id;
   }
 }

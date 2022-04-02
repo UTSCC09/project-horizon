@@ -50,8 +50,6 @@ export class UserResolver {
 					HttpStatus.INTERNAL_SERVER_ERROR,
 				);
 			}
-
-			console.log(`subscribed to notifications:${user.id} ${count} channels`);
 		});
 
 		return await new Promise((resolve, reject) => {
