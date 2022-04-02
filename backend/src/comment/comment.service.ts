@@ -26,7 +26,20 @@ export class CommentService {
       JSON.stringify({
         type: NotificationType.COMMENT,
         sourceId: comment.id,
-        payload: JSON.stringify(comment),
+        payload: JSON.stringify({
+          id: comment.id,
+          comment: comment.text,
+          post: {
+            id: post.id,
+            content: post.content,
+          },
+          user: {
+            id: comment.user.id,
+            firstName: comment.user.firstName,
+            lastName: comment.user.lastName,
+            email: comment.user.email,
+          }
+        }),
         createdAt: comment.createdAt
       })
     );
@@ -67,6 +80,32 @@ export class CommentService {
   async like(commentId: number, user: User) {
     const comment = await this.commentRepository.findOne(commentId);
     comment.likes.push(user);
+    console.log({ comment });
+
+    this.publishLike(comment, user);
+
     return this.commentRepository.save(comment);
+  }
+
+  async publishLike(comment: Comment, sourceUser: User) {
+    this.publisher.publish(`notifications:${comment.user.id}`,
+      JSON.stringify({
+        type: NotificationType.LIKE,
+        sourceId: sourceUser.id,
+        payload: JSON.stringify({
+          comment: {
+            id: comment.id,
+            text: comment.text,
+          },
+          user: {
+            id: sourceUser.id,
+            firstName: sourceUser.firstName,
+            lastName: sourceUser.lastName,
+            email: sourceUser.email,
+          }
+        }),
+        createdAt: comment.createdAt
+      })
+    );
   }
 }

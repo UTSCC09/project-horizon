@@ -34,3 +34,9 @@ h1 {
 .hidden {
 	display: none;
 }
+
+:host {
+	::ng-deep .p-toast-detail {
+		white-space: pre-line;
+	}
+}

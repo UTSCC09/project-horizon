@@ -32,7 +32,8 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-   this.getUserPosts();
+    this.messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: 'Please make sure you are logged in' });
+    this.getUserPosts();
   }
 
   getUserPosts(page: number = 0, limit: number = 1) {

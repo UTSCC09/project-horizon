@@ -10,18 +10,18 @@ import { NotificationApiService } from './api/notification-api.service';
 export class NotificationService implements OnDestroy {
   private _notification: Subject<any> = new Subject<any>();
   private notificationHandlers = {
-    [Type.COMMENT]: this.handleComment,
-    [Type.LIKE]: this.handleLike,
-    [Type.FOLLOW]: this.handleFollow,
+    [Type.COMMENT]: this.handleComment.bind(this),
+    [Type.LIKE]: this.handleLike.bind(this),
+    [Type.FOLLOW]: this.handleFollow.bind(this),
   }
 
   constructor(
     private subscriber: NotificationApiService,
     private messageService: MessageService
   ) {
-
     this.subscriber.notification.subscribe(({ data }) => {
-      const notification = data.notifications;
+      const notification = JSON.parse(JSON.stringify(data.notifications));
+      notification.payload = JSON.parse(notification.payload);
       this._notification.next(notification);
 
       if (Object.values(Type).includes(notification.type)) {
@@ -44,14 +44,35 @@ export class NotificationService implements OnDestroy {
   }
 
   handleComment(data: any) {
-    console.log("HANDLE COMMENT", { data })
+    const user = data.payload.user;
+    const comment = data.payload.comment;
+    const message: string = `${user.firstName} ${user.lastName} commented on your post \n
+      <a href="http://localhost:4200/profile/5">Click here to see</a>
+    `;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'New Comment',
+      detail: message,
+    });
   }
 
   handleLike(data: any) {
-    console.log("HANDLE LIKE", { data })
+    const user = data.payload.user;
+    const comment = data.payload.comment;
+
+    const message: string = `${user.firstName} ${user.lastName} liked your comment`;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'New Like',
+      detail: message,
+    });
   }
 
   handleFollow(data: any) {
-    console.log("HANDLE FOLLOW", { data })
+    const user = data.payload.user;
+    const message: string = `${user.firstName} ${user.lastName} is now following you`;
+    this.messageService.add({
+      severity: 'success', summary: 'New Follower', detail: message
+    });
   }
 }

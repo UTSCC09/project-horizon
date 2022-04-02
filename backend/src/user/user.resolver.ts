@@ -49,6 +49,7 @@ export class UserResolver {
 				const notification = JSON.parse(message);
 				console.log(notification);
 
+				this.subscriber.unsubscribe();
 				return resolve(notification);
 			});
 		});
