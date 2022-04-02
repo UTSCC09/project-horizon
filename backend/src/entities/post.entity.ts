@@ -41,3 +41,18 @@ export class Post {
   @Field(() => Number, { defaultValue: 0 })
   likesCount: number;
 }
+
+@ObjectType()
+export class PaginatedPost {
+  @Field(() => [Post])
+  posts: Post[];
+
+  @Field()
+  total: number;
+
+  @Field()
+  limit?: number;
+
+  @Field()
+  page?: number;
+}

@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { User, UserPost } from 'src/app/models/post.model';
+import { PostApiService } from 'src/app/services/api/post-api.service';
 import { UserApiService } from 'src/app/services/api/user-api.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -10,17 +12,22 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
-
+export class ProfileComponent {
   user: User;
   currentUser: User;
   loadingFollow = false;
+
+  posts: UserPost[] = [];
+  totalPosts: number = 0;
+  postPage: number = 0;
 
   constructor(
     private router: Router,
     private userService: UserService,
     private messageService: MessageService,
     private userApi: UserApiService,
+    private postApi: PostApiService,
+    private notificationService: NotificationService,
   ) {
     let userId = this.router.url.split('/')[2];
     this.currentUser = this.userService.user as User;
@@ -34,20 +41,15 @@ export class ProfileComponent implements OnInit {
         .subscribe(({ data }) => {
           let user: User = JSON.parse(JSON.stringify((data as any).user));
           delete user.posts;
-          let posts = (data as any).user.posts?.map((post: UserPost) => {
-            return {
-              ...post,
-              user
-            }
-          });
           this.user = user;
-          this.user.posts = JSON.parse(JSON.stringify(posts));
+
+          this.getUserPosts(userId, this.postPage);
         }, (error) => {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: error.message
-            });
+          });
         });
     } else {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User not found' });
@@ -57,7 +59,21 @@ export class ProfileComponent implements OnInit {
     this.user = this.userService.user as User;
   }
 
-  ngOnInit() {
+  getUserPosts(userId: string, page: number, limit: number = 0) {
+    this.postApi.getUserPosts(parseInt(userId), page, limit)
+      .subscribe(({ data }) => {
+        const { posts, total, page } = JSON.parse(JSON.stringify(data)).getUserPosts;
+
+        this.posts = posts;
+        this.totalPosts = total;
+        this.postPage = page;
+      }, (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.message
+        });
+      });
   }
 
   followOrUnfollow() {

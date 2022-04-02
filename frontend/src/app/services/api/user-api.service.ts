@@ -6,7 +6,6 @@ import { BaseApiService } from './base-api.service';
   providedIn: 'root'
 })
 export class UserApiService extends BaseApiService {
-
   getUser(userId: number) {
     return this.apollo.query({
       query: gql`
@@ -32,30 +31,6 @@ export class UserApiService extends BaseApiService {
               id
               firstName
               lastName
-            }
-
-            posts {
-              id
-              content
-              createdAt
-
-              comments {
-                id
-                text
-                createdAt
-                user {
-                  id
-                  firstName
-                  lastName
-                }
-              }
-
-              files {
-                id
-                filename
-                mimetype
-                url
-              }
             }
           }
         }

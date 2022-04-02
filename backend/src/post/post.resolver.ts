@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { RequestUser } from 'src/auth/jwt.strategy';
-import { Post } from 'src/entities/post.entity';
+import { PaginatedPost, Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
 import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
 import { PostService } from './post.service';
@@ -31,18 +31,25 @@ export class PostResolver {
   }
 
 
-  @Query(() => [Post])
+  @Query(() => PaginatedPost)
   async feed(
     @Args('page') page: number,
     @Args('limit') limit: number,
-    @RequestUser() user: User,
-  ): Promise<Post[]> {
+    @RequestUser({
+
+    }) user: User,
+  ): Promise<PaginatedPost> {
     user = await this.userService.findOne(user.id, { relations: ['following'] });
-    const postIds = await this.postService.userFeed(user, page, limit);
+    return this.postService.userFeed(user, page, limit);
+  }
 
-    console.log({postIds})
-
-    return this.postService.findByIds(postIds);
+  @Query(() => PaginatedPost)
+  async discover(
+    @Args('page') page: number,
+    @Args('limit') limit: number,
+    @RequestUser() user: User,
+  ): Promise<PaginatedPost> {
+    return this.postService.discover(user.id, page, limit);
   }
 
   @Query(() => [Post])
@@ -55,10 +62,13 @@ export class PostResolver {
     return await this.postService.findOne(id);
   }
 
-  @Query(() => [Post])
-  async getUserPosts(@Args('userId') userId: number): Promise<Post[]> {
-    const posts = await this.postService.getUserPosts(userId);
-    return posts;
+  @Query(() => PaginatedPost)
+  async getUserPosts(
+    @Args('page') page: number,
+    @Args('limit') limit: number,
+    @Args('userId') userId: number
+  ): Promise<PaginatedPost> {
+    return this.postService.getUserPosts(userId, page, limit);
   }
 
   @ResolveField()
