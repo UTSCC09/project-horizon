@@ -50,4 +50,9 @@ export class CommentService {
     comment.likes.push(user);
     return this.commentRepository.save(comment);
   }
+
+  async isLiked(commentId: number, user: User) {
+    const comment = await this.commentRepository.findOne(commentId, { relations: ['likes'] });
+    return comment.likes.some(like => like.id === user.id);
+  }
 }
