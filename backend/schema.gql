@@ -26,6 +26,7 @@ type Comment {
   user: User
   post: Post
   likesCount: Float!
+  liked: Boolean!
 }
 
 type Post {

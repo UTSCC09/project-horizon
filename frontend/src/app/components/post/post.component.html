@@ -1,6 +1,10 @@
 <div class="post-content">
   <div class="header">
-    <h2>{{post.user.firstName}} {{post.user.lastName}}</h2>
+    <h2>
+      <a [href]="'/profile/' + post.user.id">
+        {{post.user.firstName}} {{post.user.lastName}}
+      </a>
+    </h2>
     <span>{{post.createdAt | date }}</span>
   </div>
   <hr>

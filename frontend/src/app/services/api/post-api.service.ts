@@ -74,6 +74,7 @@ export class PostApiService extends BaseApiService {
               id
               text
               createdAt
+              liked
               user {
                 id
                 firstName

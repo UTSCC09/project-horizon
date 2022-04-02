@@ -1,6 +1,5 @@
 <div class="comment">
   <div class="comment-header">
-    <button pButton pRipple type="button" icon="pi pi-heart" class="p-button-rounded p-button-help p-button-text" onclick="likeUnlike()"></button>
     <span class="comment-author">
       <a [href]="'/profile/' + comment.user.id">{{comment.user.firstName}} {{comment.user.lastName}}:</a>
     </span>
@@ -8,6 +7,8 @@
       {{comment.text}}
     </span>
   </div>
-
-  <span class="comment-date">{{comment.createdAt | date }}</span>
+  <div class="comment-sub">
+    <span class="comment-date">{{comment.createdAt | date }}</span>
+    <span class="like-comment">Like</span>
+  </div>
 </div>

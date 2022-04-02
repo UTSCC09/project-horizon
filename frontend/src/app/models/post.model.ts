@@ -12,6 +12,8 @@ export type Comment = {
 	text: string;
 	createdAt: string;
 	user: User;
+
+	liked?: boolean;
 }
 
 export type File = {

@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, OneToMany, JoinTable } from 'typeorm';
 import { User } from './user.entity';
 import { File } from './file.entity';
 import { Comment } from './comment.entity';
@@ -36,6 +36,7 @@ export class Post {
   comments: Comment[];
 
   @ManyToMany(() => User, user => user.likedPosts)
+  @JoinTable()
   likes: User[];
 
   @Field(() => Number, { defaultValue: 0 })

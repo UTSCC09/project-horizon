@@ -14,8 +14,20 @@
     }
   }
 
-  &-date {
+  &-sub {
     font-size: 12px;
     color: #8c8c8c;
+
+    span {
+      margin-right: 10px;
+    }
+
+    .like-comment {
+      cursor: pointer;
+      &:hover {
+        color: #00bcd4;
+      }
+    }
+
   }
 }

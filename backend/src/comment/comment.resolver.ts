@@ -49,4 +49,12 @@ export class CommentResolver {
   async likesCount(@Parent() comment: Comment) {
     return await this.commentService.findOne(comment.id, { relations: ['likes'] }).then(comment => comment.likes.length);
   }
+
+  @ResolveField()
+  async liked(
+    @Parent() comment: Comment,
+    @RequestUser() user: User,
+  ) {
+    return await this.commentService.isLiked(comment.id, user);
+  }
 }
