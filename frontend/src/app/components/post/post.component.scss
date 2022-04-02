@@ -27,9 +27,15 @@
   .body {
     margin-top: 8px;
 
-    .buttons {
+    .actions {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
+    }
+
+    .likes {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
     }
 
     .scene {

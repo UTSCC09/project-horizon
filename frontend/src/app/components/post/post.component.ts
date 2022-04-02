@@ -3,6 +3,7 @@ import { MessageService } from 'primeng/api';
 import { UserPost, Comment, File } from 'src/app/models/post.model';
 
 import { CommentApiService } from 'src/app/services/api/comment-api.service';
+import { PostApiService } from 'src/app/services/api/post-api.service';
 import { EngineManagerService } from 'src/app/services/engine-manager.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
@@ -29,9 +30,11 @@ export class PostComponent implements OnInit {
   constructor(
     private commentApi: CommentApiService,
     private messageService: MessageService,
+    private postApi: PostApiService,
     private em: EngineManagerService,
   ) {
     this.commentApi = commentApi;
+    this.postApi = postApi;
     this.messageService = messageService;
 
     this.engineService = new EngineService(em);
@@ -72,6 +75,24 @@ export class PostComponent implements OnInit {
 
   isImage(file: File): boolean {
     return file.mimetype.startsWith('image');
+  }
+
+  likeUnlikePost() {
+    const updatePost = ({data}: any) => {
+      this.post.liked = !this.post.liked;
+    };
+
+    const errored = (error: any) => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error.message });
+    };
+
+    if (this.post.liked) {
+      this.postApi.unlikePost(this.post.id)
+        .subscribe(updatePost, errored);
+    } else {
+      this.postApi.likePost(this.post.id)
+        .subscribe(updatePost, errored);
+    }
   }
 
   setupRenderer() {

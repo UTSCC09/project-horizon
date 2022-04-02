@@ -24,9 +24,9 @@ export class HomeComponent implements AfterContentInit {
 
   constructor(
     private postApi: PostApiService,
-    private userService: UserService,
     private messageService: MessageService,
     private router: Router,
+    private userService: UserService,
   ) { }
 
   ngAfterContentInit(): void {

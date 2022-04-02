@@ -5,6 +5,8 @@ export type UserPost = {
 	files?: File[];
 	user: User;
 	comments?: Comment[];
+
+	liked?: boolean;
 };
 
 export type Comment = {
@@ -12,6 +14,8 @@ export type Comment = {
 	text: string;
 	createdAt: string;
 	user: User;
+
+	liked?: boolean;
 }
 
 export type File = {

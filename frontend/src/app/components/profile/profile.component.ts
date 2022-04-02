@@ -29,8 +29,12 @@ export class ProfileComponent {
     private postApi: PostApiService,
     private notificationService: NotificationService,
   ) {
-    let userId = this.router.url.split('/')[2];
+    this.user = this.userService.user as User;
     this.currentUser = this.userService.user as User;
+  }
+
+  ngOnInit() {
+    let userId = this.router.url.split('/')[2];
 
     if (userId === 'me') {
       userId = "" + this.userService.user?.id;
@@ -77,39 +81,32 @@ export class ProfileComponent {
   }
 
   followOrUnfollow() {
+    const errored = (err: any) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: err.message
+        });
+        this.loadingFollow = false;
+    }
+
     this.loadingFollow = true;
     if (this.user.isFollowing) {
       this.userApi.unfollowUser(this.user.id)
-        .subscribe(({data}) => {
+        .subscribe(() => {
           this.user.isFollowing = false;
-          this.user.followers = (data as any).unfollowUser.followers;
-          this.user.followersCount = (data as any).unfollowUser.followersCount;
-
+          this.user.followers = this.user.followers?.filter(follower => follower.id !== this.currentUser.id);
+          this.user.followersCount = (this.user.followersCount || 1) - 1;
           this.loadingFollow = false;
-        }, (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.message
-            });
-          this.loadingFollow = false;
-        });
+        }, errored);
     } else {
       this.userApi.followUser(this.user.id)
-        .subscribe(({data}) => {
+        .subscribe(() => {
           this.user.isFollowing = true;
-          this.user.followers = (data as any).followUser.followers;
-          this.user.followersCount = (data as any).followUser.followersCount;
+          this.user.followers = this.user.followers?.concat([this.currentUser]);
+          this.user.followersCount = (this.user.followersCount || 0) + 1;
           this.loadingFollow = false;
-        }, (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.message
-            });
-          this.loadingFollow = false;
-        });
+        }, errored);
     }
   }
-
 }

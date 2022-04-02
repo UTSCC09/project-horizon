@@ -120,4 +120,26 @@ export class PostService {
 
     return await (await this.postRepository.delete(id)).affected;
   }
+
+  async unlike(postId: number, user: User) {
+    const post = await this.postRepository.findOne(postId, { relations: ['likes'] });
+    post.likes = post.likes.filter(like => like.id !== user.id);
+    return this.postRepository.save(post);
+  }
+
+  async like(postId: number, user: User) {
+    const post = await this.postRepository.findOne(postId, { relations: ['likes'] });
+    if (post.likes) {
+      post.likes.push(user);
+    } else {
+      post.likes = [user];
+    }
+
+    return this.postRepository.save(post);
+  }
+
+  async isLiked(postId: number, user: User) {
+    const post = await this.postRepository.findOne(postId, { relations: ['likes'] });
+    return post.likes.some(like => like.id === user.id);
+  }
 }

@@ -20,6 +20,7 @@ export class PostApiService extends BaseApiService {
         lastName
       }
     }
+    liked
     user {
       id
       firstName
@@ -146,5 +147,35 @@ export class PostApiService extends BaseApiService {
         limit,
       }
     })
+  }
+
+  likePost(postId: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation likePost($postId: Float!) {
+          likePost(postId: $postId) {
+            id
+          }
+        }
+      `,
+      variables: {
+        postId,
+      },
+    });
+  }
+
+  unlikePost(postId: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation unlikePost($postId: Float!) {
+          unlikePost(postId: $postId) {
+            id
+          }
+        }
+      `,
+      variables: {
+        postId,
+      },
+    });
   }
 }
