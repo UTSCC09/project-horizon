@@ -57,7 +57,7 @@ and NestJS, Postgresql and Apollo for the backend because of their GraphQL suppo
 Our entire application is deployed on Google Cloud Platform's (GCP) Google Kubernetes Engine (GKE).
 This proved to be more challenging then we initially though as we had to deploy a variety of services, but also had to fix a suprising amount of issues. The deployments consist of the following (linked are the relevant kubernetes YML files):
 - [Frontend and backend deployments and service](/kube/deployment.yml)
-- [Ingress Controller and SSL](kube/ingress.yml)
+- [Ingress Controller and SSL](/kube/ingress.yml)
 - [Postgresql DB](/kube/psql.yml)
 - [Redis deployement and service](/kube/redis.yml)
 - [Persistant volume for storing files](/kube/volume.yml)
@@ -75,14 +75,11 @@ Finally, we have seperate services/deployments for both postgresql and redis whi
 
 ## Maintenance
 <!-- **Task:** Explain how you monitor your deployed app to make sure that everything is working as expected. -->
+We use a varity of tools to monitor and maintain our application.
 
-- Github build actions to ensure a PR doesn't break building
-- Github CI/CD for continuous deployment off of main (didn't work because of cost issue)
-- GCP Monitoring Tools: Error Reporting (mostly on mobile)
-- Sentry backend monitoring
+First of all, we use a variety of github actions to ensure our application is always error free on the build stage. These actions include an action that runs the build commands on PRs to ensure that the PR doesn't break the build. Then we also use a github action to deploy the application on commits to main. Sadly these actions don't currently work because of the issue recorded on [piazza](https://piazza.com/class/kxgjicgvryu3h8?cid=423#).
 
-
-
+As for monitoring our application, we again use different tools at different parts of the application. We use Sentry to monitor our backends and record/report on errors occuring in real time. We then use GCP's error reporting tools to get any notifications on errors occuring within Kubernetes itself such as Pod failures. GCP's maintenance tools also allow us to view all logs for our application but it is not as easy to manage as Sentry. Finally, we also use the GKE dashboard to monitor our application's health, traffic and resource usage. Auto scaling is also used to automatically scale the number of pods in the application based on resource requirements (currently increases number of pods when CPU usage increases above 50%).
 
 ## Challenges
 

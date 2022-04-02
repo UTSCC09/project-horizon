@@ -70,7 +70,7 @@ gcloud compute addresses create backend-address --region=northamerica-northeast2
 Attempt 2 was successful. We used seperate node ports for frontend and backend. This allowed me to use an Ingress controller to route traffic between frontend and backend. We also learned how to add a health check to the backend so deployments would go more smoothly. You can see the config for everything under the kube folder.
 This deployment includes:
 - [Frontend and backend](/kube/deployment.yml)
-- [Ingress Controller](kube/ingress.yml)
+- [Ingress Controller](/kube/ingress.yml)
 - [Postgresql DB](/kube/psql.yml)
 - [Redis](/kube/redis.yml)
 - [Persistant disk for storing files](/kube/volume.yml)
