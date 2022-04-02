@@ -52,6 +52,7 @@ import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { DataViewModule } from 'primeng/dataview';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -76,6 +77,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     NewPostComponent,
   ],
   imports: [
+    AutoCompleteModule,
     BrowserModule,
     AppRoutingModule,
     FileUploadModule,

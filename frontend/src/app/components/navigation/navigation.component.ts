@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { User } from 'src/app/models/post.model';
+import { UserApiService } from 'src/app/services/api/user-api.service';
 
 @Component({
   selector: 'app-navigation',
@@ -9,8 +11,12 @@ import { MenuItem } from 'primeng/api';
 })
 export class NavigationComponent implements OnInit {
   items: MenuItem[];
+  results: string[] = [];
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private userApi: UserApiService
+  ) {
     this.items = [
       {
         label: 'Posts',
@@ -45,4 +51,20 @@ export class NavigationComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  search(event: any) {
+    this.userApi.searchUser(event.query)
+      .subscribe(({data}: any) => {
+        const { search } = JSON.parse(JSON.stringify(data));
+        this.results = search.map((u: User) => {
+          return {
+            ...u,
+            label: `${u.firstName} ${u.lastName} - ${u.email}`,
+          }
+        });
+      });
+  }
+
+  select(event: any) {
+    this.router.navigate(['/profile', event.id]);
+  }
 }

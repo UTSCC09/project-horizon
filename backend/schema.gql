@@ -81,6 +81,7 @@ type Notification {
 type Query {
   hello: String!
   user(id: Float!): User!
+  search(query: String!): [User!]!
   notifications: Notification!
   feed(page: Float!, limit: Float!): PaginatedPost!
   discover(page: Float!, limit: Float!): PaginatedPost!

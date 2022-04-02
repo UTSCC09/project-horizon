@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotificationType, User, UserInput } from 'src/entities/user.entity';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, Repository, In, Like } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { RedisService } from 'src/redis/redis.service';
 
@@ -50,6 +50,16 @@ export class UserService {
 
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  search(query: string): Promise<User[]> {
+    return this.usersRepository.find({
+      where: [
+        { firstName: Like(`${query}%`) },
+        { lastName: Like(`${query}%`) },
+        { email: Like(`${query}%`) },
+      ],
+    });;
   }
 
   async followUser(user: User, userId: number): Promise<User> {
