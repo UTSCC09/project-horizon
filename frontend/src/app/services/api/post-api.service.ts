@@ -6,7 +6,6 @@ import { BaseApiService } from './base-api.service';
   providedIn: 'root'
 })
 export class PostApiService extends BaseApiService {
-
   upload(file: File, postId: string) {
     return this.apollo.mutate({
       mutation: gql`
@@ -63,6 +62,44 @@ export class PostApiService extends BaseApiService {
     });
   }
 
+  getFeed() {
+    return this.apollo.query({
+      query: gql`
+        query {
+          feed {
+            id
+            content
+            createdAt
+            liked
+            comments {
+              id
+              text
+              createdAt
+              liked
+              user {
+                id
+                firstName
+                lastName
+              }
+            }
+            user {
+              id
+              firstName
+              lastName
+              email
+            }
+            files {
+              id
+              filename
+              mimetype
+              url
+            }
+          }
+        }
+      `,
+    });
+  }
+
   getUserPosts(userId: number) {
     return this.apollo.query({
       query: gql`
@@ -71,6 +108,17 @@ export class PostApiService extends BaseApiService {
             id
             content
             createdAt
+            liked
+            comments {
+              id
+              text
+              createdAt
+              user {
+                id
+                firstName
+                lastName
+              }
+            }
             user {
               id
               firstName
@@ -90,5 +138,35 @@ export class PostApiService extends BaseApiService {
         userId
       }
     })
+  }
+
+  likePost(postId: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation likePost($postId: Float!) {
+          likePost(postId: $postId) {
+            id
+          }
+        }
+      `,
+      variables: {
+        postId,
+      },
+    });
+  }
+
+  unlikePost(postId: number) {
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation unlikePost($postId: Float!) {
+          unlikePost(postId: $postId) {
+            id
+          }
+        }
+      `,
+      variables: {
+        postId,
+      },
+    });
   }
 }

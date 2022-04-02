@@ -39,6 +39,17 @@ export class UserApiService extends BaseApiService {
               content
               createdAt
 
+              comments {
+                id
+                text
+                createdAt
+                user {
+                  id
+                  firstName
+                  lastName
+                }
+              }
+
               files {
                 id
                 filename

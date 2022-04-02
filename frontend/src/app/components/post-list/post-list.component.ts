@@ -1,7 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UserPost } from 'src/app/models/user.model';
-import { File } from 'src/app/models/user.model';
-import { environment } from 'src/environments/environment';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UserPost, Comment } from 'src/app/models/post.model';
 
 @Component({
   selector: 'app-post-list',
@@ -13,5 +11,4 @@ export class PostListComponent {
   @Input() posts: UserPost[] = [];
 
   constructor() { }
-
 }

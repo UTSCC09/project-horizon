@@ -18,7 +18,8 @@ export class UserResolver {
 	@ResolveField()
 	async posts(@Parent() user: User) {
 		user = await this.userService.findOne(user.id, { relations: ['posts'] });
-		return user.posts;
+
+		return user.posts.sort((a, b) => a.createdAt < b.createdAt ? 1 : -1);
 	}
 
 	@ResolveField()
@@ -32,7 +33,7 @@ export class UserResolver {
 		@RequestUser() user: User,
 		@Args('userId') userId: number,
 	): Promise<User> {
-		user = await this.userService.findOne(user.id);
+		user = await this.userService.findOne(user.id, { relations: ['following'] });
 		return await this.userService.followUser(user, userId);
 	}
 
@@ -41,7 +42,7 @@ export class UserResolver {
 		@RequestUser() user: User,
 		@Args('userId') userId: number,
 	): Promise<User> {
-		user = await this.userService.findOne(user.id);
+		user = await this.userService.findOne(user.id, { relations: ['following'] });
 		return await this.userService.unfollowUser(user, userId);
 	}
 

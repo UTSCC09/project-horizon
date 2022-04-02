@@ -19,13 +19,26 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Comment {
+  id: Float!
+  text: String!
+  createdAt: DateTime!
+  user: User
+  post: Post
+  likesCount: Float!
+  liked: Boolean!
+}
+
 type Post {
-  id: String!
+  id: Float!
   content: String!
   createdAt: DateTime!
   updatedAt: DateTime!
   user: User!
   files: [File!]!
+  comments: [Comment!]!
+  likesCount: Float!
+  liked: Boolean!
 }
 
 type User {
@@ -36,6 +49,7 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   posts: [Post!]
+  comments: [File!]
   files: [File!]
   followers: [User!]
   following: [User!]
@@ -53,8 +67,9 @@ type UserToken {
 type Query {
   hello: String!
   user(id: Float!): User!
+  feed: [Post!]!
   getPosts: [Post!]!
-  getPost(id: String!): Post!
+  getPost(id: Float!): Post!
   getUserPosts(userId: Float!): [Post!]!
   file(id: String!): File!
 }
@@ -65,7 +80,12 @@ type Mutation {
   followUser(userId: Float!): User!
   unfollowUser(userId: Float!): User!
   createPost(content: String!, files: [Upload!]): Post!
-  deletePost(id: String!): Float!
+  deletePost(id: Float!): Float!
+  likePost(postId: Float!): Post!
+  unlikePost(postId: Float!): Post!
+  createComment(text: String!, postId: Float!): Comment!
+  likeComment(commentId: Float!): Comment!
+  unlikeComment(commentId: Float!): Comment!
 }
 
 input UserInput {

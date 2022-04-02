@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { User, UserPost } from 'src/app/models/user.model';
+import { User, UserPost } from 'src/app/models/post.model';
 import { UserApiService } from 'src/app/services/api/user-api.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -22,8 +22,12 @@ export class ProfileComponent implements OnInit {
     private messageService: MessageService,
     private userApi: UserApiService,
   ) {
-    let userId = this.router.url.split('/')[2];
+    this.user = this.userService.user as User;
     this.currentUser = this.userService.user as User;
+  }
+
+  ngOnInit() {
+    let userId = this.router.url.split('/')[2];
 
     if (userId === 'me') {
       userId = "" + this.userService.user?.id;
@@ -41,7 +45,7 @@ export class ProfileComponent implements OnInit {
             }
           });
           this.user = user;
-          this.user.posts = posts;
+          this.user.posts = JSON.parse(JSON.stringify(posts));
         }, (error) => {
           this.messageService.add({
             severity: 'error',
@@ -53,47 +57,35 @@ export class ProfileComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User not found' });
       this.router.navigate(['/']);
     }
-
-    this.user = this.userService.user as User;
-  }
-
-  ngOnInit() {
   }
 
   followOrUnfollow() {
+    const errored = (err: any) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: err.message
+        });
+        this.loadingFollow = false;
+    }
+
     this.loadingFollow = true;
     if (this.user.isFollowing) {
       this.userApi.unfollowUser(this.user.id)
-        .subscribe(({data}) => {
+        .subscribe(() => {
           this.user.isFollowing = false;
-          this.user.followers = (data as any).unfollowUser.followers;
-          this.user.followersCount = (data as any).unfollowUser.followersCount;
-
+          this.user.followers = this.user.followers?.filter(follower => follower.id !== this.currentUser.id);
+          this.user.followersCount = (this.user.followersCount || 1) - 1;
           this.loadingFollow = false;
-        }, (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.message
-            });
-          this.loadingFollow = false;
-        });
+        }, errored);
     } else {
       this.userApi.followUser(this.user.id)
-        .subscribe(({data}) => {
+        .subscribe(() => {
           this.user.isFollowing = true;
-          this.user.followers = (data as any).followUser.followers;
-          this.user.followersCount = (data as any).followUser.followersCount;
+          this.user.followers = this.user.followers?.concat([this.currentUser]);
+          this.user.followersCount = (this.user.followersCount || 0) + 1;
           this.loadingFollow = false;
-        }, (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.message
-            });
-          this.loadingFollow = false;
-        });
+        }, errored);
     }
   }
-
 }

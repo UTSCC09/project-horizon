@@ -5,7 +5,13 @@
 
 		</div>
 		<div class="col-md-6 post-list">
-			<app-post-list [posts]="userPosts">
+			<ng-template #noFeed>
+				<div class="no-feed">
+					<h2>Sorry, there are no posts available</h2>
+					<p>Consider inviting some friends to join and following them.</p>
+				</div>
+			</ng-template>
+			<app-post-list #postList [posts]="posts" *ngIf="(posts.length > 0); else noFeed">
 			</app-post-list>
 		</div>
 		<div class="col-md-6 friends">

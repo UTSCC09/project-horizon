@@ -19,6 +19,9 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { PostListComponent } from './components/post-list/post-list.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { CommentComponent } from './components/comment/comment.component';
+import { CommentListComponent } from './components/comment-list/comment-list.component';
+import { NotificationTabComponent } from './components/notification-tab/notification-tab.component';
 
 // Pipes
 import { FileSizePipe } from './pipes/file-size.pipe';
@@ -44,6 +47,8 @@ import { ColorPickerModule } from 'primeng/colorpicker';
 import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
+
 
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -63,11 +68,15 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     PostComponent,
     FileSizePipe,
     UserListComponent,
+    CommentComponent,
+    CommentListComponent,
+    NotificationTabComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FileUploadModule,
+    DialogModule,
     HttpClientModule,
     ButtonModule,
     NgbModule,
@@ -111,7 +120,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
             httpLink.create({
               uri: `${environment.apiUrl}/graphql`,
               extractFiles,
-          })),
+            })),
         };
       },
       deps: [HttpLink],

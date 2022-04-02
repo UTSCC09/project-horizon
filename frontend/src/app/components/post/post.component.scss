@@ -27,6 +27,17 @@
   .body {
     margin-top: 8px;
 
+    .actions {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .likes {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+    }
+
     .scene {
       img {
         width: 100%;
@@ -40,10 +51,8 @@
 
         width: 100%;
         height: auto;
-        background-color: #fff;
         border: 1px solid #000;
         border-radius: 5px;
-        box-shadow: 0 0 5px #000;
       }
     }
   }

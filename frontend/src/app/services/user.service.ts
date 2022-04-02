@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Nullable } from '../models/utils.model';
-import { User } from '../models/user.model';
+import { User } from '../models/post.model';
 
 
 @Injectable({

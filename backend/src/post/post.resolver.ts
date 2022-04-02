@@ -7,22 +7,19 @@ import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
 import { PostService } from './post.service';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { FileService } from 'src/file/file.service';
-
-import { RedisService } from 'src/redis/redis.service';
+import { UserService } from 'src/user/user.service';
 
 type Files = File[];
 
 @Resolver(() => Post)
 @UseGuards(GqlAuthGuard)
 export class PostResolver {
-  private redisClient;
 
   constructor(
     private readonly postService: PostService,
     private readonly fileService: FileService,
-    private readonly redisService: RedisService,
+    private readonly userService: UserService,
   ) {
-    this.redisClient = this.redisService.getClient();
   }
 
   @Mutation(() => Post)
@@ -36,12 +33,24 @@ export class PostResolver {
   }
 
   @Query(() => [Post])
+  async feed(
+    @RequestUser() user: User,
+  ): Promise<Post[]> {
+    user = await this.userService.findOne(user.id, { relations: ['following'] });
+    const postIds = await this.postService.userFeed(user);
+
+    console.log({ postIds })
+
+    return this.postService.findByIds(postIds);
+  }
+
+  @Query(() => [Post])
   async getPosts(): Promise<Post[]> {
     return await this.postService.findAll();
   }
 
   @Query(() => Post)
-  async getPost(@Args('id') id: string): Promise<Post> {
+  async getPost(@Args('id') id: number): Promise<Post> {
     return await this.postService.findOne(id);
   }
 
@@ -63,8 +72,42 @@ export class PostResolver {
     return post.user;
   }
 
+  @ResolveField()
+  async comments(@Parent() post: Post) {
+    post = await this.postService.findOne(post.id, { relations: ['comments'] });
+
+    return post.comments.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
   @Mutation(() => Number)
-  async deletePost(@Args('id') id: string): Promise<number> {
-    return await this.postService.remove(id);
+  async deletePost(
+    @Args('id') id: number,
+    @RequestUser() user: User,
+  ): Promise<number> {
+    return await this.postService.remove(id, user);
+  }
+
+  @Mutation(() => Post)
+  async likePost(
+    @Args('postId') postId: number,
+    @RequestUser() user: User,
+  ) {
+    return await this.postService.like(postId, user);
+  }
+
+  @Mutation(() => Post)
+  async unlikePost(
+    @Args('postId') postId: number,
+    @RequestUser() user: User,
+  ) {
+    return await this.postService.unlike(postId, user);
+  }
+
+  @ResolveField()
+  async liked(
+    @Parent() post: Post,
+    @RequestUser() user: User,
+  ) {
+    return await this.postService.isLiked(post.id, user);
   }
 }

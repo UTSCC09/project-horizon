@@ -1,11 +1,13 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { UserPost } from 'src/app/models/user.model';
-import { File } from 'src/app/models/user.model';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { UserPost, Comment, File } from 'src/app/models/post.model';
+
+import { CommentApiService } from 'src/app/services/api/comment-api.service';
+import { PostApiService } from 'src/app/services/api/post-api.service';
 import { EngineManagerService } from 'src/app/services/engine-manager.service';
 import { EngineService } from 'src/app/services/engine.service';
 import { SceneControlService } from 'src/app/services/scene-control.service';
 import { environment } from 'src/environments/environment';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
 @Component({
   selector: 'app-post',
@@ -14,14 +16,27 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 })
 export class PostComponent implements OnInit {
   @Input() post!: UserPost;
+
+  showAddComment: boolean = false;
   private engineService: EngineService;
   private sceneController: SceneControlService;
+  commentText: string = '';
+  commentLoading: boolean = false;
 
   renderEngine: boolean = false;
 
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
-  constructor(private em: EngineManagerService) {
+  constructor(
+    private commentApi: CommentApiService,
+    private messageService: MessageService,
+    private postApi: PostApiService,
+    private em: EngineManagerService,
+  ) {
+    this.commentApi = commentApi;
+    this.postApi = postApi;
+    this.messageService = messageService;
+
     this.engineService = new EngineService(em);
     this.sceneController = this.engineService.sceneController;
 
@@ -62,6 +77,24 @@ export class PostComponent implements OnInit {
     return file.mimetype.startsWith('image');
   }
 
+  likeUnlikePost() {
+    const updatePost = ({data}: any) => {
+      this.post.liked = !this.post.liked;
+    };
+
+    const errored = (error: any) => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error.message });
+    };
+
+    if (this.post.liked) {
+      this.postApi.unlikePost(this.post.id)
+        .subscribe(updatePost, errored);
+    } else {
+      this.postApi.likePost(this.post.id)
+        .subscribe(updatePost, errored);
+    }
+  }
+
   setupRenderer() {
     this.renderEngine = true;
     this.canvas.nativeElement.classList.remove('hidden');
@@ -81,5 +114,32 @@ export class PostComponent implements OnInit {
 
         reader.readAsText(file);
       });
+  }
+
+  toggleAddCommentDialog() {
+    this.showAddComment = !this.showAddComment;
+  }
+
+  submitComment() {
+    this.commentLoading = true;
+
+    this.commentApi.addComment(this.post.id, this.commentText)
+      .subscribe(({ data }) => {
+          let comment = (data as any).createComment as Comment
+          comment.user = this.post.user;
+
+          this.post?.comments?.push(comment);
+
+          this.showAddComment = false;
+          this.commentText = '';
+        },
+        (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: err.message,
+          });
+        }),
+        () => this.commentLoading = false;
   }
 }

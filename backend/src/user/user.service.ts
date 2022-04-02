@@ -47,7 +47,7 @@ export class UserService {
   }
 
   async followUser(user: User, userId: number): Promise<User> {
-    const other = await this.usersRepository.findOne(userId);
+    const other = await this.usersRepository.findOne(userId, { relations: ['following'] });
     if (user.following) {
       user.following.push(other);
     } else {
@@ -59,7 +59,7 @@ export class UserService {
   }
 
   async unfollowUser(user: User, userId: number): Promise<User> {
-    const other = await this.usersRepository.findOne(userId);
+    const other = await this.usersRepository.findOne(userId, { relations: ['following'] });
     user.following = user.following?.filter(u => u.id !== other.id) || [];
     this.usersRepository.save(user);
     return other;
