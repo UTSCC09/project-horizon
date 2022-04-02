@@ -21,5 +21,5 @@ export type Upload = {
     name: string,
     last_modified?: number,
     controls?: TransformControls,
-    color: number,
+    color: string,
   }

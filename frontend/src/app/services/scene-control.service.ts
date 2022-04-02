@@ -16,6 +16,8 @@ export class SceneControlService implements OnDestroy {
   private _cameraControls!: OrbitControls;
   private _ready: boolean = false;
 
+  private ignoreKeyboard: boolean = false;
+
   get ready(): boolean {
     return this._ready;
   }
@@ -104,6 +106,7 @@ export class SceneControlService implements OnDestroy {
 
   initModeListener() {
     document.addEventListener('keydown', (event) => {
+      if (this.ignoreKeyboard) return;
       switch(event.key) {
         case 'r':
           this.updateSceneControl(ControlModes.Rotate);
@@ -195,5 +198,10 @@ export class SceneControlService implements OnDestroy {
   ngOnDestroy() {
     this.removeControls();
     this._ready = false;
+  }
+
+  updateKeyListener(val: boolean) {
+    this.ignoreKeyboard = val;
+    if (val) this.updateSceneControl(ControlModes.Camera);
   }
 }
