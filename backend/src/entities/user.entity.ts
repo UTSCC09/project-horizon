@@ -131,3 +131,12 @@ export enum NotificationType {
 	FOLLOW = 'follow',
   POST_LIKE = 'post_like',
 }
+
+@ObjectType()
+export class ResultStatus {
+  @Field()
+  status: boolean;
+
+  @Field()
+  message: string;
+}

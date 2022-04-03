@@ -5,11 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { ApolloLink, InMemoryCache } from '@apollo/client/core';
+import { ApolloLink, InMemoryCache, Operation, RequestHandler } from '@apollo/client/core';
 import { extractFiles } from "extract-files";
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { onError } from 'apollo-link-error';
 
 // Components
 import { UploadComponent } from './components/upload/upload.component';
@@ -114,7 +115,22 @@ import { far } from '@fortawesome/free-regular-svg-icons';
       useFactory: (httpLink: HttpLink) => {
         return {
           cache: new InMemoryCache(),
-          link: new ApolloLink((opp, forward) => {
+          link: onError(({ graphQLErrors, networkError }) => {
+            if (graphQLErrors) {
+              graphQLErrors.forEach((err) => {
+                if (err?.extensions['exception'] && err.extensions['exception'].status == 401) {
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('user');
+                  window.location.reload();
+                }
+              }
+              );
+            }
+            if (networkError) {
+              console.log({ networkError })
+            }
+          })
+          .concat((opp, forward) => {
             const token = localStorage.getItem('token');
             if (token) {
               opp.setContext({
@@ -123,12 +139,14 @@ import { far } from '@fortawesome/free-regular-svg-icons';
                 },
               });
             }
-            return forward(opp);
-          }).concat(
+            return forward(opp as any);
+          })
+          .concat(
             httpLink.create({
               uri: `${environment.apiUrl}/graphql`,
               extractFiles,
-            })),
+            }) as any
+          ),
         };
       },
       deps: [HttpLink],

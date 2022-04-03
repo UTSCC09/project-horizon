@@ -78,6 +78,11 @@ type Notification {
   createdAt: String!
 }
 
+type ResultStatus {
+  status: Boolean!
+  message: String!
+}
+
 type Query {
   hello: String!
   user(id: Float!): User!
@@ -94,6 +99,7 @@ type Query {
 type Mutation {
   register(data: UserInput!): UserToken!
   login(data: LoginInfo!): UserToken!
+  logout: ResultStatus!
   followUser(userId: Float!): User!
   unfollowUser(userId: Float!): User!
   createPost(content: String!, files: [Upload!]): Post!

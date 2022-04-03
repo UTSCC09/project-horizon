@@ -2,6 +2,7 @@ import { Injectable, HttpException, HttpStatus, createParamDecorator, ExecutionC
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { BlacklistService } from 'src/blacklist/blacklist.service';
 import { User } from 'src/entities/user.entity';
 import { AuthService } from './auth.service';
 
@@ -20,12 +21,25 @@ export const RequestUser = createParamDecorator(
   },
 );
 
+export const AuthToken = createParamDecorator(
+  (_: unknown, context: ExecutionContext): string => {
+    const ctx = GqlExecutionContext.create(context);
+    const req = ctx.getContext().req;
+
+    return req.headers.authorization?.replace('Bearer ', '');
+  }
+)
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly authService: AuthService) {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly bl: BlacklistService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.SECRETKEY,
+      passReqToCallback: true
     });
   }
 
@@ -33,7 +47,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @param  {JwtPayload} payload
    * @returns Promise
    */
-  async validate(payload: JwtPayload): Promise<User> {
+  async validate(req: any, payload: JwtPayload): Promise<User> {
+    const token = req.headers?.authorization?.replace('Bearer ', '');
+
+    if (await this.bl.blacklisted(token)) {
+      throw new HttpException('Session Expired', HttpStatus.UNAUTHORIZED);
+    }
+
     const user = await this.authService.validateUser(payload);
     if (!user) {
       throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);

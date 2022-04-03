@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { User } from 'src/app/models/post.model';
+import { AuthApiService } from 'src/app/services/api/auth-api.service';
 import { UserApiService } from 'src/app/services/api/user-api.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class NavigationComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userApi: UserApiService
+    private userApi: UserApiService,
+    private authService: AuthApiService,
   ) {
     this.items = [
       {
@@ -47,9 +49,12 @@ export class NavigationComponent implements OnInit {
   }
 
   logOut() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    this.router.navigate(['/login']);
+    this.authService.logout()
+      .subscribe(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        this.router.navigate(['/login']);
+      });
   }
 
   search(event: any) {
