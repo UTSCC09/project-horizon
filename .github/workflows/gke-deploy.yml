@@ -45,6 +45,13 @@ jobs:
         location: ${{ env.GKE_ZONE }}
         credentials: ${{ secrets.GKE_SA_KEY }}
 
+    - name: Env.Prod setup
+      run: |-
+        cd backend
+        echo "SECRETKEY=${{ secrets.JWT_KEY }}" >> .env.production.bak
+        echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env.production.bak
+        mv .env.production.bak .env.production
+
     # Build the Docker image
     - name: Build
       run: |-
