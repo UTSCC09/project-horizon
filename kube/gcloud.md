@@ -1,7 +1,7 @@
-# GCloud deploy
+# GCloud Deployment
 
 ## Table of Content
-- [GCloud deploy](#gcloud-deploy)
+- [GCloud Deployment](#gcloud-deployment)
   - [Table of Content](#table-of-content)
   - [Setup](#setup)
   - [Useful Commands](#useful-commands)
@@ -17,7 +17,7 @@
 gcloud projects list
 
 gcloud config set project $GCP_PROJECT_ID
-gcloud config set compute/zone northamerica-northeast2-a
+gcloud config set compute/zone northamerica-northeast2-a #Toronto
 gcloud config set artifacts/location northamerica-northeast2
 gcloud config set compute/region northamerica-northeast2
 
@@ -108,8 +108,9 @@ kubectl autoscale deployment backend --max 3 --min 1 --cpu-percent 50
 ```
 
 # Sources
-- https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#gcloud_2
+- https://www.mirantis.com/blog/introduction-to-yaml-creating-a-kubernetes-deployment/
 - https://cloud.google.com/kubernetes-engine/docs/concepts/ingress
+- https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#gcloud_2
 - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 - https://newrelic.com/blog/how-to-relic/kubernetes-health-checks
 - https://medium.com/@athulravindran/google-kubernetes-engine-gke-persistence-volume-nfs-on-multiple-nodes-readwritemany-4b6e8d565b08

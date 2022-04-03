@@ -37,10 +37,9 @@ After the 3D functionality, we have also included a basic notification system al
 
 ## Development
 <!-- **Task:** Leaving deployment aside, explain how the app is built. Please describe the overall code design and be specific about the programming languages, framework, libraries and third-party api that you have used. -->
-Both our frontend and backend are nodejs applicaitons with the use of npm.
 
 ### Frontend
-Our frontend is built in Angular using TS and we rely heavily on TS support, injectable services, custom components and pipes and subscriptions. TS allows us to use static types and compile time errors without stepping away from JS, and Angular enables us to take advantage of it while provided a large array of supported libraries. We split our app into segments of major components, which are generally specific to a page in our site, minor components which are used for rendering handling repeated functionality and services, which hold the main functionality of our app and can be injected into any page that needs the functionality.
+Our frontend is built in Angular using TS and we rely heavily on TS support, injectable services, custom components, pipes and subscriptions. TS allows us to use static types and compile time errors without stepping away from JS, and Angular enables us to take advantage of it while provided a large array of supported libraries. We split our app into segments of major components, which are generally specific to a page in our site, minor components which are used for rendering handling repeated functionality and services, which hold the main functionality of our app and can be injected into any page that needs the functionality.
 
 We haven't encorporated any third party API's for development, but we use a wide variety of libraries to support certain tasks. Firstly, we use PrimeNG (from primefaces), Bootstrap and Fontawesome to provide a responsive design and a consistent look across our site. Then we have ThreeJS, which we use together with our 3DEngine and 3DScene services to handle building our post scenes and rendering them. ThreeJS is imported into our services while the services are injected into our components in order to render the scenes and fill their functionality. Lastly, we have a few api services that extend the base api service which uses Apollo for handling GraphQL functionality. User driven events are listened to in a component, which then calls the appropriate api service and subscribes to it in order to provide the user with feedback to its response.
 
@@ -48,9 +47,9 @@ We haven't encorporated any third party API's for development, but we use a wide
 <!-- ... -->
 
 <!-- Finish the first part of this paragraph explaining JWTs -->
-**JWTs explanations**. Then in order to overcome the lack of destroyable tokens with JWTs, we created a blacklisting service to hold onto unexpired tokens of signed out users. This service has a cache that is also checked before validating a JWT and if that cache doesn't show that our token is blacklisted, we also have the service check redis. This check is done through our redis service, which handles multiple connections to our redis db. So whenever a user signs out the token is blacklisted in cache and pushed to redis with a TTL of the tokens remaining lifespan.
+**JWTs explanations**. Then in order to overcome the lack of destroyable tokens with JWTs, we created a blacklisting service to hold onto non-expired tokens of signed-out users. This service has a cache that is also checked before validating a JWT and if that cache doesn't show that our token is blacklisted, we also have the service check redis. This check is done through our redis service, which handles multiple connections to our redis db. So whenever a user signs out the token is blacklisted in cache and pushed to redis with a TTL of the tokens remaining lifespan.
 
-We also implemented Redis to handle PubSub across pods in order for us to implement a simple notification system with long polling. Our redis service creates and handles our subscriber and publisher connections so that our GraphQL services can create and subscribe to events when necessary.
+We also implemented Redis to handle PubSub across pods in order for us to implement a simple notification system with long polling. This was done instead of a typical event as an event listener would not be notified if the even occured from a seperate pod. Our redis service creates and handles our subscriber and publisher connections so that our GraphQL services can create and subscribe to events when necessary.
 
 ### Overview
 Below is a quick overview and recap of our main libraries
@@ -59,7 +58,7 @@ Below is a quick overview and recap of our main libraries
   - Angular
   - Libraries:
     - Three.js: WebGL library for rendering 3d graphics
-    - PrimeNg & Bootstrap: UI library
+    - PrimeNg and Bootstrap: UI library
     - FontAwesome: Icon library
     - Apollo: GraphQL api library
 - Backend:
@@ -70,7 +69,7 @@ Below is a quick overview and recap of our main libraries
     - Terminus: API health check
   - DB: Postgresql
   - Cache: Redis (also used as a cross pod pub/sub)
-  - Auth: Passport.js/JWT
+  - Auth: Passport.js/JWT (Using redis as a Blacklist)
 ```
 
 ## Deployment
@@ -89,6 +88,31 @@ We then use an ingress controller to route traffic to the correct node port. Thi
 We also use persistent volumes to store the files uploaded by the users. This is done to ensure that the files are not lost when the application is restarted.
 
 Finally, we have seperate services/deployments for both postgresql and redis which are not given an external ip and thus not accessible outside the cluster. A health check is also added to the backend's postgressql service to ensure that the database is accessible before a new pod is set as the active one, which took us a long time to figure out and debug.
+
+```sh
+➜ $ kubectl get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/backend-5d779b684b-d6rx2        1/1     Running   0          21h
+pod/frontend-7dc9fb68fb-6jrzp       1/1     Running   0          21h
+pod/postgres-98c7c5945-gx6wn        1/1     Running   0          6d21h
+pod/redis-master-64f7c9fcbb-qtjfn   1/1     Running   0          24h
+
+NAME                   TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+service/nestjs         NodePort   <hidden>        <none>        3000:30188/TCP   7d
+service/nginx          NodePort   <hidden>        <none>        80:31555/TCP     7d
+service/postgres       NodePort   <hidden>        <none>        5432:30200/TCP   7d20h
+service/redis-leader   NodePort   <hidden>        <none>        6379:30350/TCP   23h
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/backend        1/1     1            1           5d19h
+deployment.apps/frontend       1/1     1            1           7d22h
+deployment.apps/postgres       1/1     1            1           6d21h
+deployment.apps/redis-master   1/1     1            1           24h
+
+NAME                                          REFERENCE            TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/backend   Deployment/backend   <unknown>/50%   1         3         1          21h
+horizontalpodautoscaler.autoscaling/frontend  Deployment/frontend  <unknown>/70%   1         3         1          21h
+```
 
 **Note:** For some more information on the first/second attempt at deploying the application as well as our sources for the deployment, please refer to the [gcloud.md](/kube/gcloud.md) file.
 
@@ -123,8 +147,6 @@ In order to create a notification system the notification endpoint would need to
 
 ## Contributions
 <!-- **Task:** Describe the contribution of each team member to the project. Please provide the full name of each team member (but no student number).  -->
-
-Basic, elaborate.
 
 - Ahmed Halat
   Was in charge of the 3D services, components and rendering as well as creating the basic setup for the frontend. The basic frontend setup includes routing, navigation, structuring, pages and the frontend static pages like login and register. He also created the frontend and backend functionality for Notifications (setting up long polling and redis), Searching for user profiles and paginating posts and comments and the message service.
