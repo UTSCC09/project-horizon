@@ -12,7 +12,7 @@ on:
 
 env:
   PROJECT_ID: horizon-c09
-  GKE_CLUSTER: gke_horizon-c09_northamerica-northeast2-a_horizon-cluster
+  GKE_CLUSTER: horizon-cluster
   GKE_ZONE: northamerica-northeast2-a
   DEPLOYMENT_NAME: backend
   IMAGE: backend
