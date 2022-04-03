@@ -53,7 +53,7 @@ jobs:
         mv .env.production.bak .env.production
 
     # Build the Docker image
-    - name: Build
+    - name: Build Backend
       run: |-
         docker build backend \
           --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
@@ -61,9 +61,9 @@ jobs:
           --build-arg GITHUB_REF="$GITHUB_REF"
 
     # Push the Docker image to Google Container Registry
-    - name: Publish
+    - name: Publish Backend
       run: |-
-        docker push backend "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+        docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
 
     # Set up kustomize
     - name: Set up Kustomize
