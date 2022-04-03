@@ -19,7 +19,12 @@
   - [Deployment](#deployment)
   - [Maintenance](#maintenance)
   - [Challenges](#challenges)
+    - [1. Deployment](#1-deployment)
+    - [2. 3D Engine](#2-3d-engine)
+    - [3. Long Polling](#3-long-polling)
   - [Contributions](#contributions)
+    - [Ahmed Halat](#ahmed-halat)
+    - [Mohamed Halat](#mohamed-halat)
 - [One more thing?](#one-more-thing)
     - [Important](#important)
 
@@ -44,10 +49,9 @@ Our frontend is built in Angular using TS and we rely heavily on TS support, inj
 We haven't encorporated any third party API's for development, but we use a wide variety of libraries to support certain tasks. Firstly, we use PrimeNG (from primefaces), Bootstrap and Fontawesome to provide a responsive design and a consistent look across our site. Then we have ThreeJS, which we use together with our 3DEngine and 3DScene services to handle building our post scenes and rendering them. ThreeJS is imported into our services while the services are injected into our components in order to render the scenes and fill their functionality. Lastly, we have a few api services that extend the base api service which uses Apollo for handling GraphQL functionality. User driven events are listened to in a component, which then calls the appropriate api service and subscribes to it in order to provide the user with feedback to its response.
 
 ### Backend
-<!-- ... -->
+Our backend is built in Nest.js using Apollo and TypeORM. We decided on Nest.js as it allows us create a graphql server and database entities in a single file and is very organized overall. Take [comment.entity.ts](/backend/src/entities/comment.entity.ts) for example, we can create a comment TypeORM relation mapping and graphql entity very easily and in a organized method. We then use our own resolvers to handle queries and mutations as well as our own field resolvers to handle fields we created. These resolvers all have their own services which are both then tied to a module that is imported by the app module. This allows us to break up the application into seperate modules and keep our code organized.
 
-<!-- Finish the first part of this paragraph explaining JWTs -->
-**JWTs explanations**. Then in order to overcome the lack of destroyable tokens with JWTs, we created a blacklisting service to hold onto non-expired tokens of signed-out users. This service has a cache that is also checked before validating a JWT and if that cache doesn't show that our token is blacklisted, we also have the service check redis. This check is done through our redis service, which handles multiple connections to our redis db. So whenever a user signs out the token is blacklisted in cache and pushed to redis with a TTL of the tokens remaining lifespan.
+In order to authenticate users for our application, we decided to use JWTs. This is because it adds a more manageable method of authentication on the backend using the Passport library and our own custom Auth Guards that we can add to all resolvers. Then in order to overcome the lack of destroyable tokens with JWTs, we created a blacklisting service to hold onto non-expired tokens of signed-out users. This service has a cache that is also checked before validating a JWT and if that cache doesn't show that our token is blacklisted, we also have the service check redis. This check is done through our redis service, which handles multiple connections to our redis db. So whenever a user signs out the token is blacklisted in cache and pushed to redis with a TTL of the tokens remaining lifespan.
 
 We also implemented Redis to handle PubSub across pods in order for us to implement a simple notification system with long polling. This was done instead of a typical event as an event listener would not be notified if the even occured from a seperate pod. Our redis service creates and handles our subscriber and publisher connections so that our GraphQL services can create and subscribe to events when necessary.
 
@@ -120,7 +124,7 @@ horizontalpodautoscaler.autoscaling/frontend  Deployment/frontend  <unknown>/70%
 <!-- **Task:** Explain how you monitor your deployed app to make sure that everything is working as expected. -->
 We use a varity of tools to monitor and maintain our application.
 
-First of all, we use a variety of github actions to ensure our application is always error free on the build stage. These actions include an action that runs the build commands on PRs to ensure that the PR doesn't break the build. Then we also use a github action to deploy the application on commits to main. Sadly these actions don't currently work because of the issue recorded on [piazza](https://piazza.com/class/kxgjicgvryu3h8?cid=423#).
+First of all, we use a variety of github actions to ensure our application is always error free on the build stage. These actions include an action that runs the build commands on PRs to ensure that the PR doesn't break the build. Then we use GCP's CI/CD tools to ensure that our application is always error free on the deploy stage. This is done by running a build on the main branch.
 
 As for monitoring our application, we again use different tools at different parts of the application. We use Sentry to monitor our backends and record/report on errors occuring in real time. We then use GCP's error reporting tools to get any notifications on errors occuring within Kubernetes itself such as Pod failures. GCP's maintenance tools also allow us to view all logs for our application but it is not as easy to manage as Sentry. Finally, we also use the GKE dashboard to monitor our application's health, traffic and resource usage. Auto scaling is also used to automatically scale the number of pods in the application based on resource requirements (currently increases number of pods when CPU usage increases above 50%).
 
@@ -128,18 +132,27 @@ As for monitoring our application, we again use different tools at different par
 
 <!-- **Task:** What is the top 3 most challenging things that you have learned/developed for you app? Please restrict your answer to only three items. -->
 
-1. Deployment
-<!-- Explain why you went with Kubernetes -->
+### 1. Deployment
 
-2. 3D Engine
+Definetly one of the most challenging thing that we have learned for our application is deploying to Kubernetes. We decided to deploy to GKE because we both have experience with GCP and decided that Kubernetes would be a more challenging and rewarding experience for us. On top of that, it would allow us to use much more advanced features more easily such as monitoring tools, auto scaling and more. That being said, we came accross many challenges while deploying.
+
+The first major issue we came across was add SSL, static IP as well as a host name to the app. This was because during our first attempt/cluster setup, we used a basic load balancer to route traffic to the application, which was not secured. After switching to a Ingress controller, adding these features was much simpler with the official GCP documentation.
+
+Another issue we came accross was a continuous loop of Pod failures on the backend. This was because the backend was not properly able to connect to the database, so after configuring the psql service and setting up Health checks that would determine if a pod was ready, deployments haven't really failed since.
+
+We also came accross the issue of how to store files. Since our pods are wiped after each deployment we had to learn how to setup a persistent volume to store all of the files.
+
+Overall, we came across many challenges while deploying our application. We learned a lot about deploying to Kubernetes and how to use the official GCP documentation to get the most out of it.
+
+### 2. 3D Engine
 
 The 3D engine is one of the main features of our app and a lot of functionality needed to be built out for it to work as we intended. Even after using ThreeJS (a library listed on the class site resources tab), we still needed to make services to work with the library in the way we wanted. After we setup the basic canvas, we then needed to figure out how to get STLs to upload and take snapshots of them. We implemented a 3d controls service to handle editable objects and an engine to control the canvas and allow us to take snapshots of individual objects (for the table of objects) and the final scene.
 
 One thing we learned was that keeping these scenes rendered took significantly more performance than expected, so after some troubleshooting we also developed an `EngineManagerService` to un-render posts and keep the number of rendered canvas below a threashold. This increased the performance of our app and fixed some issues we were having with crashing canvases.
 
-Another challenge was handling the saved scene and storing it along with the post details in the backend. **TALK ABOUT STORING SCENE JSON**
+Another challenge was handling the saved scene and storing it along with the post details in the backend. Since we couldn't use Multer to handle file uploads on a graphql resolver (which we later learned we could use a regular post endpoint here, oh well), we endded spending quite a bit of time trying to get around this. In the end, we found out our issue was that we had to add a middleware to our app called `graphqlUploadExpress` to allow us to pass files to the backend.
 
-3. Long Polling
+### 3. Long Polling
 
 Setting up long polling and our notification system was the third most challenging/educational part of our site development. We had to implement a system that allowed users to get events that relates to them in real time. We quickly decided to use long polling from the frontend since we didn't need to send messages back (eliminating websockets), and apollo natively supports the functionality with a sinple interval and flag change. The difficulties with long polling arise with our server events.
 
@@ -148,16 +161,13 @@ In order to create a notification system the notification endpoint would need to
 ## Contributions
 <!-- **Task:** Describe the contribution of each team member to the project. Please provide the full name of each team member (but no student number).  -->
 
-- Ahmed Halat
-  Was in charge of the 3D services, components and rendering as well as creating the basic setup for the frontend. The basic frontend setup includes routing, navigation, structuring, pages and the frontend static pages like login and register. He also created the frontend and backend functionality for Notifications (setting up long polling and redis), Searching for user profiles and paginating posts and comments and the message service.
-  His main responsibility was however, working on the new post dialog including: allowing user to uploads STLs and render them, creating snapshots of scenes, customize and manipulate the STLs within a scene.
-- Mohamed Halat
-  - Figuring out basic backend architecture (typeorm + gql)
-  - Auth
-  - Deployment
-  - Comments
-  - Liking
-  - Following
+### Ahmed Halat
+  I Was in charge of the 3D services, components and rendering as well as creating the basic setup for the frontend. The basic frontend setup includes routing, navigation, structuring, pages and the frontend static pages like login and register.
+  I also created the frontend and backend functionality for Notifications (setting up long polling and redis), Searching for user profiles and paginating posts and comments and the message service.
+  My main responsibility was however, working on the new 3D engine including: allowing user to uploads STLs and render them, creating snapshots of scenes, customize and manipulate the STLs within a scene.
+### Mohamed Halat
+  I Was in charge of the backend architecture and the database as well as finding a suitable framework and doing basic setup. I created the basic database schema/entities and the basic CRUD operations for the posts, comments and users. I also created the basic authentication and authorization for the users.
+  My biggest responsibility was figuring out the initial deployment of the application. This included applying our kubernetes knowledge to deploy the application to GKE and making sure we had a secure connection to the internet. I also worked on various smaller features such as the profile pages, following, commenting and likeing.
 
 # One more thing?
 
