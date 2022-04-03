@@ -11,7 +11,7 @@ on:
       - main
 
 env:
-  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  PROJECT_ID: horizon-c09
   GKE_CLUSTER: gke_horizon-c09_northamerica-northeast2-a_horizon-cluster
   GKE_ZONE: northamerica-northeast2-a
   DEPLOYMENT_NAME: backend
@@ -31,7 +31,7 @@ jobs:
     - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
       with:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
-        project_id: ${{ secrets.GKE_PROJECT }}
+        project_id: horizon-c09
 
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
