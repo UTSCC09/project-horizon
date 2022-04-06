@@ -41,8 +41,7 @@ export class NotificationApiService extends BaseApiService implements OnDestroy 
   }
 
   override handleError(graphQLErrors: GraphQLErrors, networkError: NetworkError) {
-    if ((networkError as any)?.statusCode) {
-      console.log({ networkError });
+    if ((networkError as any)?.statusCode != undefined || (networkError as any)?.status != undefined) {
       this.init();
     }
   }
