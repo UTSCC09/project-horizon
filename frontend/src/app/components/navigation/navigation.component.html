@@ -3,6 +3,7 @@
 		<div>
 			<p-autoComplete
 				[suggestions]="results"
+				[(ngModel)]="query"
 				placeholder="Search users by name or email"
 				[minLength]="2"
 				field="label"

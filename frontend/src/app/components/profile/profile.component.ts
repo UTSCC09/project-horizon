@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { filter } from 'rxjs/operators';
 import { User, UserPost } from 'src/app/models/post.model';
 import { PostApiService } from 'src/app/services/api/post-api.service';
 import { UserApiService } from 'src/app/services/api/user-api.service';
@@ -12,7 +13,7 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   user: User;
   currentUser: User;
   loadingFollow = false;
@@ -31,6 +32,11 @@ export class ProfileComponent {
   ) {
     this.user = this.userService.user as User;
     this.currentUser = this.userService.user as User;
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((e) => {
+      this.ngOnInit();
+    });
   }
 
   ngOnInit() {

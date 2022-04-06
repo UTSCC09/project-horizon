@@ -10,9 +10,10 @@ import { UserApiService } from 'src/app/services/api/user-api.service';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent {
   items: MenuItem[];
   results: string[] = [];
+  query: string = '';
 
   constructor(
     private router: Router,
@@ -45,9 +46,6 @@ export class NavigationComponent implements OnInit {
     return this.router.url === route;
   }
 
-  ngOnInit(): void {
-  }
-
   logOut() {
     this.authService.logout()
       .subscribe(() => {
@@ -72,5 +70,6 @@ export class NavigationComponent implements OnInit {
 
   select(event: any) {
     this.router.navigate(['/profile', event.id]);
+    this.query = '';
   }
 }
