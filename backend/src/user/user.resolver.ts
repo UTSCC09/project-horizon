@@ -35,6 +35,7 @@ export class UserResolver {
 	async notifications(@RequestUser() user: User) {
 		const channel = `notifications:${user.id}`;
 		this.activeChannels.push(channel);
+
 		this.subscriber.subscribe(...this.activeChannels, (err, count) => {
 			if (err) {
 				//  return 500

@@ -19,6 +19,7 @@ export class NotificationService {
     private subscriber: NotificationApiService,
     private messageService: MessageService
   ) {
+    this.subscriber.init();
     this.subscriber.notification.subscribe(({ data }) => {
       const notification = JSON.parse(JSON.stringify(data.notifications));
       notification.payload = JSON.parse(notification.payload);

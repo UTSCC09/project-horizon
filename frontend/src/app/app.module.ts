@@ -115,22 +115,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
       useFactory: (httpLink: HttpLink) => {
         return {
           cache: new InMemoryCache(),
-          link: onError(({ graphQLErrors, networkError }) => {
-            if (graphQLErrors) {
-              graphQLErrors.forEach((err) => {
-                if (err?.extensions['exception'] && err.extensions['exception'].status == 401) {
-                  localStorage.removeItem('token');
-                  localStorage.removeItem('user');
-                  window.location.reload();
-                }
-              }
-              );
-            }
-            if (networkError) {
-              console.log({ networkError })
-            }
-          })
-          .concat((opp, forward) => {
+          link: new ApolloLink((opp, forward) => {
             const token = localStorage.getItem('token');
             if (token) {
               opp.setContext({
@@ -139,14 +124,12 @@ import { far } from '@fortawesome/free-regular-svg-icons';
                 },
               });
             }
-            return forward(opp as any);
-          })
-          .concat(
+            return forward(opp);
+          }).concat(
             httpLink.create({
               uri: `${environment.apiUrl}/graphql`,
               extractFiles,
-            }) as any
-          ),
+            })),
         };
       },
       deps: [HttpLink],
