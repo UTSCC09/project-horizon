@@ -54,6 +54,8 @@ import { DialogModule } from 'primeng/dialog';
 import { DataViewModule } from 'primeng/dataview';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { SliderModule } from 'primeng/slider';
 
 // External Libraries
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -106,10 +108,13 @@ import { far } from '@fortawesome/free-regular-svg-icons';
     DataViewModule,
     ProgressSpinnerModule,
     NgPipesModule,
+    OverlayPanelModule,
+    SliderModule,
   ],
   providers: [
     MessageService,
     DialogService,
+    FileSizePipe,
     {
       provide: APOLLO_OPTIONS,
       useFactory: (httpLink: HttpLink) => {

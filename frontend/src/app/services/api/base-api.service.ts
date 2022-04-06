@@ -21,7 +21,7 @@ export class BaseApiService {
     error.graphQLErrors?.forEach((err: any) => {
       const extension = err?.extensions['exception'];
 
-      if (extension?.status == 401) {
+      if (extension?.status == 401 || err?.extensions?.response?.statusCode == 401) {
         this.authError();
       }
       else if (extension?.status < 502) {

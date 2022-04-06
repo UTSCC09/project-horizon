@@ -20,8 +20,11 @@
 	}
 
 	&-section {
-		display: flex;
-		padding-top: 20px;
+    display: flex;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
 
 		&-header {
 			&-content {
@@ -31,6 +34,11 @@
 			}
 		}
 	}
+}
+
+.edit-upload {
+	display: flex;
+	align-items: center;
 }
 
 .buttons {

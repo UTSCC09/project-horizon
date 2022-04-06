@@ -10,6 +10,7 @@ import { GraphQLErrors, NetworkError } from '@apollo/client/errors';
 export class NotificationApiService extends BaseApiService implements OnDestroy {
   private querySubscription!: Subscription;
   private _notification: Subject<any> = new Subject<any>();
+  private errorCount: number = 0;
 
   NOTIFICATION_QUERY = gql`
     query notifications {
@@ -41,7 +42,9 @@ export class NotificationApiService extends BaseApiService implements OnDestroy 
   }
 
   override handleError(graphQLErrors: GraphQLErrors, networkError: NetworkError) {
-    if ((networkError as any)?.statusCode != undefined || (networkError as any)?.status != undefined) {
+    this.errorCount++;
+    if (this.errorCount < 5 &&
+        ((networkError as any)?.statusCode != undefined || (networkError as any)?.status != undefined)) {
       this.init();
     }
   }

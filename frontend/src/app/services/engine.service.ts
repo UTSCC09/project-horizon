@@ -182,6 +182,7 @@ export class EngineService implements OnDestroy {
   public createFileMesh(geometry: any) {
     const material = new THREE.MeshStandardMaterial({
       color: 0xffffff,
+      side: THREE.DoubleSide,
     });
     return new THREE.Mesh(geometry, material);
   }
@@ -212,6 +213,10 @@ export class EngineService implements OnDestroy {
 
   public addToScene(object: Object3D) {
     this.scene.add(object);
+  }
+
+  updateBackgroundColor(color: string) {
+    this.scene.background = new THREE.Color(color);
   }
 
   parseSTL(contents: string | ArrayBuffer) {

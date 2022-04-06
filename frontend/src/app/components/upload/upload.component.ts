@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ControlModes, Upload } from 'src/app/models/controls.model';
+import { FileSizePipe } from 'src/app/pipes/file-size.pipe';
 import { PostApiService } from 'src/app/services/api/post-api.service';
 import { EngineManagerService } from 'src/app/services/engine-manager.service';
 import { EngineService } from 'src/app/services/engine.service';
@@ -20,6 +21,7 @@ export class UploadComponent implements OnInit {
 
   private sceneObjects: { geometry: BufferGeometry, mesh: Mesh }[] = [];
   public controlOptions: any[] = [];
+  material!: MeshStandardMaterial;
   loading = false;
   keepGrid = false;
 
@@ -41,6 +43,7 @@ export class UploadComponent implements OnInit {
     private api: PostApiService,
     private messageService: MessageService,
     private engineManager: EngineManagerService,
+    private fileSizePipe: FileSizePipe
   ) {
     this.engineService = new EngineService(engineManager);
     this.engineService.setPriority(1);
@@ -95,8 +98,20 @@ export class UploadComponent implements OnInit {
   }
 
   uploadPost() {
+    this.loading = true;
+    console.log('start loading')
     const content = this.postContent;
+    const totalSize = this.uploads.reduce((acc, cur) => acc + (cur?.size || 0), 0);
 
+    if (totalSize > 100000000) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Upload too large',
+        detail: `Upload size is ${this.fileSizePipe.transform(totalSize)} which is greater than the maximum of 100MB`
+      });
+      return;
+    }
+    this.engineService.updateBackgroundColor(this.backgroundColor);
     this.sceneController.removeControls();
     if (!this.keepGrid) this.engineService.removeFromScene(this.grid);
 
@@ -112,6 +127,7 @@ export class UploadComponent implements OnInit {
             summary: 'Success',
             detail: 'Post uploaded successfully!'
           });
+          this.loading = false;
           this.ref.close();
         },
         error => {
@@ -120,6 +136,7 @@ export class UploadComponent implements OnInit {
             summary: 'Error',
             detail: error.message
           });
+          this.loading = false;
         }
       );
   }
@@ -154,10 +171,6 @@ export class UploadComponent implements OnInit {
       const contents = e.target.result;
 
       try {
-        if (/�/.test(contents)) {
-          throw new Error('File is not a valid STL file');
-        }
-
         const geometry = this.engineService.parseSTL(contents);
         const mesh = this.engineService.createFileMesh(geometry);
         mesh.rotateX(-Math.PI/2);
@@ -195,10 +208,20 @@ export class UploadComponent implements OnInit {
         this.loading = false;
       }
     };
-    reader.readAsText(files[0]);
+
+    reader.readAsArrayBuffer(files[0]);
   }
 
   changeTab(event: any) {
     this.sceneController.updateKeyListener(event.index != 0);
+  }
+
+  editUpload(upload: Upload) {
+    if (upload.mesh) this.material = (upload.mesh.material as MeshStandardMaterial);
+  }
+
+  updateMesh() {
+    if (!this.material) return;
+    this.material.needsUpdate = true;
   }
 }

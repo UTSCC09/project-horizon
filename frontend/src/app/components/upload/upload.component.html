@@ -40,9 +40,11 @@
 								<td>{{ upload.name }}</td>
 								<td>{{ upload.size | fileSize }}</td>
 								<td>{{ upload.last_modified | date }}</td>
-								<td>
+								<td class="edit-upload">
 									<p-colorPicker [(ngModel)]="upload.color" (onChange)="updateColor(upload)"
 										[ngModelOptions]="{standalone: true}"></p-colorPicker>
+									<button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-info p-button-text"
+										(click)="editUpload(upload); op.toggle($event)"></button>
 									<button pButton pRipple type="button" icon="pi pi-search"
 										class="p-button-rounded p-button-success p-button-text" (click)="centerUpload(upload)"></button>
 									<button pButton pRipple type="button" icon="pi pi-times"
@@ -51,6 +53,19 @@
 							</tr>
 						</ng-template>
 					</p-table>
+					<p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true">
+						<ng-template pTemplate>
+							<div *ngIf="material">
+								<h5>Wireframe</h5>
+								<p-checkbox [binary]="true" [(ngModel)]="material.wireframe" [ngModelOptions]="{standalone: true}" (onChange)="updateMesh()">
+								</p-checkbox>
+								<h5>Metalness: {{ material.metalness }}</h5>
+								<p-slider [(ngModel)]="material.metalness" [min]="0" [max]="2" label="Metalness" [step]="0.1"></p-slider>
+								<h5>Roughness: {{ material.roughness }}</h5>
+								<p-slider [(ngModel)]="material.roughness" [min]="0" [max]="1" label="Roughness" [step]="0.1"></p-slider>
+							</div>
+						</ng-template>
+					</p-overlayPanel>
 				</div>
 				<div class="upload-section col-md-12">
 					<div class="upload-section-content">
@@ -81,6 +96,10 @@
 		</p-tabPanel>
 		<p-tabPanel header="Confirm">
 			<div class="row">
+				<p *ngIf="!snapshotImage">
+					<span class="text-danger">Please take a snapshot before uploading</span>
+				</p>
+				<app-loader *ngIf="loading"></app-loader>
 				<div class="buttons float-right">
 					<p-button label="Post" class="p-button-success" [disabled]="!snapshotImage" (onClick)="uploadPost()">
 					</p-button>
