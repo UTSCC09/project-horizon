@@ -29,6 +29,10 @@ const isProd = process.env.NODE_ENV === 'production';
       driver: ApolloDriver,
       autoSchemaFile: isProd ? "/tmp/schema.gql" : "schema.gql",
       path: isProd ? "/api/graphql" : "/graphql",
+      cors: {
+        origin: isProd ? process.env.HOST_NAME :'*',
+        credentials: true,
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
