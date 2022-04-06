@@ -29,9 +29,6 @@ export class NotificationService {
         const handler = this.notificationHandlers[type];
         handler(notification);
       }
-    },
-    (error) => {
-      console.log("ERROR", { error })
     });
   }
 

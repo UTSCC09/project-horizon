@@ -58,7 +58,6 @@ export class UserResolver {
 				if (msgChannel != channel) return;
 
 				const notification = JSON.parse(message);
-				console.log(notification);
 
 				this.subscriber.unsubscribe(channel);
 				this.activeChannels = this.activeChannels.filter(c => c !== channel);

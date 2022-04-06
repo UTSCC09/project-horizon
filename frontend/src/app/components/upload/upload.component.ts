@@ -99,7 +99,6 @@ export class UploadComponent implements OnInit {
 
   uploadPost() {
     this.loading = true;
-    console.log('start loading')
     const content = this.postContent;
     const totalSize = this.uploads.reduce((acc, cur) => acc + (cur?.size || 0), 0);
 

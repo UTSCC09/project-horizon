@@ -16,8 +16,6 @@ export class BaseApiService {
   ) { }
 
   defaultErrorHandler(error: any) {
-    console.log('HANDLING DEFAULT',{error});
-
     error.graphQLErrors?.forEach((err: any) => {
       const extension = err?.extensions['exception'];
 
