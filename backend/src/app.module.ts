@@ -31,7 +31,7 @@ const isProd = process.env.NODE_ENV === 'production';
       path: isProd ? "/api/graphql" : "/graphql",
       cors: {
         origin: isProd ? process.env.HOST_NAME :'*',
-        credentials: true,
+        credentials: isProd,
       },
     }),
     TypeOrmModule.forRoot({

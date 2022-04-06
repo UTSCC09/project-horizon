@@ -172,4 +172,5 @@ In order to create a notification system the notification endpoint would need to
 # One more thing?
 
 ### Important
-- Since there are a lot of different encoding types for STLs, it's important to note that _**uploading wont work with all STLs**_ (we show the relevant error when it fails). We curated a list of sample stls in the repo for you to download and try uploading to our website. These sample STLs were downloaded from thingiverse with creative commons or MIT liscences.
+- Since there are a lot of different encoding types for STLs, it's important to note that _**uploading wont work with all STLs**_ (we show the relevant error when it fails). We curated a list of sample stls in the repo for you to download and try uploading to our website. These sample STLs were downloaded from thingiverse with creative commons or MIT liscences. \\
+- Our app only supports STLs that only contain ASCII characters
