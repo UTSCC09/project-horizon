@@ -21,9 +21,15 @@
     <div class="profile-content">
         <p-tabView>
             <p-tabPanel header="Posts">
-                <div class="profile-posts">
-                    <app-post-list *ngIf="posts.length > 0" [posts]="posts">
-                    </app-post-list>
+                <div class="row">
+                    <div class="col-md-3 spacer">
+                    </div>
+                    <div class="profile-posts col-lg-6">
+                        <app-post-list *ngIf="posts.length > 0" [posts]="posts">
+                        </app-post-list>
+                    </div>
+                    <div class="col-md-3 spacer">
+                    </div>
                 </div>
             </p-tabPanel>
             <p-tabPanel header="Followers">

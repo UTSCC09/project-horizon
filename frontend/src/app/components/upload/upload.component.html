@@ -12,14 +12,14 @@
 						<input #fileUpload type="file" accept=".stl" (change)="renderSTL($event)" hidden />
 					</div>
 					<p-button label="Center on Mesh" [disabled]="!uploads.length" (onClick)="centerCanvas()"></p-button>
+					<p-colorPicker [(ngModel)]="backgroundColor" [ngModelOptions]="{standalone: true}" (onChange)="updateCanvasColor()">
+					</p-colorPicker>
 					<p-selectButton [options]="controlOptions" (onChange)="updateMode($event)" [ngModel]="currentMode"
 						optionLabel="icon" optionValue="mode" [ngModelOptions]="{standalone: true}" [disabled]="!uploads.length">
 						<ng-template let-item>
 							<fa-icon [icon]="item.icon" [pTooltip]="item.tooltip"></fa-icon>
 						</ng-template>
 					</p-selectButton>
-					<p-colorPicker [(ngModel)]="backgroundColor" [ngModelOptions]="{standalone: true}" (onChange)="updateCanvasColor()">
-					</p-colorPicker>
 				</div>
 				<div class="col-md-12">
 				</div>

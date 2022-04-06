@@ -33,8 +33,9 @@ export class ProfileComponent implements OnInit {
     this.user = this.userService.user as User;
     this.currentUser = this.userService.user as User;
     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
+      filter(event => event instanceof NavigationEnd && event.url.startsWith('/profile'))
     ).subscribe((e) => {
+
       this.ngOnInit();
     });
   }
