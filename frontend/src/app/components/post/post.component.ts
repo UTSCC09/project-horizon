@@ -26,6 +26,7 @@ export class PostComponent {
   commentLoading: boolean = false;
   showAddComment: boolean = false;
   renderEngine: boolean = false;
+  loading: boolean = false;
 
   private sceneJSON: string | null = null;
 
@@ -104,13 +105,16 @@ export class PostComponent {
       return;
     }
 
+    this.loading = true;
     this.setupScene();
 
     if (this.sceneJSON == null) {
       this.retrieveScene();
+    } else {
+      this.engineService.loadScene(this.sceneJSON);
+      this.canvas.nativeElement.classList.remove('hidden');
+      this.loading = false;
     }
-
-    this.engineService.loadScene(this.sceneJSON);
   }
 
   setupScene() {
@@ -130,8 +134,10 @@ export class PostComponent {
         const reader = new FileReader();
         reader.onload = (e) => {
           const scene = JSON.parse(reader.result as string);
+          this.canvas.nativeElement.classList.remove('hidden');
           this.sceneJSON = scene;
           this.engineService.loadScene(scene);
+          this.loading = false;
         };
 
         reader.readAsText(file);

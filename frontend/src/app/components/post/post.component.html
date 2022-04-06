@@ -9,14 +9,15 @@
   </div>
   <hr>
   <div class="body">
-    <p>{{post.content}}</p>
+    <p>{{ post.content }}</p>
+    <app-loader *ngIf="loading"></app-loader>
     <div class="scene">
       <img *ngIf="!renderEngine && snapshot" [src]="fileUrl(snapshot)" [alt]="snapshot.filename">
       <canvas #canvas [id]="'canvas-' + post.id" class="hidden"></canvas>
     </div>
     <div class="row">
       <div class="col-md-3 actions">
-        <button pButton pRipple pTooltip="Render" type="button" icon="pi pi-camera" class="p-button-rounded p-button-outlined" (click)="renderPost()"></button>
+        <button pButton pRipple [loading]="loading" pTooltip="Render" type="button" icon="pi pi-camera" class="p-button-rounded p-button-outlined" (click)="renderPost()"></button>
         <button pButton pRipple pTooltip="Comment" type="button" icon="pi pi-comment" class="p-button-rounded p-button-secondary p-button-outlined" (click)="toggleAddCommentDialog()"></button>
         <button [disabled]="isMe()" pButton badge="8" pRipple [pTooltip]="post.liked ? 'Unlike' : 'Like'" type="button" [icon]="'pi pi-' + (post.liked ? 'times' : 'heart')" class="p-button-rounded p-button-help p-button-outlined" (click)="likeUnlikePost()"></button>
       </div>
