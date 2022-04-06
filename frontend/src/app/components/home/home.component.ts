@@ -22,6 +22,7 @@ export class HomeComponent implements AfterContentInit {
 
   total: number = 0;
   page: number = 0;
+  limit: number = 10;
 
   constructor(
     private postApi: PostApiService,
@@ -46,29 +47,31 @@ export class HomeComponent implements AfterContentInit {
     this.updateFeed();
   }
 
-  getFeed(page: number = 0, limit: number = 1) {
+  getFeed(page: number = 0, limit: number = 10) {
     this.postApi.getFeed(page, limit)
       .subscribe(({ data }) => {
-        const { posts, total, page } = JSON.parse(JSON.stringify((data as any).feed));
+        const { posts, total, page, limit } = JSON.parse(JSON.stringify((data as any).feed));
         this.userPosts = posts;
         this.total = total;
         this.page = page;
         this.loading = false;
+        this.limit = limit;
       });
   }
 
-  getDiscover(page: number = 0, limit: number = 1) {
+  getDiscover(page: number = 0, limit: number = 10) {
     this.postApi.getDiscover(page, limit)
       .subscribe(({ data }) => {
-        const { posts, total, page } = JSON.parse(JSON.stringify((data as any).discover));
+        const { posts, total, page, limit } = JSON.parse(JSON.stringify((data as any).discover));
         this.userPosts = posts;
         this.total = total;
         this.page = page;
         this.loading = false;
+        this.limit = limit;
       });
   }
 
-  updateFeed(page: number = 0, limit: number = 1) {
+  updateFeed(page: number = 0, limit: number = 10) {
     if (this.discover) {
       this.getDiscover(page, limit);
     } else {

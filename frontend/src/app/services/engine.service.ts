@@ -162,6 +162,7 @@ export class EngineService implements OnDestroy {
     }
 
     this._rendering = false;
+    this.manager.deactivateEngine(this);
   }
 
   /*

@@ -27,6 +27,8 @@ export class PostComponent {
   showAddComment: boolean = false;
   renderEngine: boolean = false;
 
+  private sceneJSON: string | null = null;
+
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
   constructor(
@@ -94,13 +96,33 @@ export class PostComponent {
     }
   }
 
-  setupRenderer() {
+  renderPost() {
+    if (this.renderEngine) {
+      this.renderEngine = false;
+      this.engineService.resetState();
+      this.canvas.nativeElement.classList.add('hidden');
+      return;
+    }
+
+    this.setupScene();
+
+    if (this.sceneJSON == null) {
+      this.retrieveScene();
+    }
+
+    this.engineService.loadScene(this.sceneJSON);
+  }
+
+  setupScene() {
     this.renderEngine = true;
     this.canvas.nativeElement.classList.remove('hidden');
 
     this.engineService.createScene(this.canvas);
     this.sceneController.setupControls();
     this.engineService.animate();
+  }
+
+  retrieveScene() {
     fetch(this.fileUrl(this.scene))
       .then(res => res.blob())
       .then(async blob => {
@@ -108,6 +130,7 @@ export class PostComponent {
         const reader = new FileReader();
         reader.onload = (e) => {
           const scene = JSON.parse(reader.result as string);
+          this.sceneJSON = scene;
           this.engineService.loadScene(scene);
         };
 

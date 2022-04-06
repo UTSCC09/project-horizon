@@ -29,6 +29,13 @@ export class EngineManagerService {
     return engine;
   }
 
+  deactivateEngine(engine: EngineService) {
+    const index = this.engines.indexOf(engine);
+    if (index > -1) {
+      this.engines.splice(index, 1);
+    }
+  }
+
   onEngineReset() {
     return this._engineReset;
   }
