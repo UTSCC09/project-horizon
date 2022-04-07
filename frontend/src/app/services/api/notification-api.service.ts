@@ -31,6 +31,7 @@ export class NotificationApiService extends BaseApiService implements OnDestroy 
     this.querySubscription = this.apollo.watchQuery<any>({
       query: this.NOTIFICATION_QUERY,
       pollInterval: 500,
+      fetchPolicy: 'network-only',
     })
       .valueChanges
       .subscribe(

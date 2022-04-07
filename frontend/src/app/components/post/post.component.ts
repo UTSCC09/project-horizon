@@ -154,7 +154,7 @@ export class PostComponent {
     this.commentApi.addComment(this.post.id, this.commentText)
       .subscribe(({ data }) => {
           let comment = (data as any).createComment as Comment
-          comment.user = this.post.user;
+          if (this.user) comment.user = this.user;
 
           this.post.comments = [comment, ...(this.post.comments || [])];
 
