@@ -1,6 +1,6 @@
 <div class="upload">
 	<p-tabView (onChange)="changeTab($event)">
-		<div class="col-lg-8 upload-section-content">
+		<div class="col-lg-8 upload-section-scene">
 			<canvas #canvas id="canvas"></canvas>
 		</div>
 		<p-tabPanel header="Scene Creation" class="col-lg-6">
@@ -12,8 +12,11 @@
 						<input #fileUpload type="file" accept=".stl" (change)="renderSTL($event)" hidden />
 					</div>
 					<p-button label="Center on Mesh" [disabled]="!uploads.length" (onClick)="centerCanvas()"></p-button>
-					<p-colorPicker [(ngModel)]="backgroundColor" [ngModelOptions]="{standalone: true}" (onChange)="updateCanvasColor()">
-					</p-colorPicker>
+					<div>
+						<p-colorPicker inputId="bgcolor" [(ngModel)]="backgroundColor" [ngModelOptions]="{standalone: true}" (onChange)="updateCanvasColor()">
+						</p-colorPicker>
+						<label for="bgcolor">Background</label>
+					</div>
 					<p-selectButton [options]="controlOptions" (onChange)="updateMode($event)" [ngModel]="currentMode"
 						optionLabel="icon" optionValue="mode" [ngModelOptions]="{standalone: true}" [disabled]="!uploads.length">
 						<ng-template let-item>
@@ -75,11 +78,12 @@
 								<p-checkbox [(ngModel)]="keepGrid" [binary]="true" inputId="binary"></p-checkbox>
 								<label for="binary"> Keep the floor grid in snapshot and scene?</label>
 							</div>
+							<div class="snapshot-button">
+								<p-button label="Snapshot" [disabled]="!uploads.length" (onClick)="takeSnapshot()"></p-button>
+							</div>
 							<div *ngIf="snapshotEncoded">
 								<img class="upload-snapshot-preview" [src]="snapshotEncoded" alt="snapshot">
 							</div>
-							<p>Snapshot Preview</p>
-							<p-button label="Snapshot" [disabled]="!uploads.length" (onClick)="takeSnapshot()"></p-button>
 						</div>
 					</div>
 				</div>

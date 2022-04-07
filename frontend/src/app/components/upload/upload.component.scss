@@ -10,6 +10,10 @@
 		border: 1px black solid;
 	}
 
+	label {
+		margin-left: 10px;
+	}
+
 	::ng-deep #canvas {
 		width: 100%;
 		height: 100%;
@@ -25,6 +29,18 @@
     padding-bottom: 10px;
     justify-content: space-between;
     align-items: center;
+
+		.snapshot-button {
+			margin-bottom: 10px;
+		}
+
+		.checkbox-inline {
+			margin-bottom: 10px;
+		}
+
+		&-scene {
+			margin: 0 auto;
+		}
 
 		&-header {
 			&-content {
