@@ -5,7 +5,7 @@ import { SentryService } from '@ntegral/nestjs-sentry';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(graphqlUploadExpress({ maxFileSize: 100000000, maxFiles: 10 }));
+  app.use(graphqlUploadExpress({ maxFileSize: 200000000, maxFiles: 10 }));
   app.useLogger(SentryService.SentryServiceInstance());
 
 

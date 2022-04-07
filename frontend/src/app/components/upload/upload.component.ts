@@ -100,16 +100,7 @@ export class UploadComponent implements OnInit {
   uploadPost() {
     this.loading = true;
     const content = this.postContent;
-    const totalSize = this.uploads.reduce((acc, cur) => acc + (cur?.size || 0), 0);
 
-    if (totalSize > 100000000) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Upload too large',
-        detail: `Upload size is ${this.fileSizePipe.transform(totalSize)} which is greater than the maximum of 100MB`
-      });
-      return;
-    }
     this.engineService.updateBackgroundColor(this.backgroundColor);
     this.sceneController.removeControls();
     if (!this.keepGrid) this.engineService.removeFromScene(this.grid);
@@ -117,6 +108,17 @@ export class UploadComponent implements OnInit {
     const scene = this.engineService.saveAndDestroy();
     const blob = new Blob([JSON.stringify(scene)], { type: "application/json;charset=utf-8" })
     const sceneFile = new File([blob], 'scene.json', { type: 'application/json;charset=utf-8' })
+    const size = sceneFile.size + this.snapshotImage.size;
+    if (size > 200000000) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Upload too large',
+        detail: `Upload size is ${this.fileSizePipe.transform(size)} which is greater than the maximum of 200MB`
+      });
+
+      this.loading = false;
+      return;
+    }
 
     this.api.post(content, this.snapshotImage as File, sceneFile)
       .subscribe(
