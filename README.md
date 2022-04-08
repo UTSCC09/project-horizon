@@ -4,7 +4,7 @@
 
 ## Project Video URL
 
-**Task:** Provide the link to your youtube video. Please make sure the link works.
+https://youtu.be/u6WL3KhwAVI
 
 ## Table of Contents
 - [Project Horizon](#project-horizon)
