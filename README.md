@@ -1,15 +1,7 @@
 # Project Horizon
 
-## Project URL: [horizon.mohamedhalat.com](https://horizon.mohamedhalat.com)
-
-## Project Video URL
-
-https://youtu.be/a4FY6YQR0Po
-
 ## Table of Contents
 - [Project Horizon](#project-horizon)
-  - [Project URL: horizon.mohamedhalat.com](#project-url-horizonmohamedhalatcom)
-  - [Project Video URL](#project-video-url)
   - [Table of Contents](#table-of-contents)
   - [Project Description](#project-description)
   - [Development](#development)
@@ -29,8 +21,6 @@ https://youtu.be/a4FY6YQR0Po
     - [Important](#important)
 
 ## Project Description
-
-<!-- **Task:** Provide a detailed description of your app -->
 
 Our application is intended to be a social networking platform tailored for 3D designers and 3D modelling enthusiasts. The way we achieve this is by allowing users to create profiles, upload 3D models, and share them with other users.
 
@@ -159,7 +149,6 @@ Setting up long polling and our notification system was the third most challengi
 In order to create a notification system the notification endpoint would need to subscribe to events emitted from other endpoints (like commenting on a post), but this raises an issue with our multi-pod deployment. If we have multiple backend instances running in order to handle our sites traffic flow and CPU usage, event emitted in one pod won't be subscribed to in another. In order to fix this we implemented Redis Pub/Sub instead of standard NodeJS events. This way we can lean on the redis server to track the published subscribers across our cluster and maintain their accuracy across pods. This implementation made our development, design and deployment more challenging but taught us a lot and was required because of lean away from WS.
 
 ## Contributions
-<!-- **Task:** Describe the contribution of each team member to the project. Please provide the full name of each team member (but no student number).  -->
 
 ### Ahmed Halat
   I Was in charge of the 3D services, components and rendering as well as creating the basic setup for the frontend. The basic frontend setup includes routing, navigation, structuring, pages and the frontend static pages like login and register.
