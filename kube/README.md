@@ -1,6 +1,7 @@
 # GCloud Deployment
 
 ## Table of Content
+
 - [GCloud Deployment](#gcloud-deployment)
   - [Table of Content](#table-of-content)
   - [Setup](#setup)
@@ -9,10 +10,11 @@
   - [Attempt 2 - Success](#attempt-2---success)
     - [SSL Certificates](#ssl-certificates)
   - [CI/CD](#cicd)
-  - [Scalling](#scalling)
+  - [Scaling](#scaling)
 - [Sources](#sources)
 
 ## Setup
+
 ```sh
 gcloud projects list
 
@@ -27,6 +29,7 @@ gcloud auth configure-docker northamerica-northeast2-docker.pkg.dev
 ```
 
 ## Useful Commands
+
 ```sh
 docker build . -t gcr.io/horizon-c09/frontend:latest
 docker push . -t gcr.io/horizon-c09/frontend:latest
@@ -40,10 +43,12 @@ kubectl get all
 ```
 
 ## Attempt 1 - Failed
-Used a load balancer service on the frontend and had frontend's nginx proxy to the backend's cluster ip.
-Sadly couldn't manage to get this type of implementaiton to work with neither a ssl cert or a google managed ssl cert. Also used artifacts repository to store the docker images for the backend and frontend instead of google's container registry.
 
-**Note:** These commands are not 100% the commands we used, some are missing and some say slightly different things to what we actually commited. Explanation above explains what we did.
+Used a load balancer service on the frontend and had frontend's nginx proxy to the backend's cluster ip.
+Sadly couldn't manage to get this type of implementation to work with neither a ssl cert or a google managed ssl cert. Also used artifacts repository to store the docker images for the backend and frontend instead of google's container registry.
+
+**Note:** These commands are not 100% the commands we used, some are missing and some say slightly different things to what we actually committed. Explanation above explains what we did.
+
 ```sh
 # Artifacts
 gcloud artifacts repositories create horizon-back-repo --repository-format=docker
@@ -66,17 +71,20 @@ kubectl set image deployment/hello-app hello-app=REGION-docker.pkg.dev/${PROJECT
 
 gcloud compute addresses create backend-address --region=northamerica-northeast2
 ```
+
 ## Attempt 2 - Success
-Attempt 2 was successful. We used seperate node ports for frontend and backend. This allowed me to use an Ingress controller to route traffic between frontend and backend. We also learned how to add a health check to the backend so deployments would go more smoothly. You can see the config for everything under the kube folder.
+
+Attempt 2 was successful. We used separate node ports for frontend and backend. This allowed me to use an Ingress controller to route traffic between frontend and backend. We also learned how to add a health check to the backend so deployments would go more smoothly. You can see the config for everything under the kube folder.
 This deployment includes:
+
 - [Frontend and backend](/kube/deployment.yml)
 - [Ingress Controller](/kube/ingress.yml)
 - [Postgresql DB](/kube/psql.yml)
 - [Redis](/kube/redis.yml)
-- [Persistant disk for storing files](/kube/volume.yml)
-
+- [Persistent disk for storing files](/kube/volume.yml)
 
 ### SSL Certificates
+
 We ended up using a google managed ssl certificate for the horizon domain.
 
 ```sh
@@ -86,7 +94,9 @@ gcloud compute ssl-certificates create horizon \
 ```
 
 ## CI/CD
+
 Adding Github CI/CD. Sadly it does not work at this moment because of the issue shown in the [piazza post](https://piazza.com/class/kxgjicgvryu3h8?cid=423).
+
 ```sh
 gcloud iam service-accounts create $SA_NAME
 gcloud projects add-iam-policy-binding $GKE_PROJECT \
@@ -97,8 +107,9 @@ gcloud projects add-iam-policy-binding $GKE_PROJECT \
 	--role=roles/storage.admin
 ```
 
-## Scalling
-Most of the scalling was configured on the website.
+## Scaling
+
+Most of the scaling was configured on the website.
 
 ```sh
 kubectl scale deployment hello-app --replicas=3
@@ -108,6 +119,7 @@ kubectl autoscale deployment backend --max 3 --min 1 --cpu-percent 50
 ```
 
 # Sources
+
 - https://www.mirantis.com/blog/introduction-to-yaml-creating-a-kubernetes-deployment/
 - https://cloud.google.com/kubernetes-engine/docs/concepts/ingress
 - https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#gcloud_2
